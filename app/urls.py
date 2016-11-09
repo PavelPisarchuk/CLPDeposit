@@ -1,5 +1,7 @@
 from django.conf.urls import url
 
+from app.views import Index
+
 urlpatterns = [
-    url(r'^path/', None),
+    url(r'^index/', Index, name='IndexURL'),
 ]

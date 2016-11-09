@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        {% block title %} {% endblock %}
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.css" %}"/>
+        <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.js" %}"></script>
+    </head>
+    <body role="document" >
+        <nav class="navbar navbar-default navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'IndexURL' %}">CLP Deposit</a>
+            </div>
+          </div>
+        </nav>
+        <div class="container theme-showcase" role="main">
+          <div class="starter-template">
+            {% block content %}
+            {% endblock %}
+          </div>
+        </div>
+    </body>
+</html>
