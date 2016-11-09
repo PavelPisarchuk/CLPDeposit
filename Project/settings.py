@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'bootstrap3',
+    'django_admin_generator',
 ]
 
 MIDDLEWARE_CLASSES = [
