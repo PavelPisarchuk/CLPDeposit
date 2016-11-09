@@ -42,7 +42,7 @@
                     <li>
                         {% if user.is_authenticated %}
                             <li><a href="">Мои депозиты</a></li>
-                            <li><a>{{ user.username }} </a></li>
+                            <li><a>{{ user.last_name }} {{ user.first_name }} {{ user.father_name }}</a></li>
                             <li><a href={% url 'logout' %}>Log out</a></li>
                         {% else %}
                             <a><form class="form-inline" action="{% url 'login' %}" method="post">
