@@ -16,5 +16,5 @@ urlpatterns = [
         url(r'^extract/', deposit.extract, name='extract'),
         url(r'^history/', deposit.history, name='history')
     ])),
-    url(r'^/*', index, name='index'),
+    url(r'', index, name='index'),
 ]
