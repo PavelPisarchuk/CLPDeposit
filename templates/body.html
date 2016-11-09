@@ -5,7 +5,7 @@
         {% block title %} {% endblock %}
         {% load bootstrap3 %}
         {% bootstrap_css %}
-        {% bootstrap_javascript %}
+        {% bootstrap_javascript jquery=1 %}
     </head>
     <body role="document" >
         <nav class="navbar navbar-inverse navbar-static-top">
@@ -21,27 +21,37 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
                   <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                          Вклады
-                          <span class="caret"></span>
-                      </a>
-                      <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                      </ul>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                              Вклады
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a href="#">Открытие депозита</a></li>
+                            <li><a href="#">Пополнение депозита</a></li>
+                            <li><a href="#">Перечислить средства</a></li>
+                            <li><a href="#">Выписка по депозиту</a></li>
+                            <li><a href="#">История пополнения</a></li>
+                          </ul>
+                        </li>
+                    {% endif %}
                   </ul>
 
                   <ul class="nav navbar-nav navbar-right">
                     <li>
-                        {% block auth %}
-                        {% endblock %}
+                        {% if user.is_authenticated %}
+                            <li><a href="">Мои депозиты</a></li>
+                            <li><a>{{ user.username }} </a></li>
+                            <li><a href={% url 'logout' %}>Log out</a></li>
+                        {% else %}
+                            <a><form class="form-inline" action="{% url 'login' %}" method="post">
+                                {% csrf_token %}
+                                <input style="height: inherit; padding: 0px;" class="form-control" name="username" type="text" placeholder="Email">
+                                <input style="height: inherit; padding: 0px;" class="form-control" name="password" type="password" placeholder="Password">
+                                <button style="padding: 0px 8px;" class="btn btn-default" type="submit">Log in</button>
+                            </form></a>
+                        {% endif %}
                     </li>
                   </ul>
                 </div><!--/.nav-collapse -->

@@ -4,20 +4,6 @@
     <title>Главная</title>
 {% endblock %}
 
-{% block auth %}
-    {% if user.is_authenticated %}
-        <li><a>{{ user.username }} </a></li>
-        <li><a href={% url 'logout' %}>Log out</a></li>
-    {% else %}
-        <a><form class="form-inline" action="{% url 'login' %}" method="post">
-            {% csrf_token %}
-            <input style="height: inherit; padding: 0px;" class="form-control" name="username" type="text" placeholder="Email">
-            <input style="height: inherit; padding: 0px;" class="form-control" name="password" type="password" placeholder="Password">
-            <button style="padding: 0px 8px;" class="btn btn-default" type="submit">Log in</button>
-        </form></a>
-    {% endif %}
-{% endblock %}
-
 {% block content %}
     <div class="container">
       <div class="jumbotron">
