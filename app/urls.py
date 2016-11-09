@@ -1,7 +1,13 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
-from app.views import Index
+from app.views import index
+from app.views import login, logout
 
 urlpatterns = [
-    url(r'^index/', Index, name='IndexURL'),
+    url(r'^login/', login, name='login'),
+    url(r'^logout/', logout, name='logout'),
+    url(r'^deposit/', include([
+
+    ])),
+    url(r'^/*', index, name='index'),
 ]
