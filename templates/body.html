@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        {% block title %} {% endblock %}
+        {% load bootstrap3 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript jquery=1 %}
+    </head>
+    <body role="document" >
+        <nav class="navbar navbar-inverse navbar-static-top">
+              <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="#">CLP Deposit</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+                  <ul class="nav navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                              Вклады
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a href="#">Открытие депозита</a></li>
+                            <li><a href="#">Пополнение депозита</a></li>
+                            <li><a href="#">Перечислить средства</a></li>
+                            <li><a href="#">Выписка по депозиту</a></li>
+                            <li><a href="#">История пополнения</a></li>
+                          </ul>
+                        </li>
+
+                        {% if user.is_superuser %}
+                            <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                  Клиенты
+                                  <span class="caret"></span>
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a href={% url 'client_new' %}>Зарегестрировать клиента</a></li>
+                                <li><a href={% url 'client_list' %}>Все клиенты</a></li>
+                              </ul>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                  </ul>
+
+                  <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        {% if user.is_authenticated %}
+                            {% if not  user.is_superuser %}
+                                <li><a href="">Мои депозиты</a></li>
+                            {% endif %}
+                            <li><a>{{ user.last_name }} {{ user.first_name }} {{ user.father_name }}</a></li>
+                            <li><a href={% url 'logout' %}>Log out</a></li>
+                        {% else %}
+                            <a><form class="form-inline" action="{% url 'login' %}" method="post">
+                                {% csrf_token %}
+                                <input style="height: inherit; padding: 0px;" class="form-control" name="username" type="text" placeholder="Email">
+                                <input style="height: inherit; padding: 0px;" class="form-control" name="password" type="password" placeholder="Password">
+                                <button style="padding: 0px 8px;" class="btn btn-default" type="submit">Log in</button>
+                            </form></a>
+                        {% endif %}
+                    </li>
+                  </ul>
+                </div><!--/.nav-collapse -->
+              </div>
+            </nav>
+        <div class="container theme-showcase" role="main">
+            <div class="starter-template">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
