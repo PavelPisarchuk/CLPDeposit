@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
-
+from django.contrib.auth.decorators import login_required
 
 def index(request):
-    context = {
-    }
-    return render(request, 'index.html', context)
+    return render(request, 'index.html', {})
 
 def login(request):
     if (request.method == "POST"):
@@ -19,6 +17,7 @@ def login(request):
 
         return redirect(index)
 
+@login_required
 def logout(request):
     auth.logout(request)
     return redirect(index)
