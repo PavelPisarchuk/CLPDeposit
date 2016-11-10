@@ -4,10 +4,14 @@ from app.views import index
 from app.views import login, logout
 import app.views_deposit as deposit
 import app.views_client as client
+import app.views_admin as admin
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^logout/', logout, name='logout'),
+    url(r'^admin/', include([
+        url(r'^new/', admin.new, name='admin_new'),
+    ])),
     url(r'^client/', include([
         url(r'^list/', client.list, name='client_list'),
         url(r'^new/', client.new, name='client_new'),
