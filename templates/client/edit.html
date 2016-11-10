@@ -1,11 +1,11 @@
 {% extends "body.html" %}
 
 {% block title %}
-    <title>Регистрация</title>
+    <title>Измененить профиль</title>
 {% endblock %}
 
 {% block content %}
-    <form class="form-horizontal" action="{% url 'client:new' %}" method="post">
+    <form class="form-horizontal" action="{% url 'client:edit' %}" method="post">
         {% csrf_token %}
         {% for field in form %}
             <div class="form-group">
@@ -15,6 +15,6 @@
                 </div>
             </div>
         {% endfor %}
-        <input type="submit" value="Зарегестрировать" />
+        <input type="submit" value="Изменить" />
     </form>
 {% endblock %}

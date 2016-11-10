@@ -4,15 +4,24 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     father_name = models.CharField(max_length=30)
+    passport_id = models.CharField(max_length=14)
 
 
 class Deposit(models.Model):
-    pass
+    percent = models.IntegerField()
+    pay_period = models.IntegerField()
+    interval = models.IntegerField()
 
 
 class Contract(models.Model):
-    pass
+    client = models.ForeignKey(User)
+    deposit = models.ForeignKey(Deposit)
+    signed = models.DateTimeField()
 
 
 class Pay(models.Model):
-    pass
+    contract = models.ForeignKey(Contract)
+
+
+class Bill(models.Model):
+    client = models.ForeignKey(User)

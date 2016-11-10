@@ -1,0 +1,23 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Сотрудники</title>
+{% endblock %}
+
+{% block content %}
+    {% if admins %}
+        <table class="table table-striped">
+            <tr>
+                <td>Логин</td>
+                <td>Почта</td>
+            </tr>
+            {% for admin in admins %}
+                <tr>
+                    <td>{{ admin.username }}</td>
+                    <td>{{ admin.email }}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
