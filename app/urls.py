@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^logout/', logout, name='logout'),
     url(r'^admin/', include([
         url(r'^new/', admin.new, name='admin_new'),
+        url(r'^list/', admin.list, name='admin_list'),
     ])),
     url(r'^client/', include([
         url(r'^list/', client.list, name='client_list'),

@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     father_name = models.CharField(max_length=30)
+    passport_id = models.CharField(max_length=14)
 
 
 class Deposit(models.Model):
