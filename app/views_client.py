@@ -34,4 +34,23 @@ def list(request):
 
 @login_required
 def info(request):
-    return
+    return render(request, 'client/info.html', {
+        'client': request.user
+    })
+
+
+@login_required
+def edit(request):
+    from app.forms import EditUserForm as Form
+
+    user = User.objects.get(id=request.user.id)
+
+    if request.method == 'POST':
+        form = Form(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect(index)
+    else:
+        return render(request, 'client/edit.html', {
+            'form': Form(instance=user)
+        })
