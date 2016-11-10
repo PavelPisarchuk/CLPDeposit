@@ -27,4 +27,6 @@ def new(request):
 
 @login_required
 def list(request):
-    return
+    return render(request, 'client/list.html', {
+        'clients': User.objects.all().filter(is_superuser=False)
+    })
