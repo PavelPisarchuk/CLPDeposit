@@ -43,8 +43,8 @@
                                   <span class="caret"></span>
                               </a>
                               <ul class="dropdown-menu">
-                                <li><a href={% url 'client_new' %}>Зарегестрировать клиента</a></li>
-                                <li><a href={% url 'client_list' %}>Все клиенты</a></li>
+                                <li><a href={% url 'client:new' %}>Зарегестрировать клиента</a></li>
+                                <li><a href={% url 'client:list' %}>Все клиенты</a></li>
                               </ul>
                             </li>
                             <li class="dropdown">
@@ -53,8 +53,8 @@
                                   <span class="caret"></span>
                               </a>
                               <ul class="dropdown-menu">
-                                <li><a href={% url 'admin_new' %}>Зарегестрировать</a></li>
-                                <li><a href={% url 'admin_list' %}>Список</a></li>
+                                <li><a href={% url 'employee:new' %}>Зарегестрировать</a></li>
+                                <li><a href={% url 'employee:list' %}>Список</a></li>
                               </ul>
                             </li>
                         {% endif %}
@@ -78,8 +78,8 @@
                                   <span class="caret"></span>
                               </a>
                               <ul class="dropdown-menu">
-                                <li><a href={% url 'client_info' %}>Мой профиль</a></li>
-                                <li><a href={% url 'client_edit' %}>Изменить профиль</a></li>
+                                <li><a href={% url 'client:info' %}>Мой профиль</a></li>
+                                <li><a href={% url 'client:edit' %}>Изменить профиль</a></li>
                                 <li><a href={% url 'logout' %}>Выйти</a></li>
                               </ul>
                             </li>
