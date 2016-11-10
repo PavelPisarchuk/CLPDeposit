@@ -30,3 +30,8 @@ def list(request):
     return render(request, 'client/list.html', {
         'clients': User.objects.all().filter(is_superuser=False)
     })
+
+
+@login_required
+def info(request):
+    return

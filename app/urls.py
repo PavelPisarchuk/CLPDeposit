@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^client/', include([
         url(r'^list/', client.list, name='client_list'),
         url(r'^new/', client.new, name='client_new'),
+        url(r'^info/', client.info, name='client_info'),
     ])),
     url(r'^deposit/', include([
         url(r'^list/', deposit.list, name='deposit_list'),
