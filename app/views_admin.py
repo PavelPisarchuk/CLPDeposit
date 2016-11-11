@@ -30,15 +30,31 @@ def list(request):
 
 
 @login_required
-def edit(request):
-    from app.forms import AdminForm as Form
+def info(request):
+    from django.forms import modelform_factory
+    from app.models import User as Model
 
+    Form = modelform_factory(Model, fields=("username", "email"))
+
+    return render(request, 'admin/info.html', {
+        'form': Form(instance=request.user)
+    })
+
+
+@login_required
+def edit(request):
+    from django.forms import modelform_factory
+    from app.models import User as Model
+
+    Form = modelform_factory(Model, fields=("username", "email", "password"))
     model = User.objects.get(id=request.user.id)
 
     if request.method == 'POST':
         form = Form(request.POST, instance=model)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.set_password(user.password)
+            user.save()
         return redirect(index)
     else:
         return render(request, 'admin/edit.html', {

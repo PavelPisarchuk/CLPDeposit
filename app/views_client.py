@@ -24,7 +24,6 @@ def new(request):
             'form': Form()
         })
 
-
 @login_required
 def list(request):
     return render(request, 'client/list.html', {
@@ -36,22 +35,28 @@ def list(request):
 def info(request):
     from django.forms import modelform_factory
     from app.models import User as Model
-    form = modelform_factory(Model, fields=("last_name", "first_name", "father_name", "passport_id"))
+
+    Form = modelform_factory(Model, fields=("last_name", "first_name", "father_name", "passport_id", "address", "birthday", "phone"))
+
     return render(request, 'client/info.html', {
-        'form': form(instance=request.user)
+        'form': Form(instance=request.user)
     })
 
 
 @login_required
 def edit(request):
-    from app.forms import UserForm as Form
+    from django.forms import modelform_factory
+    from app.models import User as Model
 
+    Form = modelform_factory(Model, fields=("last_name", "first_name", "father_name", "address", "phone", "password"))
     model = User.objects.get(id=request.user.id)
 
     if request.method == 'POST':
         form = Form(request.POST, instance=model)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.set_password(user.password)
+            user.save()
         return redirect(index)
     else:
         return render(request, 'client/edit.html', {
