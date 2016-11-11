@@ -75,7 +75,11 @@
                                   <span class="caret"></span>
                               </a>
                               <ul class="dropdown-menu">
-                                <li><a href={% url 'client:info' %}>Мой профиль</a></li>
+                                {% if  user.is_superuser %}
+                                    <li><a href={% url 'employee:info' %}>Мой профиль</a></li>
+                                {% else %}
+                                    <li><a href={% url 'client:info' %}>Мой профиль</a></li>
+                                {% endif %}
                                 <li><a href={% url 'logout' %}>Выйти</a></li>
                               </ul>
                             </li>
