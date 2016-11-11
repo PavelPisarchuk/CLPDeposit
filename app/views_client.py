@@ -18,7 +18,7 @@ def new(request):
                                      last_name=user.last_name,
                                      first_name=user.first_name,
                                      father_name=user.father_name)
-        return redirect(list)
+        return redirect(index)
     else:
         return render(request, 'client/registration.html', {
             'form': Form()
@@ -49,7 +49,7 @@ def edit(request):
         form = Form(request.POST, instance=model)
         if form.is_valid():
             form.save()
-        return redirect(info)
+        return redirect(index)
     else:
         return render(request, 'client/edit.html', {
             'form': Form(instance=model)

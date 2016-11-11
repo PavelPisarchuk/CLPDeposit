@@ -16,7 +16,7 @@ def new(request):
             User.objects.create_superuser(username=user.username,
                                         email=user.email,
                                         password=user.password)
-        return redirect(list)
+        return redirect(index)
     else:
         return render(request, 'admin/registration.html', {
             'form': AdminForm()
