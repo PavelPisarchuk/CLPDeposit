@@ -34,8 +34,11 @@ def list(request):
 
 @login_required
 def info(request):
+    from django.forms import modelform_factory
+    from app.models import User as Model
+    form = modelform_factory(Model, fields=("last_name", "first_name", "father_name", "passport_id"))
     return render(request, 'client/info.html', {
-        'client': request.user
+        'form': form(instance=request.user)
     })
 
 

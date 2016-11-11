@@ -8,15 +8,13 @@
     {% if clients %}
         <table class="table table-striped">
             <tr>
-                <td>Фамилия</td>
-                <td>Имя</td>
-                <td>Отчество</td>
+                <td>ФИО</td>
+                <td>Идентификационный номер</td>
             </tr>
             {% for client in clients %}
                 <tr>
-                    <td>{{ client.last_name }}</td>
-                    <td>{{ client.first_name }}</td>
-                    <td>{{ client.father_name }}</td>
+                    <td>{{ client.get_full_name }}</td>
+                    <td>{{ client.passport_id }}</td>
                 </tr>
 
             {% endfor %}

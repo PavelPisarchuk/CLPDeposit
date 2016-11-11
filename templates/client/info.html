@@ -5,5 +5,20 @@
 {% endblock %}
 
 {% block content %}
-    {{ client }}
+    <div class="table-responsive">
+        <table class="table">
+            {% for field in form %}
+                <tr>
+                    <td>{{ field.label_tag }}</td>
+                    <td>{{ field.value }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <a href={% url 'client:edit' %}>
+        <button type="button" class="btn btn-warning">
+            Изменить данные
+        </button>
+    </a>
 {% endblock %}

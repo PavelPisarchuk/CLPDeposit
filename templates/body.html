@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% block title %} {% endblock %}
         {% load bootstrap3 %}
         {% bootstrap_css %}
@@ -75,7 +76,6 @@
                               </a>
                               <ul class="dropdown-menu">
                                 <li><a href={% url 'client:info' %}>Мой профиль</a></li>
-                                <li><a href={% url 'client:edit' %}>Изменить профиль</a></li>
                                 <li><a href={% url 'logout' %}>Выйти</a></li>
                               </ul>
                             </li>

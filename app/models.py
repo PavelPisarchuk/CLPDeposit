@@ -10,7 +10,7 @@ class User(AbstractUser):
         return self.username if self.is_superuser else "{} {} {}".format(self.last_name, self.first_name, self.father_name)
 
     def get_short_name(self):
-        return self.username if self.is_superuser else "{} {}. {}.".format(self.last_name, self.first_name[0], self.father_name[0])
+        return self.username if self.is_superuser else "{} {}. {}.".format(self.last_name, self.first_name[:1], self.father_name[:1])
 
 
 class Deposit(models.Model):

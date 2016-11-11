@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^employee/', include([
         url(r'^new/', admin.new, name='new'),
         url(r'^list/', admin.list, name='list'),
+        url(r'^edit/', admin.edit, name='edit'),
     ], namespace='employee')),
     url(r'^client/', include([
         url(r'^list/', client.list, name='list'),
