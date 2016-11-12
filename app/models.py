@@ -18,6 +18,7 @@ class User(AbstractUser):
 
 class Deposit(models.Model):
     title = models.CharField(max_length=30)
+    description = models.CharField(max_length=300)
     percent = models.IntegerField()
     min_storing_term = models.IntegerField()
     max_storing_term = models.IntegerField()
@@ -34,6 +35,10 @@ class Contract(models.Model):
     sign_date = models.DateTimeField()
     term = models.IntegerField()
     money = models.FloatField()
+
+    def get_storing_term(self):
+        from datetime import date
+        return (date.today() - self.sign_date).days
 
 
 class Pay(models.Model):
@@ -58,3 +63,6 @@ class ExchangeRate(models.Model):
     this = models.ForeignKey(Currency)
     other = models.ForeignKey(Currency)
     index = models.FloatField()
+
+    def calc(self, value):
+        return value * self.index
