@@ -17,20 +17,44 @@ class User(AbstractUser):
 
 
 class Deposit(models.Model):
+    title = models.CharField(max_length=30)
     percent = models.IntegerField()
-    pay_period = models.IntegerField()
-    interval = models.IntegerField()
+    min_storing_term = models.IntegerField()
+    max_storing_term = models.IntegerField()
+    pay_term = models.IntegerField()
+    refill = models.BooleanField()
+    partial_take = models.BooleanField()
+    indexed = models.BooleanField()
+    currency = models.ForeignKey(Currency)
 
 
 class Contract(models.Model):
-    client = models.ForeignKey(User)
+    bill = models.ForeignKey(Bill)
     deposit = models.ForeignKey(Deposit)
-    signed = models.DateTimeField()
+    sign_date = models.DateTimeField()
+    term = models.IntegerField()
+    money = models.FloatField()
 
 
 class Pay(models.Model):
+    agent = models.ForeignKey(User)
     contract = models.ForeignKey(Contract)
+    datetime = models.DateTimeField()
+    money = models.FloatField()
 
 
 class Bill(models.Model):
     client = models.ForeignKey(User)
+    money = models.FloatField()
+    currency = models.ForeignKey(Currency)
+
+
+class Currency(models.Model):
+    title = models.CharField(max_length=2)
+
+
+class ExchangeRate(models.Model):
+    date = models.DateField()
+    this = models.ForeignKey(Currency)
+    other = models.ForeignKey(Currency)
+    index = models.FloatField()
