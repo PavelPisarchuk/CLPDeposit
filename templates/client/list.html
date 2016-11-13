@@ -15,6 +15,14 @@
                 <tr>
                     <td>{{ client.get_full_name }}</td>
                     <td>{{ client.passport_id }}</td>
+                    <td>
+                        <a href={% url 'employee:uedit' pk=client.id  %}>
+                            <button type="button" class="btn btn-warning">
+                                Изменить
+                            </button>
+                        </a>
+                        </a>
+                    </td>
                 </tr>
 
             {% endfor %}

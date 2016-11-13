@@ -1,0 +1,17 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Недостаточно прав</title>
+{% endblock %}
+
+{% block content %}
+    <div class="table-responsive">
+        У вас недостаточно прав для выполнения этой операции
+    </div>
+
+    <a href={% url 'index' %}>
+        <button type="button" class="btn btn-warning">
+            На главную
+        </button>
+    </a>
+{% endblock %}

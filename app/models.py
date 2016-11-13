@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    first_name = models.CharField(max_length=30, verbose_name='Имя')
-    last_name = models.CharField(max_length=30, verbose_name='Фамилия')
+    #first_name = models.CharField(max_length=30, verbose_name='Имя')
+    #last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     father_name = models.CharField(max_length=30, verbose_name='Отчество')
     passport_id = models.CharField(max_length=14, verbose_name='Идентификационный номер')
     phone = models.CharField(max_length=13, verbose_name='Телефон')
