@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+import datetime
+
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=30, verbose_name='Имя')
@@ -49,24 +51,23 @@ class Deposit(models.Model):
 class Contract(models.Model):
     bill = models.ForeignKey(Bill, verbose_name='Счёт')
     deposit = models.ForeignKey(Deposit, verbose_name='Вклад')
-    sign_date = models.DateTimeField(verbose_name='Дата подписания')
+    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.now)
     term = models.IntegerField(verbose_name='Срок')
     money = models.FloatField(verbose_name='Сумма вклада')
 
     def get_storing_term(self):
-        from datetime import date
-        return (date.today() - self.sign_date).days
+        return (datetime.date.today() - self.sign_date).days
 
 
 class Pay(models.Model):
     agent = models.ForeignKey(User, verbose_name='Оформитель')
     contract = models.ForeignKey(Contract, verbose_name='Договор')
-    datetime = models.DateTimeField(verbose_name='Дата')
+    datetime = models.DateTimeField(verbose_name='Дата', default=datetime.now)
     money = models.FloatField(verbose_name='Денежная сумма')
 
 
 class ExchangeRate(models.Model):
-    date = models.DateField(verbose_name='Дата')
+    date = models.DateField(verbose_name='Дата', default=datetime.date.today)
     from_currency = models.ForeignKey(Currency, verbose_name='Эталон', related_name="from_currency")
     to_currency = models.ForeignKey(Currency, verbose_name='Валюта', related_name="to_currency")
     index = models.FloatField(verbose_name='Кросс-курс')
