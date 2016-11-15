@@ -24,3 +24,22 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect(index)
+
+
+def rates(request):
+    from app.models import Currency, ExchangeRate
+    from itertools import permutations
+
+    exchange_rates = ExchangeRate.objects.all()
+    result = []
+
+    for date in exchange_rates.values_list('date', flat=True).distinct():
+        result.append(
+            [date] +
+            list(map(lambda item: round(item.index, 2), exchange_rates.filter(date=date)))
+        )
+
+    return render(request, 'rates.html', {
+        'headers': ['Дата'] + list(map(lambda items: "{} > {}".format(items[0].icon, items[1].icon), permutations(Currency.objects.all(), 2))),
+        'data': result
+    })

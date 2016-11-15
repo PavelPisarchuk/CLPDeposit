@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 
-from app.views import index
+from app.views import index, rates
 from app.views import login, logout
 import app.views_deposit as deposit
 import app.views_client as client
@@ -9,6 +9,7 @@ import app.views_admin as admin
 urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^logout/', logout, name='logout'),
+    url(r'^rates/', rates, name='rates'),
     url(r'^employee/', include([
         url(r'^new/', admin.new, name='new'),
         url(r'^list/', admin.list, name='list'),

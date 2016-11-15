@@ -1,0 +1,24 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Курсы валют</title>
+{% endblock %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                {% for header in headers %}
+                    <td>{{ header }}</td>
+                {% endfor %}
+            </tr>
+            {% for row in data %}
+                <tr>
+                    {% for column in row %}
+                        <td>{{ column }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
