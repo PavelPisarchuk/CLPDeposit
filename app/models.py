@@ -51,18 +51,18 @@ class Deposit(models.Model):
 class Contract(models.Model):
     bill = models.ForeignKey(Bill, verbose_name='Счёт')
     deposit = models.ForeignKey(Deposit, verbose_name='Вклад')
-    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.now)
+    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now)
     term = models.IntegerField(verbose_name='Срок')
     money = models.FloatField(verbose_name='Сумма вклада')
 
     def get_storing_term(self):
-        return (datetime.date.today() - self.sign_date).days
+        return (datetime.datetime.now() - self.sign_date).days
 
 
 class Pay(models.Model):
     agent = models.ForeignKey(User, verbose_name='Оформитель')
     contract = models.ForeignKey(Contract, verbose_name='Договор')
-    datetime = models.DateTimeField(verbose_name='Дата', default=datetime.now)
+    datetime = models.DateTimeField(verbose_name='Дата', default=datetime.datetime.now)
     money = models.FloatField(verbose_name='Денежная сумма')
 
 
