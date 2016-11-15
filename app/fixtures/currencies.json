@@ -1,0 +1,34 @@
+[
+  {
+    "model":"app.currency",
+    "pk":1,
+    "fields":{
+      "title":"USD",
+      "icon":"$"
+    }
+  },
+  {
+    "model":"app.currency",
+    "pk":2,
+    "fields":{
+      "title":"BYN",
+      "icon":"\u0440"
+    }
+  },
+  {
+    "model":"app.currency",
+    "pk":3,
+    "fields":{
+      "title":"RUB",
+      "icon":"\u20bd"
+    }
+  },
+  {
+    "model":"app.currency",
+    "pk":4,
+    "fields":{
+      "title":"EUR",
+      "icon":"\u20ac"
+    }
+  }
+]
