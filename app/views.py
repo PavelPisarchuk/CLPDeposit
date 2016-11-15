@@ -2,11 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 
-def index(request):
-    # from app.models import User
-    # User.objects.create_superuser('admin', 'admin@admin.ru', 'admin')
 
-    return render(request, 'index.html', {})
+def index(request):
+    return render(request, 'index.html')
+
 
 def login(request):
     if (request.method == "POST"):
@@ -19,6 +18,7 @@ def login(request):
             auth.login(request, user)
 
         return redirect(index)
+
 
 @login_required
 def logout(request):
