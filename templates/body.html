@@ -24,21 +24,17 @@
                   <ul class="nav navbar-nav">
                       <li><a href={% url 'rates' %}>Курсы валют</a></li>
                     {% if user.is_authenticated %}
-                        <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              Вклады
-                              <span class="caret"></span>
-                          </a>
-                          <ul class="dropdown-menu">
-                            <li><a href="#">Открытие депозита</a></li>
-                            <li><a href="#">Пополнение депозита</a></li>
-                            <li><a href="#">Перечислить средства</a></li>
-                            <li><a href="#">Выписка по депозиту</a></li>
-                            <li><a href="#">История пополнения</a></li>
-                          </ul>
-                        </li>
-
                         {% if user.is_superuser %}
+
+                            <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                  Вклады
+                                  <span class="caret"></span>
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a href="#">Все вклады</a></li>
+                              </ul>
+                            </li>
                             <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                   Клиенты
@@ -59,6 +55,8 @@
                                 <li><a href={% url 'employee:list' %}>Список</a></li>
                               </ul>
                             </li>
+                        {% else %}
+                            <li><a href="#">Вклады</a></li>
                         {% endif %}
                     {% endif %}
                   </ul>
