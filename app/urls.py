@@ -5,6 +5,7 @@ from app.views import login, logout
 import app.views_deposit as deposit
 import app.views_client as client
 import app.views_admin as admin
+import app.views_errors as errors
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
@@ -15,6 +16,8 @@ urlpatterns = [
         url(r'^list/', admin.list, name='list'),
         url(r'^info/', admin.info, name='info'),
         url(r'^edit/', admin.edit, name='edit'),
+        url(r'^edituser/(?P<pk>[0-9]+)/$', admin.edit_user, name='uedit'),
+        url(r'^edituser/', admin.edit_user, name='uedit'),
     ], namespace='employee')),
     url(r'^client/', include([
         url(r'^list/', client.list, name='list'),
@@ -31,5 +34,8 @@ urlpatterns = [
         url(r'^extract/', deposit.extract, name='extract'),
         url(r'^history/', deposit.history, name='history')
     ], namespace='deposit')),
+    url(r'errors/',include([
+        url('r^permission/',errors.permission_error,name='error')
+    ],namespace='errors')),
     url(r'', index, name='index'),
 ]

@@ -10,11 +10,19 @@
             <tr>
                 <td>ФИО</td>
                 <td>Идентификационный номер</td>
+                <td></td>
             </tr>
             {% for client in clients %}
                 <tr>
                     <td>{{ client.get_full_name }}</td>
                     <td>{{ client.passport_id }}</td>
+                    <td>
+                        <a href={% url 'employee:uedit' pk=client.id  %}>
+                            <button type="button" class="btn btn-warning">
+                                Изменить
+                            </button>
+                        </a>
+                    </td>
                 </tr>
 
             {% endfor %}

@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from app.decorators import Only_Superuser_Permission
 
 from app.views import index
 from app.models import User
 
 
 @login_required
+@Only_Superuser_Permission
 def new(request):
     from app.forms import UserForm as Form
 
@@ -24,7 +26,9 @@ def new(request):
             'form': Form()
         })
 
+        
 @login_required
+@Only_Superuser_Permission
 def list(request):
     return render(request, 'client/list.html', {
         'clients': User.objects.all().filter(is_superuser=False)
