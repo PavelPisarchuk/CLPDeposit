@@ -75,3 +75,6 @@ class ExchangeRate(models.Model):
 
     def calc(self, value):
         return value * self.index
+
+class Card(models.Model):
+    bill = models.ForeignKey(Bill, verbose_name='Счёт')

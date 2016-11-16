@@ -23,6 +23,8 @@ urlpatterns = [
         url(r'^new/', client.new, name='new'),
         url(r'^info/', client.info, name='info'),
         url(r'^edit/', client.edit, name='edit'),
+        url(r'^search/', client.search, name='search'),
+        url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),
     url(r'^deposit/', include([
         url(r'^list/', deposit.list, name='list'),

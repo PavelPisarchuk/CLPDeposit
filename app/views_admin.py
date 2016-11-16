@@ -77,8 +77,13 @@ def edit_user(request,pk):
     else:
         request.pk=pk
 
-    Form = modelform_factory(Model, fields=("username", "email","first_name","last_name","father_name","passport_id"))
-    model = User.objects.get(id=pk)
+    Form = modelform_factory(Model, fields=("username", "last_name", "first_name", "father_name", "passport_id"))
+    try:
+        model = User.objects.get(id=pk)
+    except User.DoesNotExist:
+        return render(request, 'client/list.html', {
+            'clients': User.objects.all().filter(is_superuser=False)
+        })
 
     if request.method == 'POST':
         form = Form(request.POST, instance=model)
