@@ -1,28 +1,25 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
-from app.views import index
-from app.models import User
+from django.forms import modelform_factory
 
 from app.decorators import Only_Superuser_Permission
+from app.views import index
+from app.models import User
+from app.forms import AdminForm, adminfields, clientfields
 
 
 @login_required
 @Only_Superuser_Permission
 def new(request):
-    from app.forms import AdminForm as Form
-
     if request.method == 'POST':
-        form = Form(request.POST)
+        form = AdminForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            User.objects.create_superuser(username=user.username,
-                                        email=user.email,
-                                        password=user.password)
+            user = User.objects.create_superuser(**form.cleaned_data)
+            user.save()
         return redirect(index)
     else:
         return render(request, 'admin/registration.html', {
-            'form': Form()
+            'form': AdminForm()
         })
 
         
@@ -37,11 +34,7 @@ def list(request):
 @login_required
 @Only_Superuser_Permission
 def info(request):
-    from django.forms import modelform_factory
-    from app.models import User as Model
-
-    Form = modelform_factory(Model, fields=("username", "email"))
-
+    Form = modelform_factory(User, fields=adminfields)
     return render(request, 'admin/info.html', {
         'form': Form(instance=request.user)
     })
@@ -50,36 +43,28 @@ def info(request):
 @login_required
 @Only_Superuser_Permission
 def edit(request):
-    from django.forms import modelform_factory
-    from app.models import User as Model
-
-    Form = modelform_factory(Model, fields=("username", "email", "password"))
-    model = User.objects.get(id=request.user.id)
+    Form = modelform_factory(User, fields=adminfields)
+    user = request.user
 
     if request.method == 'POST':
-        form = Form(request.POST, instance=model)
+        form = Form(request.POST, instance=user)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(user.password)
-            user.save()
+            form.save()
         return redirect(index)
     else:
         return render(request, 'admin/edit.html', {
-            'form': Form(instance=model)
+            'form': Form(instance=user)
         })
 
 
 @login_required
 def edit_user(request,pk):
-    from django.forms import modelform_factory
-    from app.models import User as Model
-
     if not pk:
         pk=request.pk
     else:
         request.pk=pk
 
-    Form = modelform_factory(Model, fields=("username", "email","first_name","last_name","father_name","passport_id"))
+    Form = modelform_factory(User, fields=clientfields)
     model = User.objects.get(id=pk)
 
     if request.method == 'POST':
