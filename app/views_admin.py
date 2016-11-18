@@ -58,6 +58,7 @@ def edit(request):
 
 
 @login_required
+@Only_Superuser_Permission
 def edit_user(request,pk):
     if not pk:
         pk=request.pk
