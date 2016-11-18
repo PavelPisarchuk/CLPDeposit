@@ -26,6 +26,22 @@ def logout(request):
     return redirect(index)
 
 
+@login_required
+def password(request):
+    if (request.method == "POST"):
+        user = request.user
+        if user.check_password(request.POST.get("password_old")):
+            password_new = request.POST.get("password_new")
+            password_new_repeat = request.POST.get("password_new_repeat")
+            if password_new == password_new_repeat:
+                user.set_password(password_new)
+                user.save()
+                return logout(request)
+        return redirect(index)
+    else:
+        return render(request, 'password.html')
+
+
 def rates(request):
     from app.models import Currency, ExchangeRate
     from itertools import permutations
