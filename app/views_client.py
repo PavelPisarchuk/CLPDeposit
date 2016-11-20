@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 from app.views import index
 from app.models import User, Bill, Currency, Message, MessageBox
-from app.forms import UserForm, clientfields
+from app.forms import UserForm, SearchForm, clientfields
 
 
 @login_required
@@ -30,7 +30,8 @@ def new(request):
 @Only_Superuser_Permission
 def list(request):
     return render(request, 'client/list.html', {
-        'clients': User.objects.all().filter(is_superuser=False)
+        'clients': User.objects.all().filter(is_superuser=False),
+        'form': SearchForm()
     })
 
 @login_required
