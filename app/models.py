@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -5,8 +7,8 @@ import datetime
 
 
 class User(AbstractUser):
-    first_name = models.CharField(max_length=30, verbose_name='Имя')
-    last_name = models.CharField(max_length=30, verbose_name='Фамилия')
+    #first_name = models.CharField(max_length=30, verbose_name='Имя')
+    #last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     father_name = models.CharField(max_length=30, verbose_name='Отчество')
     passport_id = models.CharField(max_length=14, verbose_name='Идентификационный номер')
     phone = models.CharField(max_length=13, verbose_name='Телефон')
@@ -33,6 +35,18 @@ class Bill(models.Model):
     client = models.ForeignKey(User, verbose_name='Клиент')
     money = models.FloatField(verbose_name='Денежная сумма')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
+
+
+class MessageBox(models.Model):
+    user=models.ForeignKey(User,verbose_name='Пользователь')
+
+class Message(models.Model):
+    message=models.CharField(max_length=300,verbose_name='Сообщение')
+    header=models.CharField(max_length=100,verbose_name='Заголовок')
+    readed=models.BooleanField(verbose_name='Прочитано ?')
+    messagebox=models.ForeignKey(MessageBox,verbose_name='Сообщения пользователя')
+    date=models.DateField(auto_now=False,auto_now_add=True,verbose_name='Дата')
+
 
 
 class Deposit(models.Model):

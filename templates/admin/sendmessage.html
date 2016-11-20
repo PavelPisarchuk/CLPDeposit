@@ -1,0 +1,26 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Измененить профиль</title>
+{% endblock %}
+
+{% block content %}
+    <form class="form-horizontal" action="{% url 'employee:sendmessage' pk=request.pk %}" method="post">
+        {% csrf_token %}
+            <div class="form-group">
+                <div class="col-sm-10">
+
+                    <div class="fieldWrapper">
+                            {{ form.header }}
+                            <label for="first_name">{{ form.header.label }}</label>
+                        </div>
+                        <div class="fieldWrapper">
+                            {{ form.message}}
+                            <label for="last_name"> {{ form.message.label }}</label>
+                        </div>
+
+                </div>
+            </div>
+        <input class="btn btn-default" type="submit" value="Отправить" />
+    </form>
+{% endblock %}

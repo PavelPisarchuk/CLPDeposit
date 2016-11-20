@@ -4,9 +4,12 @@ from django.forms import modelform_factory
 
 from app.decorators import Only_Superuser_Permission
 from app.views import index
-from app.models import User
-from app.forms import AdminForm, adminfields, clientfields
+from app.models import User, Message, MessageBox
+from app.forms import adminfields, clientfields
 
+from app.forms import AdminForm, MessageForm, SearchForm
+
+from app.decorators import Only_Superuser_Permission
 
 @login_required
 @Only_Superuser_Permission
@@ -22,7 +25,7 @@ def new(request):
             'form': AdminForm()
         })
 
-        
+
 @login_required
 @Only_Superuser_Permission
 def list(request):
@@ -79,3 +82,35 @@ def edit_user(request,pk):
         return render(request, 'admin/edituser.html', {
             'form': Form(instance=model)
         })
+
+
+@Only_Superuser_Permission
+@login_required
+def send_message(request,pk):
+    try:
+        model = User.objects.get(id=pk)
+    except User.DoesNotExist:
+        return render(request, 'client/list.html', {
+            'clients': User.objects.all().filter(is_superuser=False),'form': SearchForm(request.POST)
+        })
+
+    if request.method == 'POST':
+        try:
+            messageBox=MessageBox.objects.get(user_id=pk)
+        except MessageBox.DoesNotExist:
+            messageBox=MessageBox.objects.create(user=model)
+
+        message=MessageForm(request.POST)
+        Message.objects.create(message=message.data.get('message'),header=message.data.get('header'),
+                               readed=False,messagebox=messageBox)
+
+        return render(request, 'client/list.html', {
+            'clients': User.objects.all().filter(is_superuser=False),'form': SearchForm(request.POST)
+        })
+    else:
+        request.pk = pk
+        message = MessageForm(request.POST)
+        return render(request, 'admin/sendmessage.html', {
+            'form': message
+        })
+

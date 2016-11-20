@@ -5,11 +5,30 @@
 {% endblock %}
 
 {% block content %}
+    <form class="form-horizontal" action="{% url 'client:search' %}" method="post">
+            {% csrf_token %}
+                        <div class="fieldWrapper">
+                            {{ form.first_name }}
+                            <label for="first_name">{{ form.first_name.label }}</label>
+                        </div>
+                        <div class="fieldWrapper">
+                            {{ form.last_name }}
+                            <label for="last_name"> {{ form.last_name.label }}</label>
+                        </div>
+                        <div class="fieldWrapper">
+                            {{ form.passport_id }}
+                            <label for="passport_id">{{ form.passport_id.label }}</label>
+                        </div>
+
+            <input class="btn btn-default" type="submit" value="Поиск" />
+        </form>
+
     {% if clients %}
         <table class="table table-striped">
             <tr>
                 <td>ФИО</td>
                 <td>Идентификационный номер</td>
+                <td></td>
                 <td></td>
             </tr>
             {% for client in clients %}
@@ -20,6 +39,13 @@
                         <a href={% url 'employee:uedit' pk=client.id  %}>
                             <button type="button" class="btn btn-warning">
                                 Изменить
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href={% url 'employee:sendmessage' pk=client.id  %}>
+                            <button type="button" class="btn btn-warning">
+                                Отправить сообщение
                             </button>
                         </a>
                     </td>

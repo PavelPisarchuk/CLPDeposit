@@ -3,6 +3,24 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+               $('#msg').bind('click', function(){
+                   $.get("/client/updatemsg/", function(data) {
+
+                        if (data['data']==true)
+                            $("#newmsg").text("Мои сообщения +"+data['count'])
+                        else
+                            $("#newmsg").text("Мои сообщения")
+
+                     });
+                });
+
+            });
+        </script>
         {% block title %} {% endblock %}
         {% load bootstrap3 %}
         {% bootstrap_css %}
@@ -68,7 +86,7 @@
                                 <li><a href="">Мои депозиты</a></li>
                             {% endif %}
                             <li></li>
-                            <li class="dropdown">
+                            <li id="msg" class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                   {{ user.get_short_name }}
                                   <span class="caret"></span>
@@ -78,6 +96,7 @@
                                     <li><a href={% url 'employee:info' %}>Мой профиль</a></li>
                                 {% else %}
                                     <li><a href={% url 'client:info' %}>Мой профиль</a></li>
+                                    <li ><a id="newmsg" href={% url 'client:messages' %}>Мои сообщения</a></li>
                                 {% endif %}
                                 <li><a href={% url 'password' %}>Изменить пароль</a></li>
                                 <li><a href={% url 'logout' %}>Выйти</a></li>

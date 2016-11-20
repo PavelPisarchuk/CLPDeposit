@@ -1,0 +1,37 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Клиенты</title>
+{% endblock %}
+
+{% block content %}
+
+
+
+        <table class="table table-striped">
+            <tr>
+                <td>Дата</td>
+                <td>Заголовок</td>
+                <td></td>
+            </tr>
+        {% if messages %}
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message.date }}</td>
+                    <td>{{ message.header }}</td>
+                    <td>
+                        {% if not message.readed %}
+                            Непрочитанное->
+                        {% endif %}
+                        <a href={% url 'client:readmsg' pk=message.id %}>
+                            <button type="button" class="btn btn-warning">
+                                Прочитать
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
