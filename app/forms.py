@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django import forms
-from app.models import User
+from app.models import User,Bill
 
 
 class UserForm(forms.ModelForm):
@@ -15,6 +15,9 @@ class AdminForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
 
+class MessageForm(forms.Form):
+    message = forms.CharField(max_length=300, label='Сообщение')
+    header = forms.CharField(max_length=100, label='Заголовок')
 
 class SearchForm(forms.Form):
     first_name = forms.CharField(max_length=30, label='Имя')

@@ -45,6 +45,25 @@ class BillAdmin(admin.ModelAdmin):
     list_filter = ('client', 'currency')
 
 
+class MessageBoxAdmin(admin.ModelAdmin):
+
+    list_display = (u'id', 'user')
+    list_filter = ('user',)
+
+
+class MessageAdmin(admin.ModelAdmin):
+
+    list_display = (
+        u'id',
+        'message',
+        'header',
+        'readed',
+        'messagebox',
+        'date',
+    )
+    list_filter = ('readed', 'messagebox', 'date')
+
+
 class DepositAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -88,8 +107,9 @@ def _register(model, admin_class):
 _register(models.User, UserAdmin)
 _register(models.Currency, CurrencyAdmin)
 _register(models.Bill, BillAdmin)
+_register(models.MessageBox, MessageBoxAdmin)
+_register(models.Message, MessageAdmin)
 _register(models.Deposit, DepositAdmin)
 _register(models.Contract, ContractAdmin)
 _register(models.Pay, PayAdmin)
 _register(models.ExchangeRate, ExchangeRateAdmin)
-

@@ -16,6 +16,7 @@ urlpatterns = [
         url(r'^info/', admin.info, name='info'),
         url(r'^edit/', admin.edit, name='edit'),
         url(r'^edituser/(?P<pk>[0-9]+)/$', admin.edit_user, name='uedit'),
+        url(r'^sendmessage/(?P<pk>[0-9]+)/$', admin.send_message, name='sendmessage'),
         url(r'^edituser/', admin.edit_user, name='uedit'),
     ], namespace='employee')),
     url(r'^client/', include([
@@ -24,6 +25,9 @@ urlpatterns = [
         url(r'^info/', client.info, name='info'),
         url(r'^edit/', client.edit, name='edit'),
         url(r'^search/', client.search, name='search'),
+        url(r'^updatemsg/', client.updatemsg, name='updatemsg'),
+        url(r'^messages/', client.messages, name='messages'),
+        url(r'^readmsg/(?P<pk>[0-9]+)/$', client.readmessage, name='readmsg'),
         url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),
     url(r'^deposit/', include([

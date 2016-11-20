@@ -35,6 +35,18 @@ class Bill(models.Model):
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
 
 
+class MessageBox(models.Model):
+    user=models.ForeignKey(User,verbose_name='Пользователь')
+
+class Message(models.Model):
+    message=models.CharField(max_length=300,verbose_name='Сообщение')
+    header=models.CharField(max_length=100,verbose_name='Заголовок')
+    readed=models.BooleanField(verbose_name='Прочитано ?')
+    messagebox=models.ForeignKey(MessageBox,verbose_name='Сообщения пользователя')
+    date=models.DateField(auto_now=False,auto_now_add=True,verbose_name='Дата')
+
+
+
 class Deposit(models.Model):
     title = models.CharField(max_length=30, verbose_name='Название')
     description = models.CharField(max_length=300, verbose_name='Описание')
@@ -75,6 +87,3 @@ class ExchangeRate(models.Model):
 
     def calc(self, value):
         return value * self.index
-
-class Card(models.Model):
-    bill = models.ForeignKey(Bill, verbose_name='Счёт')

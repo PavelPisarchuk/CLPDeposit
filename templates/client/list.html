@@ -24,13 +24,12 @@
         </form>
 
     {% if clients %}
-
-
-
         <table class="table table-striped">
             <tr>
                 <td>ФИО</td>
                 <td>Идентификационный номер</td>
+                <td></td>
+                <td></td>
             </tr>
             {% for client in clients %}
                 <tr>
@@ -40,6 +39,13 @@
                         <a href={% url 'employee:uedit' pk=client.id  %}>
                             <button type="button" class="btn btn-warning">
                                 Изменить
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href={% url 'employee:sendmessage' pk=client.id  %}>
+                            <button type="button" class="btn btn-warning">
+                                Отправить сообщение
                             </button>
                         </a>
                     </td>

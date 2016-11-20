@@ -2,7 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from app.views import index
-from app.models import User
+from app.models import User,Message,MessageBox
+from django.forms import modelform_factory
+from app.models import User as Model
+
+from app.forms import MessageForm, SearchForm
 
 from app.decorators import Only_Superuser_Permission
 
@@ -48,9 +52,6 @@ def info(request):
 @login_required
 @Only_Superuser_Permission
 def edit(request):
-    from django.forms import modelform_factory
-    from app.models import User as Model
-
     Form = modelform_factory(Model, fields=("username", "email", "password"))
     model = User.objects.get(id=request.user.id)
 
@@ -66,18 +67,10 @@ def edit(request):
             'form': Form(instance=model)
         })
 
-
+@Only_Superuser_Permission
 @login_required
 def edit_user(request,pk):
-    from django.forms import modelform_factory
-    from app.models import User as Model
 
-    if not pk:
-        pk=request.pk
-    else:
-        request.pk=pk
-
-    Form = modelform_factory(Model, fields=("username", "last_name", "first_name", "father_name", "passport_id"))
     try:
         model = User.objects.get(id=pk)
     except User.DoesNotExist:
@@ -85,6 +78,7 @@ def edit_user(request,pk):
             'clients': User.objects.all().filter(is_superuser=False)
         })
 
+    Form = modelform_factory(Model, fields=("username", "last_name", "first_name", "father_name", "passport_id"))
     if request.method == 'POST':
         form = Form(request.POST, instance=model)
         if form.is_valid():
@@ -93,6 +87,38 @@ def edit_user(request,pk):
             user.save()
         return redirect(index)
     else:
+        request.pk = pk
         return render(request, 'admin/edituser.html', {
             'form': Form(instance=model)
         })
+
+@Only_Superuser_Permission
+@login_required
+def send_message(request,pk):
+    try:
+        model = User.objects.get(id=pk)
+    except User.DoesNotExist:
+        return render(request, 'client/list.html', {
+            'clients': User.objects.all().filter(is_superuser=False),'form': SearchForm(request.POST)
+        })
+
+    if request.method == 'POST':
+        try:
+            messageBox=MessageBox.objects.get(user_id=pk)
+        except MessageBox.DoesNotExist:
+            messageBox=MessageBox.objects.create(user=model)
+
+        message=MessageForm(request.POST)
+        Message.objects.create(message=message.data.get('message'),header=message.data.get('header'),
+                               readed=False,messagebox=messageBox)
+
+        return render(request, 'client/list.html', {
+            'clients': User.objects.all().filter(is_superuser=False),'form': SearchForm(request.POST)
+        })
+    else:
+        request.pk = pk
+        message = MessageForm(request.POST)
+        return render(request, 'admin/sendmessage.html', {
+            'form': message
+        })
+
