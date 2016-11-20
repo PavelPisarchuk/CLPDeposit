@@ -1,0 +1,14 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Клиенты</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if msg %}
+    <p><textarea rows="3" cols="45" name="text">{{ msg.header }}</textarea></p>
+    <p><textarea rows="10" cols="45" name="text">{{ msg.message }}</textarea></p>
+
+    {% endif %}
+{% endblock %}
