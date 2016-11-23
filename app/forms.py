@@ -17,6 +17,12 @@ class AdminForm(forms.ModelForm):
 class DepositForm(forms.ModelForm):
     class Meta:
         model = Deposit
-        fields = ['title', 'description', 'type', 'percent', 'percent_for_early_withdrawal', 'is_floating_rate',
+        fields = ['title', 'description', 'depositType', 'percent', 'percent_for_early_withdrawal', 'is_floating_rate',
                    'min_amount', 'duration', 'min_refill', 'pay_period_in_months', 'is_capitalization', 'minimum_balance',
                   'currency', 'binding_currency']
+
+
+class CurrencyForm(forms.ModelForm):
+    class Meta:
+        model = Currency
+        fields = '__all__'

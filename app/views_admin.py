@@ -51,12 +51,25 @@ def edit(request):
 def DepositConfigurator(request):
     if request.method == 'POST':
         depositForm = DepositForm(request.POST)
-        if form.is_valid():
+        if depositForm.is_valid():
+            depositForm.save()
             return render(request, 'admin/depositConfigurator.html')
     else:
         depositForm = DepositForm()
 
     return render(request, 'admin/depositConfigurator.html', {'depositForm': depositForm})
+
+@login_required
+def NewCurrency(request):
+    if request.method == 'POST':
+        form = CurrencyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'admin/newCurrency.html')
+    else:
+        form = CurrencyForm()
+
+    return render(request, 'admin/newCurrency.html', {'form': form})
 
 @login_required
 def new(request):

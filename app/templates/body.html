@@ -24,16 +24,16 @@
                   <ul class="nav navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="dropdown">
-                          <a href="/admin/deposit_configurator/" >
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                               Конфигуратор вкладов
+                              <span class="caret"></span>
                           </a>
-{#                          <ul class="dropdown-menu">#}
-{#                            <li><a href="#">Открытие депозита</a></li>#}
-{#                            <li><a href="#">Пополнение депозита</a></li>#}
-{#                            <li><a href="#">Перечислить средства</a></li>#}
-{#                            <li><a href="#">Выписка по депозиту</a></li>#}
-{#                            <li><a href="#">История пополнения</a></li>#}
-{#                          </ul>#}
+                          <ul class="dropdown-menu">
+                            <li><a href="#">Список депозитов</a></li>
+                            <li><a href="/admin/deposit_configurator/">Добавить депозит</a></li>
+                            <li><a href="/admin/newCurrency/">Добавить валюту</a></li>
+                            <li><a href="#">Добавить новый вид депозитов</a></li>
+                          </ul>
                         </li>
 
                         {% if user.is_superuser %}

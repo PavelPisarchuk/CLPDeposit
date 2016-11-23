@@ -25,7 +25,7 @@ class User(AbstractUser):
 
 
 class Currency(models.Model):
-    title = models.CharField(max_length=2, verbose_name='Название')
+    title = models.CharField(max_length=3, verbose_name='Название')
     icon = models.CharField(max_length=1, verbose_name='Значок')
 
 
@@ -40,7 +40,7 @@ class DepositType(models.Model):
 class Deposit(models.Model):
     title = models.CharField(max_length=30, verbose_name='Название')
     description = models.CharField(max_length=300, verbose_name='Описание')
-    type = models.ForeignKey(DepositType, verbose_name='Тип')
+    depositType = models.ForeignKey(DepositType, verbose_name='Тип')
     percent = models.IntegerField(verbose_name='Ставка')
     percent_for_early_withdrawal=models.IntegerField(verbose_name='Ставка при преждевременном снятии')
     is_floating_rate=models.BooleanField(verbose_name='Плавающая ставка')

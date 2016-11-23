@@ -8,8 +8,8 @@
 
     <form action="/admin/deposit_configurator/" method="post">
         {% csrf_token %}
-        {{ depositForm }}
-        <input type="submit" value="Submit" />
+        {{ depositForm.as_p }}
+        <input class="btn btn-default" type="submit" value="Подтвердить" />
     </form>
 
     <form class="form-horizontal" action="{% url 'employee:edit' %}" method="post">

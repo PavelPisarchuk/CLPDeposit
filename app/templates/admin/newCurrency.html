@@ -1,0 +1,15 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Конфигкратор Валют</title>
+{% endblock %}
+
+{% block content %}
+
+    <form action="/admin/newCurrency/" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-default" type="submit" value="Подтвердить" />
+    </form>
+
+{% endblock %}
