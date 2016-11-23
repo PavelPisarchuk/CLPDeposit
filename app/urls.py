@@ -9,7 +9,8 @@ import app.views_admin as admin
 urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^logout/', logout, name='logout'),
-    url(r'^employee/', include([
+    url(r'^admin/', include([
+        url(r'^deposit_configurator/', admin.DepositConfigurator, name='depositConfigurator'),
         url(r'^new/', admin.new, name='new'),
         url(r'^list/', admin.list, name='list'),
         url(r'^info/', admin.info, name='info'),

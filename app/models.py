@@ -61,10 +61,10 @@ class Contract(models.Model):
     deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита')
     percent = models.FloatField(verbose_name='Ставка')
 
-    start_exchange_rate=models.FloatField(verbose_name='начальный курс')
-    final_exchange_rate = models.FloatField(verbose_name='конечный курс')
+    #start_exchange_rate=models.FloatField(verbose_name='начальный курс')
+    #final_exchange_rate = models.FloatField(verbose_name='конечный курс')
 
-    bonuce=models.FloatField(verbose_name='Бонусная индексированная ставка')
+    bonuce=models.FloatField(verbose_name='Бонусная индексированная ставка', default=0)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now)
     end_date = models.DateTimeField(verbose_name='Дата окончания')
     is_prolongation=models.BooleanField(verbose_name='Пролонгация')

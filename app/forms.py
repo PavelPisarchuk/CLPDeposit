@@ -1,5 +1,5 @@
 from django import forms
-from app.models import User
+from app.models import *
 
 
 class UserForm(forms.ModelForm):
@@ -12,3 +12,11 @@ class AdminForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+
+class DepositForm(forms.ModelForm):
+    class Meta:
+        model = Deposit
+        fields = ['title', 'description', 'type', 'percent', 'percent_for_early_withdrawal', 'is_floating_rate',
+                   'min_amount', 'duration', 'min_refill', 'pay_period_in_months', 'is_capitalization', 'minimum_balance',
+                  'currency', 'binding_currency']

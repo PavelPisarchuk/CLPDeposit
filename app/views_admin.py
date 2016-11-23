@@ -1,26 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 from app.views import index
 from app.models import User
+from app.forms import *
 
-
-@login_required
-def new(request):
-    from app.forms import AdminForm as Form
-
-    if request.method == 'POST':
-        form = Form(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            User.objects.create_superuser(username=user.username,
-                                        email=user.email,
-                                        password=user.password)
-        return redirect(index)
-    else:
-        return render(request, 'admin/registration.html', {
-            'form': Form()
-        })
 
 @login_required
 def list(request):
@@ -59,4 +44,33 @@ def edit(request):
     else:
         return render(request, 'admin/edit.html', {
             'form': Form(instance=model)
+        })
+
+
+@login_required
+def DepositConfigurator(request):
+    if request.method == 'POST':
+        depositForm = DepositForm(request.POST)
+        if form.is_valid():
+            return render(request, 'admin/depositConfigurator.html')
+    else:
+        depositForm = DepositForm()
+
+    return render(request, 'admin/depositConfigurator.html', {'depositForm': depositForm})
+
+@login_required
+def new(request):
+    from app.forms import AdminForm as Form
+
+    if request.method == 'POST':
+        form = Form(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            User.objects.create_superuser(username=user.username,
+                                        email=user.email,
+                                        password=user.password)
+        return redirect(index)
+    else:
+        return render(request, 'admin/registration.html', {
+            'form': Form()
         })
