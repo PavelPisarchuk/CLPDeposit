@@ -48,30 +48,6 @@ def edit(request):
 
 
 @login_required
-def DepositConfigurator(request):
-    if request.method == 'POST':
-        depositForm = DepositForm(request.POST)
-        if depositForm.is_valid():
-            depositForm.save()
-            return render(request, 'admin/depositConfigurator.html')
-    else:
-        depositForm = DepositForm()
-
-    return render(request, 'admin/depositConfigurator.html', {'depositForm': depositForm})
-
-@login_required
-def NewCurrency(request):
-    if request.method == 'POST':
-        form = CurrencyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'admin/newCurrency.html')
-    else:
-        form = CurrencyForm()
-
-    return render(request, 'admin/newCurrency.html', {'form': form})
-
-@login_required
 def new(request):
     from app.forms import AdminForm as Form
 
@@ -87,3 +63,37 @@ def new(request):
         return render(request, 'admin/registration.html', {
             'form': Form()
         })
+
+
+
+
+@login_required
+def DepositConfigurator(request):
+
+    depositList=Deposit.objects.all()
+
+    if request.method == 'POST':
+        depositForm = DepositForm(request.POST)
+        if depositForm.is_valid():
+            depositForm.save()
+            depositForm = DepositForm()
+    else:
+        depositForm = DepositForm()
+
+    return render(request, 'admin/depositConfigurator.html', {'depositForm': depositForm, 'depositList':depositList})
+
+@login_required
+def NewCurrency(request):
+
+    currencyList=Currency.objects.all()
+
+    if request.method == 'POST':
+        form = CurrencyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            form = CurrencyForm()
+    else:
+        form = CurrencyForm()
+
+    return render(request, 'admin/newCurrency.html', {'form': form, 'currencyList':currencyList})
+

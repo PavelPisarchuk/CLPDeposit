@@ -1,0 +1,23 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>My deposits</title>
+{% endblock %}
+
+{% block content %}
+        {% if deposits %}
+            <table class="table table-striped">
+                {% for deposit in deposits %}
+                    <tr>
+                        <td><a href="/client/allDeposits/{{ deposit.id }}/">{{ deposit.title }}</a></td>
+                        <td>{{  deposit.percent }}%</td>
+                        <td>{{  deposit.min_amount }} {{ deposit.getCurrencyTitle }}</td>
+                        <td>{{  deposit.duration }} months</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <br>
+            <p>No available Deposits</p>
+        {% endif %}
+{% endblock %}

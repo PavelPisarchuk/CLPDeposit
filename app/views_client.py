@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from app.views import index
-from app.models import User
+from app.models import *
+from app.forms import *
 
 
 @login_required
@@ -62,3 +63,32 @@ def edit(request):
         return render(request, 'client/edit.html', {
             'form': Form(instance=model)
         })
+
+
+@login_required
+def allDeposits(request):
+
+    deposits=Deposit.objects.all()
+
+    return render(request, 'client/allDeposits.html', {'deposits':deposits})
+
+
+@login_required
+def newDeposit(request, deposit_id):
+
+    if request.method == 'POST':
+        form = ContractForm(request.POST)
+        if form.is_valid():
+            form.save()
+            form = ContractForm()
+    else:
+        form = ContractForm()
+
+    return render(request, 'client/newDeposit.html', {'ID':deposit_id})
+
+
+def allDeposits(request):
+
+    deposits=Contract.objects.filter()
+
+    return render(request, 'client/myDeposits.html', {'deposits':deposits})

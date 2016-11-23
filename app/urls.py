@@ -22,6 +22,9 @@ urlpatterns = [
         url(r'^new/', client.new, name='new'),
         url(r'^info/', client.info, name='info'),
         url(r'^edit/', client.edit, name='edit'),
+        url(r'^allDeposits/(?P<deposit_id>[0-9]+)/', client.newDeposit, name='newDeposit'),
+        url(r'^allDeposits/', client.allDeposits, name='allDeposits'),
+        url(r'^myDeposits/', client.myDeposits, name='myDeposits'),
     ], namespace='client')),
     url(r'^deposit/', include([
         url(r'^list/', deposit.list, name='list'),

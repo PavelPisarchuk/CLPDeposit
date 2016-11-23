@@ -28,30 +28,33 @@ class Currency(models.Model):
     title = models.CharField(max_length=3, verbose_name='Название')
     icon = models.CharField(max_length=1, verbose_name='Значок')
 
+    def __str__(self):
+        return self.title
+
 
 class Bill(models.Model):
     client = models.ForeignKey(User, verbose_name='Клиент')
     money = models.FloatField(verbose_name='Денежная сумма')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
 
-class DepositType(models.Model):
-    title = models.CharField(max_length=30, verbose_name='Название')
-
 class Deposit(models.Model):
     title = models.CharField(max_length=30, verbose_name='Название')
     description = models.CharField(max_length=300, verbose_name='Описание')
-    depositType = models.ForeignKey(DepositType, verbose_name='Тип')
+    depositType = models.CharField(max_length=30, verbose_name='Тип')
     percent = models.IntegerField(verbose_name='Ставка')
     percent_for_early_withdrawal=models.IntegerField(verbose_name='Ставка при преждевременном снятии')
     is_floating_rate=models.BooleanField(verbose_name='Плавающая ставка')
+    currency = models.ForeignKey(Currency, verbose_name='Валюта')
     min_amount=models.FloatField(verbose_name='Минимальная сумма')
     duration=models.IntegerField(verbose_name='Срок хранения')
     min_refill = models.FloatField(verbose_name='Минимальное пополнение')
     pay_period_in_months = models.FloatField(verbose_name='Период выплат')
     is_capitalization=models.BooleanField(verbose_name='Капитализация')
     minimum_balance=models.FloatField(verbose_name='Неснижаемый остаток')
-    currency = models.ForeignKey(Currency, verbose_name='Валюта')
-    binding_currency=models.ForeignKey(Currency,related_name="BindingCurrency", verbose_name='Валюта привязки')
+    binding_currency=models.ForeignKey(Currency,related_name="BindingCurrency", verbose_name='Валюта привязки', default=None)
+
+    def getCurrencyTitle(self):
+        return self.currency.title
 
 
 

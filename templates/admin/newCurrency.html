@@ -6,6 +6,17 @@
 
 {% block content %}
 
+    {% if currencyList %}
+    <ul>
+    {% for currency in currencyList %}
+        <li>{{ currency.title }}</li>
+{#        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>#}
+    {% endfor %}
+    </ul>
+    {% else %}
+        <p>No available currency</p>
+    {% endif %}
+
     <form action="/admin/newCurrency/" method="post">
         {% csrf_token %}
         {{ form.as_p }}

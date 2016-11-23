@@ -22,17 +22,15 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
                   <ul class="nav navbar-nav">
-                    {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
                         <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                               Конфигуратор вкладов
                               <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a href="#">Список депозитов</a></li>
-                            <li><a href="/admin/deposit_configurator/">Добавить депозит</a></li>
-                            <li><a href="/admin/newCurrency/">Добавить валюту</a></li>
-                            <li><a href="#">Добавить новый вид депозитов</a></li>
+                            <li><a href="/admin/deposit_configurator/">Депозиты</a></li>
+                            <li><a href="/admin/newCurrency/">Валюты</a></li>
                           </ul>
                         </li>
 
@@ -65,7 +63,16 @@
                     <li>
                         {% if user.is_authenticated %}
                             {% if not  user.is_superuser %}
-                                <li><a href="">Мои депозиты</a></li>
+                                <li class="dropdown">
+                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                      Депозиты
+                                      <span class="caret"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="/client/allDeposits/">Новый депозит</a></li>
+                                    <li><a href="/admin/newCurrency/">Мои депозиты</a></li>
+                                  </ul>
+                                </li>
                             {% endif %}
                             <li></li>
                             <li class="dropdown">

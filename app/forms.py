@@ -26,3 +26,9 @@ class CurrencyForm(forms.ModelForm):
     class Meta:
         model = Currency
         fields = '__all__'
+
+
+class ContractForm(forms.ModelForm):
+    class Meta:
+        model = Contract
+        fields = ['deposit_bill']

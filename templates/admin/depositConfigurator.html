@@ -1,0 +1,31 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Конфигкратор дипозитов</title>
+{% endblock %}
+
+{% block content %}
+
+    <form action="/admin/deposit_configurator/" method="post">
+        {% csrf_token %}
+        {{ depositForm.as_p }}
+        <input class="btn btn-default" type="submit" value="Подтвердить" />
+    </form>
+
+    {% if depositList %}
+    <table class="table table-striped">
+        {% for deposit in depositList %}
+            <tr>
+                <td><a href="/polls/{{ question.id }}/">{{ deposit.title }}</a></td>
+                <td>{{  deposit.percent }}</td>
+                <td>{{  deposit.min_amount }} {{ deposit.getCurrencyTitle }}</td>
+                <td>{{  deposit.duration }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <br>
+        <p>No available Deposits</p>
+    {% endif %}
+
+{% endblock %}
