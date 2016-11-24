@@ -42,44 +42,46 @@ class Deposit(models.Model):
     Types = (
         ('Вклад до востребования', 'Вклад до востребования'),
         ('Сберегательный вклад', 'Сберегательный вклад'),
+        ('Накопительный вклад','Накопительный вклад'),
+        ('Расчетный вклад','Расчетный вклад'),
+        ('Индексируемый вклад','Индексируемый вклад')
     )
 
+    depositType = models.CharField(max_length=30,choices=Types, verbose_name='Тип')
     title = models.CharField(max_length=30, verbose_name='Название')
     description = models.CharField(max_length=300, verbose_name='Описание')
-    depositType = models.CharField(max_length=30,choices=Types, verbose_name='Тип')
     percent = models.IntegerField(verbose_name='Ставка')
-    percent_for_early_withdrawal=models.IntegerField(verbose_name='Ставка при преждевременном снятии',blank=True)
+    percent_for_early_withdrawal=models.IntegerField(verbose_name='Ставка при преждевременном снятии',blank=True,default=0)
     #is_floating_rate=models.BooleanField(verbose_name='Плавающая ставка')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
     min_amount=models.FloatField(verbose_name='Минимальная сумма')
     duration=models.IntegerField(verbose_name='Срок хранения')
-    is_refill=models.BooleanField(verbose_name='Возможность пополнения')
-    min_refill = models.FloatField(verbose_name='Минимальное пополнение',blank=True)
+    is_refill=models.BooleanField(verbose_name='Возможность пополнения',default=True)
+    min_refill = models.FloatField(verbose_name='Минимальное пополнение',blank=True, null=True, default=None)
     pay_period_in_months = models.FloatField(verbose_name='Период выплат')
     is_capitalization=models.BooleanField(verbose_name='Капитализация')
-    is_early_withdrawal=models.BooleanField(verbose_name='Возможность преждевременного снятия')
-    minimum_balance=models.FloatField(verbose_name='Неснижаемый остаток', blank=True)
-    binding_currency=models.ForeignKey(Currency,related_name="BindingCurrency", verbose_name='Валюта привязки',blank=True)
+    is_early_withdrawal=models.BooleanField(verbose_name='Возможность преждевременного снятия',default=False)
+    minimum_balance=models.FloatField(verbose_name='Неснижаемый остаток', blank=True, null=True)
+    binding_currency=models.ForeignKey(Currency,related_name="BindingCurrency", verbose_name='Валюта привязки',blank=True,null=True, default=None)
     is_archive=models.BooleanField(verbose_name='Капитализация',default=False,editable=False)
+
+
+    def __str__(self):
+        return self.title
 
     def getCurrencyTitle(self):
         return self.currency.title
 
 
-
 class Contract(models.Model):
-    bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя')
-    deposit_bill=models.FloatField(verbose_name='Депозитный счет')
-    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита')
-    percent = models.FloatField(verbose_name='Ставка')
-
-    #start_exchange_rate=models.FloatField(verbose_name='начальный курс')
-    #final_exchange_rate = models.FloatField(verbose_name='конечный курс')
-
-    bonuce=models.FloatField(verbose_name='Бонусная индексированная ставка', default=0)
-    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now)
-    end_date = models.DateTimeField(verbose_name='Дата окончания')
-    is_prolongation=models.BooleanField(verbose_name='Пролонгация')
+    bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя',default=None,editable=False,null=True)
+    deposit_bill=models.FloatField(verbose_name='Сумма')
+    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False,blank=True, null=True)
+    #percent = models.FloatField(verbose_name='Ставка')
+    bonuce=models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
+    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
+    end_date = models.DateTimeField(verbose_name='Дата окончания',editable=False, default=None,null=True)
+    is_prolongation=models.BooleanField(verbose_name='Пролонгация',default=False)
 
     def get_storing_term(self):
         return (datetime.datetime.now() - self.sign_date).days

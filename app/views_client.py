@@ -76,19 +76,29 @@ def allDeposits(request):
 @login_required
 def newDeposit(request, deposit_id):
 
-    if request.method == 'POST':
-        form = ContractForm(request.POST)
-        if form.is_valid():
-            form.save()
-            form = ContractForm()
-    else:
-        form = ContractForm()
+    d=Deposit.objects.filter(id=deposit_id)[0]
+    dt=d.depositType
 
-    return render(request, 'client/newDeposit.html', {'ID':deposit_id})
+    if dt == 'Сберегательный вклад':
+        F=SavingsDepositForm
+    elif dt == 'Вклад до востребования':
+        F=DemandDepositForm
+
+    if request.method == 'POST':
+        form = F(request.POST)
+        if form.is_valid():
+            contract=form.save(commit=False)
+            contract.deposit=d;
+            contract.save()
+            return redirect('/client/myDeposits/')
+    else:
+        form = F()
+
+    return render(request, 'client/newDeposit.html', {'ID':deposit_id, 'form':form, 'deposit':d})
 
 
 def myDeposits(request):
 
-    deposits=Contract.objects.filter()
+    deposits=Contract.objects.all()#filter(bill__client_=request.user)
 
     return render(request, 'client/myDeposits.html', {'deposits':deposits})

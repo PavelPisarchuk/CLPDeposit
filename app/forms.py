@@ -17,9 +17,7 @@ class AdminForm(forms.ModelForm):
 class DepositForm(forms.ModelForm):
     class Meta:
         model = Deposit
-        fields = ['title', 'description', 'depositType', 'percent', 'percent_for_early_withdrawal', 'is_floating_rate',
-                   'min_amount', 'duration', 'min_refill', 'pay_period_in_months', 'is_capitalization', 'minimum_balance',
-                  'currency', 'binding_currency']
+        exclude=['is_archive']
 
 
 class CurrencyForm(forms.ModelForm):
@@ -28,7 +26,13 @@ class CurrencyForm(forms.ModelForm):
         fields = '__all__'
 
 
-class ContractForm(forms.ModelForm):
+class SavingsDepositForm(forms.ModelForm):
     class Meta:
         model = Contract
-        fields = ['deposit_bill']
+        fields='__all__'
+
+
+class DemandDepositForm(forms.ModelForm):
+    class Meta:
+        model = Contract
+        exclude = ['is_prolongation']
