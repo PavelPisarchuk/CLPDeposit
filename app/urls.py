@@ -37,6 +37,11 @@ urlpatterns = [
         url(r'^bills/', bill.bills, name='bills'),
         url(r'^addbill/(?P<pk>[0-9]+)/$', bill.addbill, name='addbill'),
         url(r'^cards/', bill.cards, name='cards'),
+        url(r'^addcard/(?P<pk>[0-9]+)/$', bill.addcard, name='addcard'),
+        url(r'^addcard/', bill.addcard, name='addcard'),
+        url(r'^addonbill/(?P<pk>[0-9]+)/$', bill.addonbill, name='addonbill'),
+        url(r'^addonbill/', bill.addonbill, name='addonbill'),
+
         url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
     ], namespace='bill')),
     url(r'^deposit/', include([
