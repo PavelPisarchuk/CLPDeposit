@@ -27,7 +27,7 @@ class User(AbstractUser):
 
 
 class Currency(models.Model):
-    title = models.CharField(max_length=2, verbose_name='Название')
+    title = models.CharField(max_length=3, verbose_name='Название')
     icon = models.CharField(max_length=1, verbose_name='Значок')
 
 
