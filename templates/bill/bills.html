@@ -1,0 +1,18 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Счета</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if bills %}
+        {% for b in bills %}
+            <div>Счёт №{{  b.id}}</div>
+            <div>Баланс: {{ b.money }} рублей</div>
+            <div><a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a></div>
+            _______________________________
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

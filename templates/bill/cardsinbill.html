@@ -15,7 +15,7 @@
     <br><br>
     {% if cards %}
         {% for c in cards %}
-            <div>Карточка №{{  c.id}}</div>
+            <div><a href="#">Карточка №{{  c.id}}</a></div>
             <div>Лимит {{ c.limit }}</div>
             _______________________________
         {% endfor %}

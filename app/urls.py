@@ -34,6 +34,8 @@ urlpatterns = [
         url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),
     url(r'^bill/', include([
+        url(r'^bills/', bill.bills, name='bills'),
+        url(r'^addbill/(?P<pk>[0-9]+)/$', bill.addbill, name='addbill'),
         url(r'^cards/', bill.cards, name='cards'),
         url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
     ], namespace='bill')),
