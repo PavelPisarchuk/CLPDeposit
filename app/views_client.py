@@ -87,7 +87,7 @@ def newDeposit(request, deposit_id):
     return render(request, 'client/newDeposit.html', {'ID':deposit_id})
 
 
-def allDeposits(request):
+def myDeposits(request):
 
     deposits=Contract.objects.filter()
 

@@ -38,20 +38,29 @@ class Bill(models.Model):
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
 
 class Deposit(models.Model):
+
+    Types = (
+        ('Вклад до востребования', 'Вклад до востребования'),
+        ('Сберегательный вклад', 'Сберегательный вклад'),
+    )
+
     title = models.CharField(max_length=30, verbose_name='Название')
     description = models.CharField(max_length=300, verbose_name='Описание')
-    depositType = models.CharField(max_length=30, verbose_name='Тип')
+    depositType = models.CharField(max_length=30,choices=Types, verbose_name='Тип')
     percent = models.IntegerField(verbose_name='Ставка')
-    percent_for_early_withdrawal=models.IntegerField(verbose_name='Ставка при преждевременном снятии')
-    is_floating_rate=models.BooleanField(verbose_name='Плавающая ставка')
+    percent_for_early_withdrawal=models.IntegerField(verbose_name='Ставка при преждевременном снятии',blank=True)
+    #is_floating_rate=models.BooleanField(verbose_name='Плавающая ставка')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
     min_amount=models.FloatField(verbose_name='Минимальная сумма')
     duration=models.IntegerField(verbose_name='Срок хранения')
-    min_refill = models.FloatField(verbose_name='Минимальное пополнение')
+    is_refill=models.BooleanField(verbose_name='Возможность пополнения')
+    min_refill = models.FloatField(verbose_name='Минимальное пополнение',blank=True)
     pay_period_in_months = models.FloatField(verbose_name='Период выплат')
     is_capitalization=models.BooleanField(verbose_name='Капитализация')
-    minimum_balance=models.FloatField(verbose_name='Неснижаемый остаток')
-    binding_currency=models.ForeignKey(Currency,related_name="BindingCurrency", verbose_name='Валюта привязки', default=None)
+    is_early_withdrawal=models.BooleanField(verbose_name='Возможность преждевременного снятия')
+    minimum_balance=models.FloatField(verbose_name='Неснижаемый остаток', blank=True)
+    binding_currency=models.ForeignKey(Currency,related_name="BindingCurrency", verbose_name='Валюта привязки',blank=True)
+    is_archive=models.BooleanField(verbose_name='Капитализация',default=False,editable=False)
 
     def getCurrencyTitle(self):
         return self.currency.title
