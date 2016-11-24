@@ -1,13 +1,10 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import modelform_factory
-from app.decorators import Only_Superuser_Permission
-from django.db.models import Q
-from django.http import JsonResponse
 
+from app.decorators import Only_Superuser_Permission
 from app.views import index
-from app.models import User, Bill, Currency, Message, MessageBox
+from app.models import User
 from app.forms import UserForm, SearchForm, clientfields
 
 
@@ -42,7 +39,6 @@ def search(request):
     if(request.POST):
         users = User.objects.all()
         Form = SearchForm(request.POST)
-        #print(Form.data.get('first_name'))
 
         if(Form.data.get('first_name')):
             users=users.filter(first_name__contains=Form.data.get('first_name'))
@@ -83,52 +79,3 @@ def edit(request):
         return render(request, 'client/edit.html', {
             'form': Form(instance=user)
         })
-
-
-@login_required
-def readmessage(request,pk):
-    try:
-        msg=Message.objects.get(id=pk)
-    except Message.DoesNotExist:
-        return messages(request)
-
-    if request.user.id!=msg.messagebox.user_id:
-        return render(request,'errors/permissionerror.html')
-    else:
-        msg.readed=True
-        msg.save()
-        return render(request, 'client/message.html', {'msg':msg })
-
-
-@login_required
-def updatemsg(request):
-    try:
-        messageBox=MessageBox.objects.get(user_id=request.user.id)
-        mymessages=Message.objects.all().filter(messagebox_id__exact=messageBox.id)
-        count=0
-        for msg in mymessages:
-            if msg.readed==False:
-                count+=1
-
-        if count>0:
-            return JsonResponse({'data': True,'count':count})
-        else:
-            return JsonResponse({'data': False})
-
-    except messageBox.DoesNotExist:
-        return JsonResponse({'data':False})
-
-
-@login_required
-def messages(request):
-    try:
-        messageBox=MessageBox.objects.get(user_id=request.user.id)
-        mymessages=Message.objects.all().filter(messagebox_id__exact=messageBox.id).reverse()
-        for msg in mymessages:
-            if msg.readed==False:
-                request.msgtext='q'
-                break
-        return render(request, 'client/messages.html', {'messages'
-                                                        : reversed(mymessages)})
-    except:
-        return render(request, 'client/messages.html')

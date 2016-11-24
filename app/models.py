@@ -38,15 +38,15 @@ class Bill(models.Model):
 
 
 class MessageBox(models.Model):
-    user=models.ForeignKey(User,verbose_name='Пользователь')
+    user = models.ForeignKey(User, verbose_name='Пользователь')
+
 
 class Message(models.Model):
-    message=models.CharField(max_length=300,verbose_name='Сообщение')
-    header=models.CharField(max_length=100,verbose_name='Заголовок')
-    readed=models.BooleanField(verbose_name='Прочитано ?')
-    messagebox=models.ForeignKey(MessageBox,verbose_name='Сообщения пользователя')
-    date=models.DateField(auto_now=False,auto_now_add=True,verbose_name='Дата')
-
+    message = models.CharField(max_length=300, verbose_name='Сообщение')
+    header = models.CharField(max_length=100, verbose_name='Заголовок')
+    readed = models.BooleanField(default=False, verbose_name='Прочитано ?')
+    messagebox = models.ForeignKey(MessageBox, verbose_name='Сообщения пользователя')
+    date = models.DateField(default=datetime.date.today, verbose_name='Дата')
 
 
 class Deposit(models.Model):
