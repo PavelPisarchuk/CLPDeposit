@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^admin/', include([
         url(r'^deposit_configurator/', admin.DepositConfigurator, name='depositConfigurator'),
         url(r'^newCurrency/', admin.NewCurrency, name='newCurrency'),
+        url(r'^newDeposit/', admin.NewDeposit, name='newDepositFromAdmin'),
+        url(r'^deposits/(?P<deposit_id>[0-9]+)/', admin.ChangeDeposit, name='ChangeDeposit'),
         url(r'^new/', admin.new, name='new'),
         url(r'^list/', admin.list, name='list'),
         url(r'^info/', admin.info, name='info'),
@@ -24,7 +26,7 @@ urlpatterns = [
         url(r'^edit/', client.edit, name='edit'),
         url(r'^allDeposits/(?P<deposit_id>[0-9]+)/', client.newDeposit, name='newDeposit'),
         url(r'^allDeposits/', client.allDeposits, name='allDeposits'),
-        url(r'^myDeposits/', client.myDeposits, name='myDeposits'),
+        url(r'^myDeposits/', client.myDeposits, name='allDeposits'),
     ], namespace='client')),
     url(r'^deposit/', include([
         url(r'^list/', deposit.list, name='list'),

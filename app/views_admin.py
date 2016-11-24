@@ -72,15 +72,60 @@ def DepositConfigurator(request):
 
     depositList=Deposit.objects.all()
 
+    return render(request, 'admin/depositConfigurator.html', {'depositList':depositList})
+
+
+@login_required
+def NewDeposit(request,deposit_id):
+
+    errors=[]
+
     if request.method == 'POST':
         depositForm = DepositForm(request.POST)
         if depositForm.is_valid():
-            depositForm.save()
-            depositForm = DepositForm()
+            d=depositForm.save(commit=False)
+            if d.percent<=0:
+                errors.append('Percent must be bigger then 0')
+            elif d.depositType!='Вклад до востребования' and (d.percent_for_early_withdrawal==None or d.percent_for_early_withdrawal<=0):
+                errors.append('percent for early withdrawal must be bigger then 0')
+            elif d.depositType=='Индексируемый вклад' and d.binding_currency==None:
+                errors.append('add binding currency')
+            else:
+                d.save()
+                return redirect('/admin/deposit_configurator/')
     else:
         depositForm = DepositForm()
 
-    return render(request, 'admin/depositConfigurator.html', {'depositForm': depositForm, 'depositList':depositList})
+    return render(request, 'admin/newDeposit.html', {'depositForm': depositForm, 'errors':errors})
+
+
+@login_required
+def ChangeDeposit(request,deposit_id):
+
+    errors=[]
+    oldDeposit = Deposit.objects.get(pk=deposit_id)
+
+    if request.method == 'POST':
+        depositForm = DepositForm(request.POST)
+        if depositForm.is_valid():
+            d=depositForm.save(commit=False)
+            if d.percent<=0:
+                errors.append('Percent must be bigger then 0')
+            elif d.depositType!='Вклад до востребования' and (d.percent_for_early_withdrawal==None or d.percent_for_early_withdrawal<=0):
+                errors.append('percent for early withdrawal must be bigger then 0')
+            elif d.depositType=='Индексируемый вклад' and d.binding_currency==None:
+                errors.append('add binding currency')
+            else:
+                oldDeposit.is_archive=True;
+                oldDeposit.save()
+                d.save()
+                return redirect('/admin/deposit_configurator/')
+    else:
+        depositForm = DepositForm(instance=oldDeposit)
+
+    return render(request, 'admin/changeDeposit.html', {'depositForm': depositForm, 'errors':errors,'ID':deposit_id})
+
+
 
 @login_required
 def NewCurrency(request):

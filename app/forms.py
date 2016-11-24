@@ -1,6 +1,6 @@
 from django import forms
 from app.models import *
-
+from django.forms import IntegerField
 
 class UserForm(forms.ModelForm):
     class Meta:
