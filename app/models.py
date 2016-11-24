@@ -30,6 +30,12 @@ class Currency(models.Model):
     title = models.CharField(max_length=2, verbose_name='Название')
     icon = models.CharField(max_length=1, verbose_name='Значок')
 
+    def print_short(self, value):
+        return "{}{}".format(round(value), self.icon)
+
+    def print_full(self, value):
+        return "{}{}".format(self.title, round(value))
+
 
 class Bill(models.Model):
     client = models.ForeignKey(User, verbose_name='Клиент')
@@ -38,15 +44,15 @@ class Bill(models.Model):
 
 
 class MessageBox(models.Model):
-    user=models.ForeignKey(User,verbose_name='Пользователь')
+    user = models.ForeignKey(User,verbose_name='Пользователь')
+
 
 class Message(models.Model):
-    message=models.CharField(max_length=300,verbose_name='Сообщение')
-    header=models.CharField(max_length=100,verbose_name='Заголовок')
-    readed=models.BooleanField(verbose_name='Прочитано ?')
-    messagebox=models.ForeignKey(MessageBox,verbose_name='Сообщения пользователя')
-    date=models.DateField(auto_now=False,auto_now_add=True,verbose_name='Дата')
-
+    message = models.CharField(max_length=300, verbose_name='Сообщение')
+    header = models.CharField(max_length=100, verbose_name='Заголовок')
+    readed = models.BooleanField(verbose_name='Прочитано ?', default=False)
+    messagebox = models.ForeignKey(MessageBox, verbose_name='Сообщения пользователя')
+    date = models.DateField(auto_now=False, auto_now_add=True, verbose_name='Дата')
 
 
 class Deposit(models.Model):
@@ -69,8 +75,14 @@ class Contract(models.Model):
     term = models.IntegerField(verbose_name='Срок')
     money = models.FloatField(verbose_name='Сумма вклада')
 
+    def calc_payment(self):
+        return self.money * (self.deposit.percent / 100)
+
     def get_storing_term(self):
         return (datetime.datetime.now() - self.sign_date).days
+
+    def is_active(self):
+        return (datetime.date.today() > self.sign_date) and (self.get_storing_term() < self.term)
 
 
 class Pay(models.Model):
