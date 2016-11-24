@@ -1,0 +1,15 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Карточки</title>
+{% endblock %}
+
+{% block content %}
+    {% if bill_user %}
+        <form class="form-horizontal" action="{% url 'bill:addbill' pk=bill_user.id %}" method="post">
+            {% csrf_token %}
+            <div>Добавить новый счёт для {{ bill_user.get_full_name }} ?</div>
+            <input class="btn btn-default" type="submit" value="Открыть" />
+        </form>
+    {% endif %}
+{% endblock %}

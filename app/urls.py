@@ -7,6 +7,7 @@ import app.views_client as client
 import app.views_admin as admin
 import app.views_errors as errors
 import app.views_messages as messages
+import app.views_bill as bill
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
@@ -35,6 +36,12 @@ urlpatterns = [
         url(r'^search/', client.search, name='search'),
         url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),
+    url(r'^bill/', include([
+        url(r'^bills/', bill.bills, name='bills'),
+        url(r'^addbill/(?P<pk>[0-9]+)/$', bill.addbill, name='addbill'),
+        url(r'^cards/', bill.cards, name='cards'),
+        url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
+    ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/', deposit.list, name='list'),
         url(r'^open/', deposit.open, name='open'),

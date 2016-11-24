@@ -1,0 +1,31 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Карточки</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if bill %}
+    <div>Счёт №{{ bill.id }}</div>
+        <div>Денег на счету {{ bill.money }} рублей</div>
+    <br>
+    {% endif %}
+    <div>Мои карточки в текущем счёте:</div>
+
+    {% if cards %}
+        <table class="table table-striped">
+            <tr>
+                <td>Карточка №</td>
+                <td>Лимит</td>
+            </tr>
+            {% for c in cards %}
+                <tr>
+                    <td>Карточка №{{  c.id}}</td>
+                    <td>Лимит {{ c.limit }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+{% endblock %}

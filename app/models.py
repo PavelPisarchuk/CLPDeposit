@@ -36,6 +36,9 @@ class Bill(models.Model):
     money = models.FloatField(verbose_name='Денежная сумма')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
 
+class Card(models.Model):
+    bill=models.ForeignKey(Bill,verbose_name='Счёт')
+    limit=models.FloatField(verbose_name='Лимит')
 
 class Message(models.Model):
     message = models.CharField(max_length=300, verbose_name='Сообщение')

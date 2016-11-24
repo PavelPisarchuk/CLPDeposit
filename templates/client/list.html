@@ -30,6 +30,7 @@
                 <td>Идентификационный номер</td>
                 <td></td>
                 <td></td>
+                <td></td>
             </tr>
             {% for client in clients %}
                 <tr>
@@ -46,6 +47,13 @@
                         <a href={% url 'message:send' pk=client.id  %}>
                             <button type="button" class="btn btn-warning">
                                 Отправить сообщение
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href={% url 'bill:addbill' pk=client.id  %}>
+                            <button type="button" class="btn btn-warning">
+                                Открыть счёт
                             </button>
                         </a>
                     </td>
