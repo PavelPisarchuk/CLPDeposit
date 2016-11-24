@@ -37,15 +37,11 @@ class Bill(models.Model):
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
 
 
-class MessageBox(models.Model):
-    user = models.ForeignKey(User, verbose_name='Пользователь')
-
-
 class Message(models.Model):
     message = models.CharField(max_length=300, verbose_name='Сообщение')
     header = models.CharField(max_length=100, verbose_name='Заголовок')
     readed = models.BooleanField(default=False, verbose_name='Прочитано ?')
-    messagebox = models.ForeignKey(MessageBox, verbose_name='Сообщения пользователя')
+    user = models.ForeignKey(User, verbose_name='Пользователь')
     date = models.DateField(default=datetime.date.today, verbose_name='Дата')
 
 

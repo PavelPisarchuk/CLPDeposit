@@ -9,7 +9,7 @@
             $(document).ready(function(){
 
                $('#msg').bind('click', function(){
-                   $.get({% url 'message:updatemsg' %}, function(data) {
+                   $.get('/message/updatemsg/', function(data) {
 
                         if (data['data']==true)
                             $("#newmsg").text("Мои сообщения +"+data['count'])
