@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from app.models import Contract, Message, MessageBox, Pay
+from app.models import Contract, Message, Pay
 
 
 class Command(BaseCommand):
@@ -13,10 +13,10 @@ class Command(BaseCommand):
                 money=contract.calc_payment()
             )
             Message.objects.create(
-                message="{} Вам выплачено {}".format(
-                    pay.datetime,
-                    contract.deposit.currency.print_full(pay.money)
+                message="Вам выплачено {} по вкладу {}".format(
+                    contract.deposit.currency.print_full(pay.money),
+                    contract.deposit.title
                 ),
                 header='Выплата по вкладу',
-                messagebox=MessageBox.objects.get(user=contract.bill.client)
+                user=contract.bill.client
             )
