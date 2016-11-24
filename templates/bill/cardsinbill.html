@@ -1,0 +1,24 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Карточки</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if bill %}
+    <div>Счёт №{{ bill.id }}</div>
+        <div>Денег на счету {{ bill.money }} рублей</div>
+    <br>
+    {% endif %}
+    <div>Мои карточки в текущем счёте:</div>
+    <br><br>
+    {% if cards %}
+        {% for c in cards %}
+            <div>Карточка №{{  c.id}}</div>
+            <div>Лимит {{ c.limit }}</div>
+            _______________________________
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

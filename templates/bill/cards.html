@@ -1,0 +1,19 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Карточки</title>
+{% endblock %}
+
+{% block content %}
+
+
+    {% if cards %}
+        {% for c in cards %}
+                    <div><a href={% url 'bill:cardsinbill' pk=c.bill_id %}>Счёт номер {{ c.bill_id }}</a></div>
+                    <div>Лимит карточки: {{ c.limit }} рубля</div>
+
+            _______________________________
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
