@@ -67,16 +67,11 @@ def new(request):
 
 
 
-@login_required
-def DepositConfigurator(request):
 
-    depositList=Deposit.objects.all()
-
-    return render(request, 'admin/depositConfigurator.html', {'depositList':depositList})
 
 
 @login_required
-def NewDeposit(request,deposit_id):
+def NewDeposit(request):
 
     errors=[]
 
@@ -96,7 +91,7 @@ def NewDeposit(request,deposit_id):
     else:
         depositForm = DepositForm()
 
-    return render(request, 'admin/newDeposit.html', {'depositForm': depositForm, 'errors':errors})
+    return render(request, 'admin/../templates/deposit/newDeposit.html', {'depositForm': depositForm, 'errors':errors})
 
 
 @login_required
@@ -123,7 +118,7 @@ def ChangeDeposit(request,deposit_id):
     else:
         depositForm = DepositForm(instance=oldDeposit)
 
-    return render(request, 'admin/changeDeposit.html', {'depositForm': depositForm, 'errors':errors,'ID':deposit_id})
+    return render(request, 'admin/../templates/deposit/changeDeposit.html', {'depositForm': depositForm, 'errors':errors, 'ID':deposit_id})
 
 
 
@@ -140,5 +135,5 @@ def NewCurrency(request):
     else:
         form = CurrencyForm()
 
-    return render(request, 'admin/newCurrency.html', {'form': form, 'currencyList':currencyList})
+    return render(request, 'admin/../templates/deposit/newCurrency.html', {'form': form, 'currencyList':currencyList})
 

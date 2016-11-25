@@ -16,6 +16,7 @@
                 <td>{{  deposit.duration }} months</td>
                 <td>{{  deposit.is_archive }} %</td>
                 <td><a href="/admin/deposits/{{ deposit.id }}/"> редоктировать </a></td>
+                <td><a href="{% url 'deposit:listToArch' deposit.id %}"> добавить в архив </a></td>
             </tr>
         {% endfor %}
     </table>

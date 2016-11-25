@@ -10,7 +10,8 @@ urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^logout/', logout, name='logout'),
     url(r'^admin/', include([
-        url(r'^deposit_configurator/', admin.DepositConfigurator, name='depositConfigurator'),
+        # url(r'^deposit_configurator/(?P<deposit_id>[0-9]+)/', admin.DepositConfigurator, name='depositToArchive'),
+        # url(r'^deposit_configurator/', admin.DepositConfigurator, name='depositConfigurator'),
         url(r'^newCurrency/', admin.NewCurrency, name='newCurrency'),
         url(r'^newDeposit/', admin.NewDeposit, name='newDepositFromAdmin'),
         url(r'^deposits/(?P<deposit_id>[0-9]+)/', admin.ChangeDeposit, name='ChangeDeposit'),
@@ -29,7 +30,8 @@ urlpatterns = [
         url(r'^myDeposits/', client.myDeposits, name='allDeposits'),
     ], namespace='client')),
     url(r'^deposit/', include([
-        url(r'^list/', deposit.list, name='list'),
+        url(r'^admin/list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
+        url(r'^admin/list/', deposit.list, name='list'),
         url(r'^open/', deposit.open, name='open'),
         url(r'^refill/', deposit.refill, name='refill'),
         url(r'^transfer/', deposit.transfer, name='transfer'),
