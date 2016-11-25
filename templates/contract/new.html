@@ -1,0 +1,19 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Конфигкратор дипозитов</title>
+{% endblock %}
+
+{% block content %}
+
+    <br>Deposit: {{ deposit.title }}
+    <br>Description: {{ deposit.description }}
+
+    <form action="{% url 'contract:new' ID %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-default" type="submit" value="Подтвердить" />
+    </form>
+
+
+{% endblock %}

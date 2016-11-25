@@ -46,11 +46,12 @@
 
                             <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                  Вклады
+                                  Конфигуратор вкладов
                                   <span class="caret"></span>
                               </a>
                               <ul class="dropdown-menu">
-                                <li><a href="#">Все вклады</a></li>
+                                <li><a href="{% url 'deposit:list' %}">Вклады</a></li>
+                                <li><a href="{% url 'deposit:currency' %}">Валюты</a></li>
                               </ul>
                             </li>
                             <li class="dropdown">
@@ -85,7 +86,16 @@
                     <li>
                         {% if user.is_authenticated %}
                             {% if not  user.is_superuser %}
-                                <li><a href="">Мои депозиты</a></li>
+                                <li class="dropdown">
+                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                      Депозиты
+                                      <span class="caret"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="{% url 'contract:all' %}">Новый депозит</a></li>
+                                    <li><a href="{% url 'contract:list' %}">Мои депозиты</a></li>
+                                  </ul>
+                                </li>
                             {% endif %}
                             <li></li>
                             <li id="msg" class="dropdown">

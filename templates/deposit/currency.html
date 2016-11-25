@@ -1,0 +1,25 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Конфигкратор Валют</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if currencyList %}
+    <ul>
+    {% for currency in currencyList %}
+        <li>{{ currency.title }}</li>
+    {% endfor %}
+    </ul>
+    {% else %}
+        <p>No available currency</p>
+    {% endif %}
+
+    <form action="{% url 'deposit:currency' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-default" type="submit" value="Подтвердить" />
+    </form>
+
+{% endblock %}
