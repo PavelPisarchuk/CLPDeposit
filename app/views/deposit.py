@@ -1,9 +1,9 @@
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test,login_required
 from django.shortcuts import render, redirect
 
 from app.forms import *
 
-
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def list(request, deposit_id=None):
     if deposit_id != None:
@@ -13,7 +13,7 @@ def list(request, deposit_id=None):
     depositList = Deposit.objects.all()
     return render(request, 'deposit/list.html', {'depositList': depositList})
 
-
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new(request):
     errors=[]
@@ -35,7 +35,7 @@ def new(request):
 
     return render(request, 'deposit/new.html', {'depositForm': depositForm, 'errors':errors})
 
-
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def edit(request, deposit_id):
     errors=[]
@@ -61,7 +61,7 @@ def edit(request, deposit_id):
 
     return render(request, 'deposit/edit.html', {'depositForm': depositForm, 'errors':errors, 'ID':deposit_id})
 
-
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def currency(request):
     currencyList=Currency.objects.all()

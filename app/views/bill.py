@@ -14,7 +14,7 @@ def card(request, pk=None):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def addcard(request, pk=None):
     if request.POST:
         try:
@@ -79,7 +79,7 @@ def bills(request):
         return render(request, index)
 
     bills = Bill.objects.all().filter(client_id=_user.id).order_by('id')
-    print(len(bills))
+
     return render(request, 'bill/bills.html', {
         'bills': bills
     })
@@ -116,7 +116,7 @@ def addonbill(request, pk=None):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def addbill(request, pk=None):
     try:
         _user = User.objects.get(id=pk)
@@ -129,7 +129,7 @@ def addbill(request, pk=None):
         except Currency.DoesNotExist:
             c = Currency.objects.create(title='BYN', icon='p')
 
-        Bill.objects.create(client=_user, money=0, currency=c)
+        Bill.add(_user,0,c)#objects.create(client=_user, money=0, currency=c)
         return list(request)
     else:
         return render(request, 'bill/addbill.html', {

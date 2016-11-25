@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -7,8 +7,8 @@ from app.forms import MessageForm, SearchForm
 from app.models import User, Message
 
 
-@Only_Superuser_Permission
 @login_required
+@user_passes_test(lambda u: u.is_superuser)
 def send_message(request, pk):
     try:
         model = User.objects.get(id=pk)

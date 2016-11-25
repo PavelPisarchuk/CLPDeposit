@@ -1,5 +1,5 @@
 from app.decorators import Only_Superuser_Permission
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect
 
@@ -9,7 +9,7 @@ from app.views.general import index
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def new(request):
     if request.method == 'POST':
         form = AdminForm(request.POST)
@@ -24,7 +24,7 @@ def new(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def list(request):
     return render(request, 'admin/list.html', {
         'admins': User.objects.all().filter(is_superuser=True)
@@ -32,7 +32,7 @@ def list(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def info(request):
     Form = modelform_factory(User, fields=adminfields)
     return render(request, 'admin/info.html', {
@@ -41,7 +41,7 @@ def info(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def edit(request):
     Form = modelform_factory(User, fields=adminfields)
     user = request.user
@@ -58,7 +58,7 @@ def edit(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def edit_user(request,pk):
     if not pk:
         pk=request.pk
