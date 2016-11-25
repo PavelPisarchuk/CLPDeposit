@@ -1,5 +1,4 @@
-from app.decorators import Only_Superuser_Permission
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect
 
@@ -8,7 +7,7 @@ from app.models import User
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def new(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -23,7 +22,7 @@ def new(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def list(request):
     return render(request, 'client/list.html', {
         'clients': User.objects.all().filter(is_superuser=False),
@@ -31,7 +30,7 @@ def list(request):
     })
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def search(request):
     from app.forms import SearchForm
 

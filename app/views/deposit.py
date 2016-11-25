@@ -1,9 +1,12 @@
-from django.contrib.auth.decorators import user_passes_test
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect
 
 from app.forms import *
 
 
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def list(request, deposit_id=None):
     if deposit_id != None:
@@ -11,9 +14,12 @@ def list(request, deposit_id=None):
         d.is_archive = True
         d.save()
     depositList = Deposit.objects.all()
-    return render(request, 'deposit/list.html', {'depositList': depositList})
+    return render(request, 'deposit/list.html', {
+        'depositList': depositList
+    })
 
 
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new(request):
     errors=[]
@@ -33,9 +39,13 @@ def new(request):
     else:
         depositForm = DepositForm()
 
-    return render(request, 'deposit/new.html', {'depositForm': depositForm, 'errors':errors})
+    return render(request, 'deposit/new.html', {
+        'depositForm': depositForm,
+        'errors': errors
+    })
 
 
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def edit(request, deposit_id):
     errors=[]
@@ -59,13 +69,16 @@ def edit(request, deposit_id):
     else:
         depositForm = DepositForm(instance=oldDeposit)
 
-    return render(request, 'deposit/edit.html', {'depositForm': depositForm, 'errors':errors, 'ID':deposit_id})
+    return render(request, 'deposit/edit.html', {
+        'depositForm': depositForm,
+        'errors': errors,
+        'ID': deposit_id
+    })
 
 
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def currency(request):
-    currencyList=Currency.objects.all()
-
     if request.method == 'POST':
         form = CurrencyForm(request.POST)
         if form.is_valid():
@@ -74,7 +87,10 @@ def currency(request):
     else:
         form = CurrencyForm()
 
-    return render(request, 'deposit/currency.html', {'form': form, 'currencyList':currencyList})
+    return render(request, 'deposit/currency.html', {
+        'form': form,
+        'currencyList': Currency.objects.all()
+     })
 
 
 def refill(request):

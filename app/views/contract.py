@@ -1,4 +1,6 @@
-from django.contrib.auth.decorators import login_required
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.forms import modelform_factory
 
@@ -10,7 +12,9 @@ def all(request):
 
     deposits=Deposit.objects.filter(is_archive=False)
 
-    return render(request, 'contract/all.html', {'deposits':deposits})
+    return render(request, 'contract/all.html', {
+        'deposits': deposits
+    })
 
 
 @login_required
@@ -41,18 +45,29 @@ def new(request, deposit_id):
     else:
         form = F()
 
-    return render(request, 'contract/new.html', {'ID':deposit_id, 'form':form, 'deposit':d, 'errors':errors})
+    return render(request, 'contract/new.html', {
+        'ID': deposit_id,
+        'form': form,
+        'deposit': d,
+        'errors': errors
+    })
 
 
+@login_required
 def list(request):
 
     deposits=Contract.objects.all()#filter(bill__client_=request.user)
 
-    return render(request, 'contract/list.html', {'deposits':deposits})
+    return render(request, 'contract/list.html', {
+        'deposits': deposits
+    })
 
 
+@login_required
 def info(request,deposit_id):
 
     contract=Contract.objects.get(pk=deposit_id)
 
-    return render(request, 'contract/info.html',{'contract':contract})
+    return render(request, 'contract/info.html',{
+        'contract': contract
+    })
