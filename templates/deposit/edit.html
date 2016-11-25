@@ -14,7 +14,7 @@
     <br>
 
 
-    <form action="/admin/deposits/{{ ID }}/" method="post">
+    <form action="{% url 'deposit:edit' ID %}" method="post">
         {% csrf_token %}
         {{ depositForm.as_p }}
         <input class="btn btn-default" type="submit" value="Подтвердить" />

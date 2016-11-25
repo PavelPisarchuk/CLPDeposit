@@ -10,14 +10,13 @@
     <ul>
     {% for currency in currencyList %}
         <li>{{ currency.title }}</li>
-{#        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>#}
     {% endfor %}
     </ul>
     {% else %}
         <p>No available currency</p>
     {% endif %}
 
-    <form action="/admin/newCurrency/" method="post">
+    <form action="{% url 'deposit:currency' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input class="btn btn-default" type="submit" value="Подтвердить" />

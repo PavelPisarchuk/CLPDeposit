@@ -9,7 +9,7 @@
     <br>Deposit: {{ deposit.title }}
     <br>Description: {{ deposit.description }}
 
-    <form action="/client/allDeposits/{{ ID }}/" method="post">
+    <form action="{% url 'contract:new' ID %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input class="btn btn-default" type="submit" value="Подтвердить" />

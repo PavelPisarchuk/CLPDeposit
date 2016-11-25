@@ -1,7 +1,7 @@
 {% extends "body.html" %}
 
 {% block title %}
-    <title>Клиенты</title>
+    <title>My deposits</title>
 {% endblock %}
 
 {% block content %}
@@ -9,10 +9,7 @@
             <table class="table table-striped">
                 {% for deposit in deposits %}
                     <tr>
-                        <td><a href="/client/allDeposits/{{ deposit.id }}/">{{ deposit.title }}</a></td>
-                        <td>{{  deposit.percent }}%</td>
-                        <td>{{  deposit.min_amount }} {{ deposit.getCurrencyTitle }}</td>
-                        <td>{{  deposit.duration }} months</td>
+                        <td><a href="{% url 'contract:info' deposit.id %}">{{ deposit.deposit }}</a></td>
                     </tr>
                 {% endfor %}
             </table>
