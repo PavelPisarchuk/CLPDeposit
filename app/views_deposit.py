@@ -1,9 +1,10 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from app.models import Deposit
 from app.forms import *
 
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def list(request, deposit_id=None):
     if deposit_id != None:
         d = Deposit.objects.get(pk=deposit_id)
@@ -13,7 +14,7 @@ def list(request, deposit_id=None):
     return render(request, 'deposit/list.html', {'depositList': depositList})
 
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def new(request):
     errors=[]
     if request.method == 'POST':
@@ -35,7 +36,7 @@ def new(request):
     return render(request, 'deposit/new.html', {'depositForm': depositForm, 'errors':errors})
 
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def edit(request, deposit_id):
     errors=[]
     oldDeposit = Deposit.objects.get(pk=deposit_id)
@@ -60,7 +61,7 @@ def edit(request, deposit_id):
 
     return render(request, 'deposit/edit.html', {'depositForm': depositForm, 'errors':errors, 'ID':deposit_id})
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def currency(request):
     currencyList=Currency.objects.all()
 

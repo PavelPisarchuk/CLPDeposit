@@ -4,12 +4,13 @@ from django.contrib.auth.decorators import login_required
 from app.views import index
 from app.models import *
 from app.forms import *
+from django.forms import modelform_factory
 
 
 @login_required
 def all(request):
 
-    deposits=Deposit.objects.all()
+    deposits=Deposit.objects.filter(is_archive=False)
 
     return render(request, 'contract/all.html', {'deposits':deposits})
 
@@ -17,25 +18,32 @@ def all(request):
 @login_required
 def new(request, deposit_id):
 
+    errors=[]
     d=Deposit.objects.filter(id=deposit_id)[0]
     dt=d.depositType
 
     if dt == 'Сберегательный вклад':
-        F=SavingsDepositForm
-    elif dt == 'Вклад до востребования':
-        F=DemandDepositForm
+        F=modelform_factory(Contract, exclude=("is_prolongation"))
+    else:
+        F=modelform_factory(Contract,exclude=())
 
     if request.method == 'POST':
         form = F(request.POST)
         if form.is_valid():
             contract=form.save(commit=False)
-            contract.deposit=d;
-            contract.save()
-            return redirect('contract:list')
+            deposit=Deposit.objects.get(pk=deposit_id)
+            minAmount=deposit.min_amount
+            currency = deposit.currency
+            if contract.deposit_bill<minAmount:
+                errors.append('Сумма должна быть не меньше '+ str(minAmount) +" "+str(currency))
+            else:
+                contract.deposit=d;
+                contract.save()
+                return redirect('contract:list')
     else:
         form = F()
 
-    return render(request, 'contract/new.html', {'ID':deposit_id, 'form':form, 'deposit':d})
+    return render(request, 'contract/new.html', {'ID':deposit_id, 'form':form, 'deposit':d, 'errors':errors})
 
 
 
@@ -49,6 +57,6 @@ def list(request):
 
 def info(request,deposit_id):
 
-    #deposits=Contract.objects.all()#filter(bill__client_=request.user)
+    contract=Contract.objects.get(pk=deposit_id)
 
-    return render(request, 'contract/info.html')
+    return render(request, 'contract/info.html',{'contract':contract})
