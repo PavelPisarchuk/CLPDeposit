@@ -1,11 +1,6 @@
 from django.contrib.auth.decorators import login_required,user_passes_test
-from django.shortcuts import render
-
-from app.decorators import Only_Superuser_Permission
-from app.forms import SearchForm
+from django.shortcuts import render,redirect
 from app.models import User, Card, Bill,Currency
-from app.views.general import index
-from app.views.client import list
 
 
 @login_required
@@ -21,19 +16,17 @@ def addcard(request, pk=None):
             pk = request.POST["num"]
             bill = Bill.objects.get(id=pk)
         except Bill.DoesNotExist:
-            return index
+            return redirect('index')
 
         Card.objects.create(bill=bill, limit=request.POST['limit'])
-        return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False),
-            'form': SearchForm()
-        })
+        return redirect('client:list')
+
 
     else:
         try:
             _user = User.objects.get(id=pk)
         except Bill.DoesNotExist:
-            return render(request, index)
+            return redirect('index')
         _bills = Bill.objects.all().filter(client=_user)
         if _bills:
             return render(request, 'bill/addcard.html', {
@@ -48,7 +41,7 @@ def cards(request):
     try:
         _user = request.user
     except User.DoesNotExist:
-        return render(request,index)
+        return redirect('index')
 
     cards = Card.objects.all().filter(bill__client_id=_user.id).order_by('bill_id')
     return render(request, 'bill/cards.html', {
@@ -61,7 +54,7 @@ def cardsinbill(request, pk):
     try:
         _bill = Bill.objects.get(id=pk)
     except Bill.DoesNotExist:
-        return render(request, index)
+        return redirect('index')
 
     _cards = Card.objects.all().filter(bill=_bill)
 
@@ -76,7 +69,7 @@ def bills(request):
     try:
         _user = User.objects.get(id=request.user.id)
     except User.DoesNotExist:
-        return render(request, index)
+        return redirect('index')
 
     bills = Bill.objects.all().filter(client_id=_user.id).order_by('id')
 
@@ -93,19 +86,16 @@ def addonbill(request, pk=None):
             pk = request.POST["num"]
             bill = Bill.objects.get(id=pk)
         except Bill.DoesNotExist:
-            return index
+            return redirect('client:list')
 
         bill.money += int(request.POST['money'])
         bill.save()
-        return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False),
-            'form': SearchForm()
-        })
+        return redirect('client:list')
     else:
         try:
             _user = User.objects.get(id=pk)
-        except Bill.DoesNotExist:
-            return render(request,index)
+        except User.DoesNotExist:
+            return redirect('client:list')
         _bills = Bill.objects.all().filter(client=_user)
         if _bills:
             return render(request, 'bill/addonbill.html', {
@@ -121,7 +111,7 @@ def addbill(request, pk=None):
     try:
         _user = User.objects.get(id=pk)
     except User.DoesNotExist:
-        return render(request, index)
+        return redirect('client:list')
 
     if request.POST:
         try:
@@ -130,7 +120,7 @@ def addbill(request, pk=None):
             c = Currency.objects.create(title='BYN', icon='p')
 
         Bill.add(_user,0,c)#objects.create(client=_user, money=0, currency=c)
-        return list(request)
+        return redirect('client:list')
     else:
         return render(request, 'bill/addbill.html', {
             'bill_user': _user
