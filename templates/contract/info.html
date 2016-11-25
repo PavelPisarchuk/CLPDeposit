@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "body.html" %}
 
-</body>
-</html>
+{% block title %}
+    <title>My deposits</title>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-striped">
+        <tr>
+            <td>Тип {{ contract.deposit }}</td>
+            <td>Дата открытия {{ contract.sign_date }}</td>
+            <td>Счёт привязки {{ contract.bill }}</td>
+            <td>Текущий счёт {{ contract.deposit_bill }}</td>
+            <td>Пролонгация {{ contract.prolongation_to_string }}</td>
+        </tr>
+    </table>
+    <br>
+    <p>No available Deposits</p>
+{% endblock %}

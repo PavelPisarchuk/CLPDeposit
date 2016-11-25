@@ -87,10 +87,9 @@ class Deposit(models.Model):
 
 
 class Contract(models.Model):
+    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False,blank=True, null=True)
     bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя',default=None,editable=False,null=True)
     deposit_bill=models.FloatField(verbose_name='Сумма')
-    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False,blank=True, null=True)
-    #percent = models.FloatField(verbose_name='Ставка')
     bonuce=models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
     end_date = models.DateTimeField(verbose_name='Дата окончания',editable=False, default=None,null=True)
@@ -101,6 +100,11 @@ class Contract(models.Model):
 
     def calculate_bonuce(self):
         self.bonuce=((self.final_exchange_rate/self.start_exchange_rate)*100-100)*360/360
+
+    def prolongation_to_string(self):
+        if(self.is_prolongation):
+            return "Yes"
+        return "No"
 
 
 class ActionType(models.Model):
