@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect
-from app.models import Deposit
 from app.forms import *
-
 
 
 def list(request, deposit_id=None):
@@ -11,7 +9,6 @@ def list(request, deposit_id=None):
         d.save()
     depositList = Deposit.objects.all()
     return render(request, 'deposit/list.html', {'depositList': depositList})
-
 
 
 def new(request):
@@ -33,7 +30,6 @@ def new(request):
         depositForm = DepositForm()
 
     return render(request, 'deposit/new.html', {'depositForm': depositForm, 'errors':errors})
-
 
 
 def edit(request, deposit_id):
@@ -73,9 +69,6 @@ def currency(request):
         form = CurrencyForm()
 
     return render(request, 'deposit/currency.html', {'form': form, 'currencyList':currencyList})
-
-
-
 
 
 def refill(request):

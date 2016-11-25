@@ -1,5 +1,5 @@
 from django import forms
-from app.models import Currency, Deposit, User
+from app.models import Contract, Currency, Deposit, User
 
 
 userfields = ["username", "password"]

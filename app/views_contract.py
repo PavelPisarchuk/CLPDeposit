@@ -38,13 +38,11 @@ def new(request, deposit_id):
     return render(request, 'contract/new.html', {'ID':deposit_id, 'form':form, 'deposit':d})
 
 
-
 def list(request):
 
     deposits=Contract.objects.all()#filter(bill__client_=request.user)
 
     return render(request, 'contract/list.html', {'deposits':deposits})
-
 
 
 def info(request,deposit_id):

@@ -1,7 +1,7 @@
 {% extends "body.html" %}
 
 {% block title %}
-    <title>Конфигкратор дипозитов</title>
+    <title>Конфигуратор депозитов</title>
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
                 <td>{{  deposit.min_amount }} {{ deposit.getCurrencyTitle }}</td>
                 <td>{{  deposit.duration }} months</td>
                 <td>{{  deposit.is_archive }} %</td>
-                <td><a href="{% url 'deposit:edit' deposit.id %}"> редоктировать </a></td>
+                <td><a href="{% url 'deposit:edit' deposit.id %}"> редактировать </a></td>
                 <td><a href="{% url 'deposit:listToArch' deposit.id %}"> добавить в архив </a></td>
             </tr>
         {% endfor %}
