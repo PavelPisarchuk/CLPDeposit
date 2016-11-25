@@ -108,12 +108,14 @@ class Contract(models.Model):
     end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None,null=True)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
-    def get_storing_term_in_days(self):
-        return (datetime.datetime.now() - self.sign_date).days
+    def is_active(self):
+        return self.sign_date < datetime.date.today() < self.end_date
 
-    def get_storing_term_in_months(self):
-        d1, d2 = datetime.datetime.now(), self.sign_date
-        return (d1.year - d2.year) * 12 + d1.month - d2.month
+    def get_duration_in_days(self):
+        return (self.end_date - self.sign_date).days
+
+    def get_storing_term(self):
+        return (datetime.datetime.now() - self.sign_date).days
 
     def calculate_bonuce(self):
         sign_rate = ExchangeRate.objects.get(
@@ -126,7 +128,7 @@ class Contract(models.Model):
             from_currency=self.deposit.currency,
             to_currency=self.deposit.binding_currency
         )
-        self.bonus = ((today_rate / sign_rate) * 100 - 100) * 360 / self.get_storing_term()
+        self.bonus = ((today_rate / sign_rate) * 100 - 100) * self.get_duration_in_days() / self.get_storing_term()
 
     def prolongation_to_string(self):
         if self.is_prolongation:
@@ -151,6 +153,13 @@ class Action(models.Model):
             contract=contract,
             money=money
         ).save()
+
+    @classmethod
+    def get_last_pay(cls, contract):
+        return Action.objects.all().filter(
+            actionType=ActionType.objects.get(description='PAY'),
+            contract=contract
+        ).last()
 
 
 class ExchangeRate(models.Model):
