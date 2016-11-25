@@ -39,9 +39,11 @@ class Bill(models.Model):
     money = models.FloatField(verbose_name='Денежная сумма')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
 
+
 class Card(models.Model):
     bill=models.ForeignKey(Bill,verbose_name='Счёт')
     limit=models.FloatField(verbose_name='Лимит')
+
 
 class Message(models.Model):
     message = models.CharField(max_length=300, verbose_name='Сообщение')
@@ -67,7 +69,8 @@ class Deposit(models.Model):
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
     min_amount = models.PositiveIntegerField(verbose_name='Минимальная сумма')
     duration = models.PositiveIntegerField(verbose_name='Срок хранения (в месяцах)')
-    pay_period_in_days = models.PositiveIntegerField(verbose_name='Период выплат (в днях)',default=0)
+    is_pay_period_month=models.BooleanField(verbose_name='Период выплат день/месяц',default=False)
+    pay_period = models.PositiveIntegerField(verbose_name='Период выплат')
     percent = models.FloatField(verbose_name='Ставка')
     is_refill=models.BooleanField(verbose_name='Возможность пополнения',default=True)
     min_refill = models.PositiveIntegerField(verbose_name='Минимальное пополнение',blank=True, null=True, default=0)
@@ -77,7 +80,6 @@ class Deposit(models.Model):
     is_capitalization=models.BooleanField(verbose_name='Капитализация')
     binding_currency=models.ForeignKey(Currency,related_name="BindingCurrency", verbose_name='Валюта привязки',blank=True,null=True, default=None)
     is_archive=models.BooleanField(verbose_name='В архиве',default=False,editable=False)
-
 
     def __str__(self):
         return self.title
@@ -95,11 +97,25 @@ class Contract(models.Model):
     end_date = models.DateTimeField(verbose_name='Дата окончания',editable=False, default=None,null=True)
     is_prolongation=models.BooleanField(verbose_name='Пролонгация',default=False)
 
-    def get_storing_term(self):
+    def get_storing_term_in_days(self):
         return (datetime.datetime.now() - self.sign_date).days
 
+    def get_storing_term_in_months(self):
+        d1, d2 = datetime.datetime.now(), self.sign_date
+        return (d1.year - d2.year) * 12 + d1.month - d2.month
+
     def calculate_bonuce(self):
-        self.bonuce=((self.final_exchange_rate/self.start_exchange_rate)*100-100)*360/360
+        sign_rate = ExchangeRate.objects.get(
+            date=self.sign_date,
+            from_currency=self.deposit.currency,
+            to_currency=self.deposit.binding_currency
+        )
+        today_rate = ExchangeRate.objects.get(
+            date=datetime.date.today(),
+            from_currency=self.deposit.currency,
+            to_currency=self.deposit.binding_currency
+        )
+        self.bonuce=((today_rate / sign_rate) * 100 - 100) * 360 / self.get_storing_term()
 
     def prolongation_to_string(self):
         if(self.is_prolongation):
