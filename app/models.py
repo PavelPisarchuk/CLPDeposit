@@ -50,6 +50,14 @@ class Bill(models.Model):
             currency=_currency
         )
 
+    def push(self, value):
+        self.money += value
+        self.save()
+
+    def pop(self, value):
+        self.money -= value
+        self.save()
+
 
 class Card(models.Model):
     bill = models.ForeignKey(Bill, verbose_name='Счёт')
