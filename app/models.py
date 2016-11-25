@@ -27,7 +27,7 @@ class User(AbstractUser):
 
 
 class Currency(models.Model):
-    title = models.CharField(max_length=2, verbose_name='Название')
+    title = models.CharField(max_length=3, verbose_name='Название')
     icon = models.CharField(max_length=1, verbose_name='Значок')
 
     def print_short(self, value):
@@ -43,16 +43,17 @@ class Bill(models.Model):
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
 
 
-class MessageBox(models.Model):
-    user = models.ForeignKey(User,verbose_name='Пользователь')
+class Card(models.Model):
+    bill=models.ForeignKey(Bill,verbose_name='Счёт')
+    limit=models.FloatField(verbose_name='Лимит')
 
 
 class Message(models.Model):
     message = models.CharField(max_length=300, verbose_name='Сообщение')
     header = models.CharField(max_length=100, verbose_name='Заголовок')
-    readed = models.BooleanField(verbose_name='Прочитано ?', default=False)
-    messagebox = models.ForeignKey(MessageBox, verbose_name='Сообщения пользователя')
-    date = models.DateField(auto_now=False, auto_now_add=True, verbose_name='Дата')
+    readed = models.BooleanField(default=False, verbose_name='Прочитано ?')
+    user = models.ForeignKey(User, verbose_name='Пользователь')
+    date = models.DateField(default=datetime.date.today, verbose_name='Дата')
 
 
 class Deposit(models.Model):

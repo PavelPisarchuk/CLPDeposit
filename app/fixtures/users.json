@@ -79,5 +79,32 @@
 
       ]
     }
+  },
+  {
+    "model":"app.user",
+    "pk":4,
+    "fields":{
+      "password":"pbkdf2_sha256$30000$APCpQLzTc33l$08eVMOxFmfNZsDlis9FijnS+JfwW2K95wKkGS8ML66s=",
+      "last_login":null,
+      "is_superuser":false,
+      "username":"test",
+      "first_name":"test",
+      "last_name":"test",
+      "email":"",
+      "is_staff":false,
+      "is_active":true,
+      "date_joined":"2016-11-24T18:44:22.637Z",
+      "father_name":"test",
+      "passport_id":"",
+      "phone":"",
+      "address":"",
+      "birthday":null,
+      "groups":[
+
+      ],
+      "user_permissions":[
+
+      ]
+    }
   }
 ]

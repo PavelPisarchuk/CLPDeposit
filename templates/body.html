@@ -9,7 +9,7 @@
             $(document).ready(function(){
 
                $('#msg').bind('click', function(){
-                   $.get("/client/updatemsg/", function(data) {
+                   $.get('/message/updatemsg/', function(data) {
 
                         if (data['data']==true)
                             $("#newmsg").text("Мои сообщения +"+data['count'])
@@ -75,6 +75,8 @@
                             </li>
                         {% else %}
                             <li><a href="#">Вклады</a></li>
+                            <li><a href={% url 'bill:cards' %}>Мои карточки</a></li>
+                            <li><a href={% url 'bill:bills' %}>Мои счета</a></li>
                         {% endif %}
                     {% endif %}
                   </ul>
@@ -96,7 +98,7 @@
                                     <li><a href={% url 'employee:info' %}>Мой профиль</a></li>
                                 {% else %}
                                     <li><a href={% url 'client:info' %}>Мой профиль</a></li>
-                                    <li ><a id="newmsg" href={% url 'client:messages' %}>Мои сообщения</a></li>
+                                    <li ><a id="newmsg" href={% url 'message:messages' %}>Мои сообщения</a></li>
                                 {% endif %}
                                 <li><a href={% url 'password' %}>Изменить пароль</a></li>
                                 <li><a href={% url 'logout' %}>Выйти</a></li>

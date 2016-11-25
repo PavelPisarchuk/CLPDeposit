@@ -23,7 +23,7 @@
                         {% if not message.readed %}
                             Непрочитанное->
                         {% endif %}
-                        <a href={% url 'client:readmsg' pk=message.id %}>
+                        <a href={% url 'message:readmsg' pk=message.id %}>
                             <button type="button" class="btn btn-warning">
                                 Прочитать
                             </button>

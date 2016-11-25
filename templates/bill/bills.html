@@ -1,0 +1,24 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Счета</title>
+{% endblock %}
+
+{% block content %}
+    {% if bills %}
+        <table class="table table-striped">
+            <tr>
+                <td>Счёт №</td>
+                <td>Баланс</td>
+                <td></td>
+            </tr>
+            {% for b in bills %}
+                <tr>
+                    <td>{{  b.id}}</td>
+                    <td>{{ b.money }} рублей</td>
+                    <td><a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
