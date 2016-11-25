@@ -50,6 +50,14 @@ class Bill(models.Model):
             currency=_currency
         )
 
+    def push(self, value):
+        self.money += value
+        self.save()
+
+    def pop(self, value):
+        self.money -= value
+        self.save()
+
 
 class Card(models.Model):
     bill = models.ForeignKey(Bill, verbose_name='Счёт')
@@ -109,7 +117,8 @@ class Contract(models.Model):
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
     def is_active(self):
-        return self.sign_date < datetime.date.today() < self.end_date
+        tz_info = self.sign_date.tzinfo
+        return self.sign_date < datetime.datetime.now(tz_info) < self.end_date
 
     def get_duration_in_days(self):
         return (self.end_date - self.sign_date).days

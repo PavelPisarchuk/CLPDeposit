@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from app.models import Bill, Contract, Message, Pay
+from app.models import Bill, Contract, Message, Action
 
 
 class Command(BaseCommand):
@@ -8,22 +8,19 @@ class Command(BaseCommand):
         contracts = Contract.objects.all()
         active_contracts = [contract for contract in contracts if contract.is_active()]
         for contract in active_contracts:
-            pay = Pay.objects.create(
+            pay = 500
+            Action.add(
+                action_type_title='PAY',
                 contract=contract,
-                money=contract.calc_payment()
+                money=pay
             )
-            pay.save()
+            contract.bill.push(pay)
 
-            bill = Bill.objects.get(id=contract.bill.id)
-            bill.money += pay.money
-            bill.save()
-
-            message = Message.objects.create(
+            Message.objects.create(
                 message="Вам выплачено {} по вкладу {}".format(
-                    contract.deposit.currency.print_full(pay.money),
+                    pay,
                     contract.deposit.title
                 ),
                 header='Выплата по вкладу',
                 user=contract.bill.client
-            )
-            message.save()
+            ).save()
