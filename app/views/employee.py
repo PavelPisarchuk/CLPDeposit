@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 
 from app.forms import AdminForm, adminfields, clientfields
 from app.models import User
-from app.views.general import index
 
 
 @login_required
@@ -16,7 +15,7 @@ def new(request):
         if form.is_valid():
             user = User.objects.create_superuser(**form.cleaned_data)
             user.save()
-        return redirect(index)
+        return redirect('employee:list')
     else:
         return render(request, 'admin/registration.html', {
             'form': AdminForm()
@@ -50,7 +49,7 @@ def edit(request):
         form = Form(request.POST, instance=user)
         if form.is_valid():
             form.save()
-        return redirect(index)
+        return redirect('employee:info')
     else:
         return render(request, 'admin/edit.html', {
             'form': Form(instance=user)
@@ -74,9 +73,8 @@ def edit_user(request,pk):
             user = form.save(commit=False)
             model.save()
             user.save()
-        return redirect(index)
+        return redirect('client:list')
     else:
         return render(request, 'admin/edituser.html', {
             'form': Form(instance=model)
         })
-

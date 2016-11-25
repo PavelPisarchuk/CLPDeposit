@@ -17,13 +17,13 @@ def login(request):
         if user is not None:
             auth.login(request, user)
 
-        return redirect(index)
+        return redirect('index')
 
 
 @login_required
 def logout(request):
     auth.logout(request)
-    return redirect(index)
+    return redirect('index')
 
 
 @login_required
@@ -37,7 +37,7 @@ def password(request):
                 user.set_password(password_new)
                 user.save()
                 return logout(request)
-        return redirect(index)
+        return redirect('index')
     else:
         return render(request, 'password.html')
 

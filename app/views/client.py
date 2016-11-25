@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 
 from app.forms import UserForm, SearchForm, clientfields
 from app.models import User
-from app.views.general import index
 
 
 @login_required
@@ -16,7 +15,7 @@ def new(request):
         if form.is_valid():
             user = User.objects.create_user(**form.cleaned_data)
             user.save()
-        return redirect(index)
+        return redirect('client:list')
     else:
         return render(request, 'client/registration.html', {
             'form': UserForm()
@@ -52,9 +51,7 @@ def search(request):
             'form':Form,'clients': users.filter(is_superuser=False)
         })
     else:
-        return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False), 'form': SearchForm()
-        })
+        return redirect('client:list')
 
 
 @login_required
@@ -74,7 +71,7 @@ def edit(request):
         form = Form(request.POST, instance=user)
         if form.is_valid():
             form.save()
-        return redirect(index)
+        return redirect('client:info')
     else:
         return render(request, 'client/edit.html', {
             'form': Form(instance=user)
