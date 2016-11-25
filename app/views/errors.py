@@ -4,4 +4,4 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def permission_error(request):
-    return render(request,'errors/permissionerror.html')
+    return render(request, 'errors/permissionerror.html')

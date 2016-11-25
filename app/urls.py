@@ -1,13 +1,14 @@
+import app.views.bill as bill
+import app.views.client as client
+import app.views.contract as contract
+import app.views.employee as admin
+import app.views.errors as errors
+import app.views.messages as messages
+from app.views.general import index, rates
+from app.views.general import login, logout, password
 from django.conf.urls import url, include
 
-from app.views import index, rates
-from app.views import login, logout, password
-import app.views_deposit as deposit
-import app.views_client as client
-import app.views_admin as admin
-import app.views_errors as errors
-import app.views_messages as messages
-import app.views_bill as bill
+import app.views.deposit as deposit
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
@@ -47,16 +48,27 @@ urlpatterns = [
         url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
     ], namespace='bill')),
     url(r'^deposit/', include([
+        url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
         url(r'^list/', deposit.list, name='list'),
-        url(r'^open/', deposit.open, name='open'),
+        url(r'^new/', deposit.new, name='new'),
+        url(r'^edit/(?P<deposit_id>[0-9]+)/', deposit.edit, name='edit'),
+        url(r'^currency/', deposit.currency, name='currency'),
+
+
         url(r'^refill/', deposit.refill, name='refill'),
         url(r'^transfer/', deposit.transfer, name='transfer'),
         url(r'^close/', deposit.close, name='close'),
         url(r'^extract/', deposit.extract, name='extract'),
         url(r'^history/', deposit.history, name='history')
     ], namespace='deposit')),
+    url(r'^contract/', include([
+        url(r'^all/', contract.all, name='all'),
+        url(r'^new/(?P<deposit_id>[0-9]+)', contract.new, name='new'),
+        url(r'^list/', contract.list, name='list'),
+        url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
+    ], namespace='contract')),
     url(r'errors/',include([
-        url('r^permission/',errors.permission_error,name='error')
+        url('r^permission/', errors.permission_error, name='error')
     ],namespace='errors')),
     url(r'', index, name='index'),
 ]

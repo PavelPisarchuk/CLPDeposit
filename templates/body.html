@@ -43,40 +43,7 @@
                       <li><a href={% url 'rates' %}>Курсы валют</a></li>
                     {% if user.is_authenticated %}
                         {% if user.is_superuser %}
-
-                            <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                  Вклады
-                                  <span class="caret"></span>
-                              </a>
-                              <ul class="dropdown-menu">
-                                <li><a href="#">Все вклады</a></li>
-                              </ul>
-                            </li>
-                            <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                  Клиенты
-                                  <span class="caret"></span>
-                              </a>
-                              <ul class="dropdown-menu">
-                                <li><a href={% url 'client:new' %}>Зарегестрировать клиента</a></li>
-                                <li><a href={% url 'client:list' %}>Все клиенты</a></li>
-                              </ul>
-                            </li>
-                            <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                  Сотрудники
-                                  <span class="caret"></span>
-                              </a>
-                              <ul class="dropdown-menu">
-                                <li><a href={% url 'employee:new' %}>Зарегестрировать</a></li>
-                                <li><a href={% url 'employee:list' %}>Список</a></li>
-                              </ul>
-                            </li>
-                        {% else %}
-                            <li><a href="#">Вклады</a></li>
-                            <li><a href={% url 'bill:cards' %}>Мои карточки</a></li>
-                            <li><a href={% url 'bill:bills' %}>Мои счета</a></li>
+                            {% include 'menu/admin_actions.html' %}
                         {% endif %}
                     {% endif %}
                   </ul>
@@ -85,26 +52,9 @@
                     <li>
                         {% if user.is_authenticated %}
                             {% if not  user.is_superuser %}
-                                <li><a href="">Мои депозиты</a></li>
+                                {% include 'menu/client_actions.html' %}
                             {% endif %}
-                            <li></li>
-                            <li id="msg" class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                  {{ user.get_short_name }}
-                                  <span class="caret"></span>
-                              </a>
-                              <ul class="dropdown-menu">
-                                {% if  user.is_superuser %}
-                                    <li><a href={% url 'employee:info' %}>Мой профиль</a></li>
-                                {% else %}
-                                    <li><a href={% url 'client:info' %}>Мой профиль</a></li>
-                                    <li ><a id="newmsg" href={% url 'message:messages' %}>Мои сообщения</a></li>
-                                {% endif %}
-                                <li><a href={% url 'password' %}>Изменить пароль</a></li>
-                                <li><a href={% url 'logout' %}>Выйти</a></li>
-                              </ul>
-                            </li>
-
+                            {% include 'menu/profile.html' %}
                         {% else %}
                             <a><form class="form-inline" action="{% url 'login' %}" method="post">
                                 {% csrf_token %}

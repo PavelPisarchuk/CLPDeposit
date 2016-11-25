@@ -1,22 +1,20 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import modelform_factory
+from django.shortcuts import render, redirect
 
-from app.decorators import Only_Superuser_Permission
-from app.views import index
-from app.models import User
 from app.forms import UserForm, SearchForm, clientfields
+from app.models import User
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def new(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             user = User.objects.create_user(**form.cleaned_data)
             user.save()
-        return redirect(index)
+        return redirect('client:list')
     else:
         return render(request, 'client/registration.html', {
             'form': UserForm()
@@ -24,7 +22,7 @@ def new(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def list(request):
     return render(request, 'client/list.html', {
         'clients': User.objects.all().filter(is_superuser=False),
@@ -32,7 +30,7 @@ def list(request):
     })
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def search(request):
     from app.forms import SearchForm
 
@@ -48,13 +46,11 @@ def search(request):
             users=users.filter(passport_id__contains=Form.data.get('passport_id'))
 
 
-        return render(request,'client/list.html', {
+        return render(request, 'client/list.html', {
             'form':Form,'clients': users.filter(is_superuser=False)
         })
     else:
-        return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False), 'form': SearchForm()
-        })
+        return redirect('client:list')
 
 
 @login_required
@@ -74,7 +70,7 @@ def edit(request):
         form = Form(request.POST, instance=user)
         if form.is_valid():
             form.save()
-        return redirect(index)
+        return redirect('client:info')
     else:
         return render(request, 'client/edit.html', {
             'form': Form(instance=user)

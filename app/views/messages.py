@@ -1,22 +1,18 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
+from django.shortcuts import render, redirect
 
-from app.decorators import Only_Superuser_Permission
+from app.forms import MessageForm
 from app.models import User, Message
-from app.forms import MessageForm, SearchForm
 
 
-@Only_Superuser_Permission
 @login_required
+@user_passes_test(lambda u: u.is_superuser)
 def send_message(request, pk):
     try:
         model = User.objects.get(id=pk)
     except User.DoesNotExist:
-        return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False),
-            'form': SearchForm(request.POST)
-        })
+        return redirect('client:list')
 
     if request.method == 'POST':
         message = MessageForm(request.POST)
@@ -25,10 +21,7 @@ def send_message(request, pk):
             header=message.data.get('header'),
             user=model)
 
-        return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False),
-            'form': SearchForm(request.POST)
-        })
+        return redirect('client:list')
     else:
         request.pk = pk
         message = MessageForm(request.POST)
@@ -42,10 +35,10 @@ def readmessage(request, pk):
     try:
         msg = Message.objects.get(id=pk)
     except Message.DoesNotExist:
-        return messages(request)
+        return redirect('message:messages')
 
     if request.user != msg.user:
-        return render(request, 'errors/permissionerror.html')
+        return redirect('errors:permission')
     else:
         msg.readed = True
         msg.save()

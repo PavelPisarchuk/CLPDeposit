@@ -30,67 +30,136 @@ class Currency(models.Model):
     title = models.CharField(max_length=3, verbose_name='Название')
     icon = models.CharField(max_length=1, verbose_name='Значок')
 
-    def print_short(self, value):
-        return "{}{}".format(round(value), self.icon)
+    def __str__(self):
+        return self.title
 
-    def print_full(self, value):
-        return "{}{}".format(self.title, round(value))
+    def format_value(self, value):
+        return "{}{}".format(self.title, round(value, 2))
 
 
 class Bill(models.Model):
     client = models.ForeignKey(User, verbose_name='Клиент')
-    money = models.FloatField(verbose_name='Денежная сумма')
+    money = models.FloatField(verbose_name='Денежная сумма', default=0)
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
+
+    @classmethod
+    def add(cls, _client, _money, _currency):
+        return Bill.objects.create(
+            client=_client,
+            money=_money,
+            currency=_currency
+        )
 
 
 class Card(models.Model):
-    bill=models.ForeignKey(Bill,verbose_name='Счёт')
-    limit=models.FloatField(verbose_name='Лимит')
+    bill = models.ForeignKey(Bill, verbose_name='Счёт')
+    limit = models.FloatField(verbose_name='Лимит')
 
 
 class Message(models.Model):
     message = models.CharField(max_length=300, verbose_name='Сообщение')
     header = models.CharField(max_length=100, verbose_name='Заголовок')
-    readed = models.BooleanField(default=False, verbose_name='Прочитано ?')
+    readed = models.BooleanField(default=False, verbose_name='Прочитано?')
     user = models.ForeignKey(User, verbose_name='Пользователь')
     date = models.DateField(default=datetime.date.today, verbose_name='Дата')
 
 
 class Deposit(models.Model):
+
+    Types = (
+        ('Вклад до востребования', 'Вклад до востребования'),
+        ('Сберегательный вклад', 'Сберегательный вклад'),
+        ('Накопительный вклад', 'Накопительный вклад'),
+        ('Расчетный вклад', 'Расчетный вклад'),
+        ('Индексируемый вклад', 'Индексируемый вклад')
+    )
+
+    depositType = models.CharField(max_length=30, choices=Types, verbose_name='Тип')
     title = models.CharField(max_length=30, verbose_name='Название')
-    description = models.CharField(max_length=300, verbose_name='Описание')
-    percent = models.IntegerField(verbose_name='Ставка')
-    min_storing_term = models.IntegerField(verbose_name='Минимальный срок хранения')
-    max_storing_term = models.IntegerField(verbose_name='Максимальный срок хранения')
-    pay_term = models.IntegerField(verbose_name='Период выплат')
-    refill = models.BooleanField(verbose_name='Пополнение')
-    partial_take = models.BooleanField(verbose_name='Частичное снятие')
-    indexed = models.BooleanField(verbose_name='Индексированный')
+    description = models.TextField(max_length=300, verbose_name='Описание')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
+    min_amount = models.PositiveIntegerField(verbose_name='Минимальная сумма')
+    duration = models.PositiveIntegerField(verbose_name='Срок хранения (в месяцах)')
+    is_pay_period_month = models.BooleanField(verbose_name='Период выплат день/месяц', default=False)
+    pay_period = models.PositiveIntegerField(verbose_name='Период выплат')
+    percent = models.FloatField(verbose_name='Ставка')
+    is_refill = models.BooleanField(verbose_name='Возможность пополнения', default=True)
+    min_refill = models.PositiveIntegerField(verbose_name='Минимальное пополнение', blank=True, null=True, default=0)
+    is_early_withdrawal = models.BooleanField(verbose_name='Возможность преждевременного снятия', default=False)
+    minimum_balance = models.PositiveIntegerField(verbose_name='Неснижаемый остаток', blank=True, null=True, default=0)
+    percent_for_early_withdrawal = models.FloatField(verbose_name='ставка при нарушении минимального баланса', blank=True, default=0, null=True)
+    is_capitalization = models.BooleanField(verbose_name='Капитализация')
+    binding_currency = models.ForeignKey(Currency, related_name="BindingCurrency", verbose_name='Валюта привязки', blank=True, null=True, default=None)
+    is_archive = models.BooleanField(verbose_name='В архиве', default=False, editable=False)
+
+    def __str__(self):
+        return self.title
+
+    def getCurrencyTitle(self):
+        return self.currency.title
 
 
 class Contract(models.Model):
-    bill = models.ForeignKey(Bill, verbose_name='Счёт')
-    deposit = models.ForeignKey(Deposit, verbose_name='Вклад')
-    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now)
-    term = models.IntegerField(verbose_name='Срок')
-    money = models.FloatField(verbose_name='Сумма вклада')
+    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False, blank=True, null=True)
+    bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя', default=None, editable=False, null=True)
+    deposit_bill = models.FloatField(verbose_name='Сумма')
+    bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
+    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
+    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None,null=True)
+    is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
-    def calc_payment(self):
-        return self.money * (self.deposit.percent / 100)
+    def is_active(self):
+        return self.sign_date < datetime.date.today() < self.end_date
+
+    def get_duration_in_days(self):
+        return (self.end_date - self.sign_date).days
 
     def get_storing_term(self):
         return (datetime.datetime.now() - self.sign_date).days
 
-    def is_active(self):
-        return (datetime.date.today() > self.sign_date) and (self.get_storing_term() < self.term)
+    def calculate_bonuce(self):
+        sign_rate = ExchangeRate.objects.get(
+            date=self.sign_date,
+            from_currency=self.deposit.currency,
+            to_currency=self.deposit.binding_currency
+        )
+        today_rate = ExchangeRate.objects.get(
+            date=datetime.date.today(),
+            from_currency=self.deposit.currency,
+            to_currency=self.deposit.binding_currency
+        )
+        self.bonus = ((today_rate / sign_rate) * 100 - 100) * self.get_duration_in_days() / self.get_storing_term()
+
+    def prolongation_to_string(self):
+        if self.is_prolongation:
+            return "Yes"
+        return "No"
 
 
-class Pay(models.Model):
-    agent = models.ForeignKey(User, verbose_name='Оформитель')
+class ActionType(models.Model):
+    description = models.CharField(max_length=300, verbose_name='Описание')
+
+
+class Action(models.Model):
+    actionType = models.ForeignKey(ActionType, verbose_name='Тип действия')
     contract = models.ForeignKey(Contract, verbose_name='Договор')
     datetime = models.DateTimeField(verbose_name='Дата', default=datetime.datetime.now)
     money = models.FloatField(verbose_name='Денежная сумма')
+
+    @classmethod
+    def add(cls, action_type_title, contract, money):
+        Action.objects.create(
+            actionType=ActionType.objects.get(description=action_type_title),
+            contract=contract,
+            money=money
+        ).save()
+
+    @classmethod
+    def get_last_pay(cls, contract):
+        return Action.objects.all().filter(
+            actionType=ActionType.objects.get(description='PAY'),
+            contract=contract
+        ).last()
 
 
 class ExchangeRate(models.Model):

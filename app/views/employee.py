@@ -1,22 +1,20 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import modelform_factory
+from django.shortcuts import render, redirect
 
-from app.decorators import Only_Superuser_Permission
-from app.views import index
-from app.models import User
 from app.forms import AdminForm, adminfields, clientfields
+from app.models import User
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def new(request):
     if request.method == 'POST':
         form = AdminForm(request.POST)
         if form.is_valid():
             user = User.objects.create_superuser(**form.cleaned_data)
             user.save()
-        return redirect(index)
+        return redirect('employee:list')
     else:
         return render(request, 'admin/registration.html', {
             'form': AdminForm()
@@ -24,7 +22,7 @@ def new(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def list(request):
     return render(request, 'admin/list.html', {
         'admins': User.objects.all().filter(is_superuser=True)
@@ -32,7 +30,7 @@ def list(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def info(request):
     Form = modelform_factory(User, fields=adminfields)
     return render(request, 'admin/info.html', {
@@ -41,7 +39,7 @@ def info(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def edit(request):
     Form = modelform_factory(User, fields=adminfields)
     user = request.user
@@ -50,7 +48,7 @@ def edit(request):
         form = Form(request.POST, instance=user)
         if form.is_valid():
             form.save()
-        return redirect(index)
+        return redirect('employee:info')
     else:
         return render(request, 'admin/edit.html', {
             'form': Form(instance=user)
@@ -58,7 +56,7 @@ def edit(request):
 
 
 @login_required
-@Only_Superuser_Permission
+@user_passes_test(lambda u: u.is_superuser)
 def edit_user(request,pk):
     if not pk:
         pk=request.pk
@@ -74,9 +72,8 @@ def edit_user(request,pk):
             user = form.save(commit=False)
             model.save()
             user.save()
-        return redirect(index)
+        return redirect('client:list')
     else:
         return render(request, 'admin/edituser.html', {
             'form': Form(instance=model)
         })
-
