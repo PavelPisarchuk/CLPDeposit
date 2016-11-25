@@ -1,8 +1,6 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
-from app.views import index
-from app.models import *
 from app.forms import *
 
 

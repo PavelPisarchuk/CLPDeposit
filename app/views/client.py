@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from app.decorators import Only_Superuser_Permission
 from django.contrib.auth.decorators import login_required
 from django.forms import modelform_factory
+from django.shortcuts import render, redirect
 
-from app.decorators import Only_Superuser_Permission
-from app.views import index
-from app.models import User
 from app.forms import UserForm, SearchForm, clientfields
+from app.models import User
+from app.views.general import index
 
 
 @login_required
@@ -48,7 +48,7 @@ def search(request):
             users=users.filter(passport_id__contains=Form.data.get('passport_id'))
 
 
-        return render(request,'client/list.html', {
+        return render(request, 'client/list.html', {
             'form':Form,'clients': users.filter(is_superuser=False)
         })
     else:

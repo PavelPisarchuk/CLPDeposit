@@ -1,15 +1,14 @@
+import app.views.bill as bill
+import app.views.client as client
+import app.views.contract as contract
+import app.views.employee as admin
+import app.views.errors as errors
+import app.views.messages as messages
+from app.views.general import index, rates
+from app.views.general import login, logout, password
 from django.conf.urls import url, include
 
-from app.views import index, rates
-from app.views import login, logout, password
-import app.views_deposit as deposit
-import app.views_client as client
-import app.views_admin as admin
-import app.views_errors as errors
-import app.views_messages as messages
-import app.views_bill as bill
-import app.views_contract as contract
-
+import app.views.deposit as deposit
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
@@ -69,7 +68,7 @@ urlpatterns = [
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
     url(r'errors/',include([
-        url('r^permission/',errors.permission_error,name='error')
+        url('r^permission/', errors.permission_error, name='error')
     ],namespace='errors')),
     url(r'', index, name='index'),
 ]

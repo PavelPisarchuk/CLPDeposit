@@ -1,10 +1,10 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import render
 
 from app.decorators import Only_Superuser_Permission
-from app.models import User, Message
 from app.forms import MessageForm, SearchForm
+from app.models import User, Message
 
 
 @Only_Superuser_Permission

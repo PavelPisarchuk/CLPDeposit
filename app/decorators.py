@@ -1,6 +1,5 @@
-from app import models
-from django.shortcuts import render, redirect
-from app.views import index
+from django.shortcuts import render
+
 
 def Only_Superuser_Permission(func):
     def fun(request, *args, **kwargs):

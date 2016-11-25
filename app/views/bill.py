@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required,user_passes_test
+from django.shortcuts import render
 
-from app.models import User, Card, Bill,Currency
 from app.decorators import Only_Superuser_Permission
 from app.forms import SearchForm
-from app.views_client import list
-from app.views import index
+from app.models import User, Card, Bill,Currency
+from app.views.general import index
+from app.views.client import list
 
 
 @login_required
@@ -80,7 +80,7 @@ def bills(request):
 
     bills = Bill.objects.all().filter(client_id=_user.id).order_by('id')
     print(len(bills))
-    return render(request,'bill/bills.html',{
+    return render(request, 'bill/bills.html', {
         'bills': bills
     })
 
