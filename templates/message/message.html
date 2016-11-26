@@ -7,8 +7,12 @@
 {% block content %}
 
     {% if msg %}
-    <p><textarea rows="3" cols="45" name="text">{{ msg.header }}</textarea></p>
-    <p><textarea rows="10" cols="45" name="text">{{ msg.message }}</textarea></p>
-
+        <h3>{{ msg.header }}</h3>
+        <p>{{ msg.message }}</p>
+        <a href={% url 'message:delete' pk=msg.id  %}>
+            <button type="button" class="btn btn-warning">
+                Удалить сообщение
+            </button>
+        </a>
     {% endif %}
 {% endblock %}

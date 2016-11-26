@@ -20,6 +20,7 @@ urlpatterns = [
         url(r'^updatemsg/', messages.updatemsg, name='updatemsg'),
         url(r'^messages/', messages.messages, name='messages'),
         url(r'^readmsg/(?P<pk>[0-9]+)/$', messages.readmessage, name='readmsg'),
+        url(r'^delete/(?P<pk>[0-9]+)/$', messages.delete, name='delete'),
     ], namespace='message')),
     url(r'^employee/', include([
         url(r'^new/', admin.new, name='new'),

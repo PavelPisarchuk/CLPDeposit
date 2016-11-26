@@ -71,3 +71,16 @@ def messages(request):
         })
     except:
         return render(request, 'message/messages.html')
+
+
+@login_required
+def delete(request, pk):
+    try:
+        msg = Message.objects.get(id=pk)
+        if request.user != msg.user:
+            return redirect('errors:permission')
+        else:
+            msg.delete()
+            return redirect('message:messages')
+    except Message.DoesNotExist:
+        return redirect('message:messages')
