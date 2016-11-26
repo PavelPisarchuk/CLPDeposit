@@ -6,7 +6,9 @@
 
 {% block content %}
     <div class="table-responsive">
-        У вас недостаточно прав для выполнения этой операции
+        {% if errors %}
+                <div>{{ errors }}</div>
+        {% endif %}
     </div>
 
     <a href={% url 'index' %}>

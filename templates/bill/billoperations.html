@@ -1,0 +1,24 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Операции</title>
+{% endblock %}
+
+{% block content %}
+    {% if operations %}
+        <table class="table table-striped">
+            <tr>
+                <td>Тип операции</td>
+                <td>Дата</td>
+                <td>Сумма</td>
+            </tr>
+            {% for o in operations %}
+                <tr>
+                    <td>{{ o.actionType.description }}</td>
+                    <td>{{ o.datetime }} </td>
+                    <td>{{ o.money }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

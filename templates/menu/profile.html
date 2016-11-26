@@ -15,6 +15,9 @@
             <li >
                 <a id="newmsg" href={% url 'message:messages' %}>Мои сообщения</a>
             </li>
+            <li>
+                <a href={% url 'bill:billtransact' %}>Перевод на другой счёт</a>
+            </li>
         {% endif %}
         <li>
             <a href={% url 'password' %}>Изменить пароль</a>
