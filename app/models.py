@@ -55,8 +55,12 @@ class Bill(models.Model):
         self.save()
 
     def pop(self, value):
-        self.money -= value
-        self.save()
+        if self.money >= value:
+            self.money -= value
+            self.save()
+            return True
+        else:
+            return False
 
 
 class Card(models.Model):
