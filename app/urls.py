@@ -46,6 +46,8 @@ urlpatterns = [
         url(r'^addonbill/(?P<pk>[0-9]+)/$', bill.addonbill, name='addonbill'),
         url(r'^addonbill/', bill.addonbill, name='addonbill'),
         url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
+        url(r'^billoperations/(?P<pk>[0-9]+)/$', bill.billoperations, name='billoperations'),
+        url(r'^billtransact/', bill.billtransact, name='billtransact')
     ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
@@ -68,7 +70,7 @@ urlpatterns = [
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
     url(r'errors/',include([
-        url('r^permission/', errors.permission_error, name='error')
+        url('r^error/', errors.error, name='error')
     ],namespace='errors')),
     url(r'', index, name='index'),
 ]

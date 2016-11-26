@@ -64,7 +64,7 @@ def updatemsg(request):
 @login_required
 def messages(request):
     try:
-        mymessages = Message.objects.all().filter(user=request.user)
+        mymessages = Message.objects.all().filter(user=request.user).order_by('-id')
 
         return render(request, 'message/messages.html', {
             'messages': mymessages

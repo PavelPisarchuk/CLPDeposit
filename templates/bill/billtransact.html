@@ -1,0 +1,30 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Карточки</title>
+{% endblock %}
+
+{% block content %}
+    {% if bills %}
+        <p><select name="_from" form="data">
+            <option selected disabled>Откуда</option>
+            {% for b in bills %}
+                <option  value={{ b.id }}>Счёт номер {{ b.id }} </option>
+            {% endfor %}
+        </select></p>
+
+        <p><select name="_to" form="data">
+            <option selected disabled>Куда</option>
+            {% for b in bills %}
+                <option  value={{ b.id }}>Счёт номер {{ b.id }} </option>
+            {% endfor %}
+        </select></p>
+
+        <form id="data" action={% url 'bill:billtransact' %} method="post">
+            {% csrf_token %}
+            <p><input type="number" name="money" value=0></p>
+
+            <p><input type="submit" value="Перевести"></p>
+        </form>
+    {% endif %}
+{% endblock %}

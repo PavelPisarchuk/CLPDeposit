@@ -1,6 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
-from app.models import User, Card, Bill, Currency
+from app.models import User, Card, Bill, Currency, Action
 
 
 @login_required
@@ -86,8 +88,9 @@ def addonbill(request, pk=None):
         except Bill.DoesNotExist:
             return redirect('client:list')
 
-        bill.money += int(request.POST['money'])
-        bill.save()
+        pushmoney = int(request.POST['money'])
+        bill.push(pushmoney)
+        Action.add('FILL', None, bill, pushmoney)
         return redirect('client:list')
     else:
         try:
@@ -117,9 +120,69 @@ def addbill(request, pk=None):
         except Currency.DoesNotExist:
             currency = Currency.objects.create(title='BYN', icon='p')
 
-        Bill.add(_user, 0, currency)#objects.create(client=_user, money=0, currency=c)
+        _bill = Bill.add(_user, 0, currency)
+        Action.add('CREATE', None, _bill, 0)
         return redirect('client:list')
     else:
         return render(request, 'bill/addbill.html', {
             'bill_user': _user
+        })
+
+
+@login_required
+def billoperations(request, pk=None):
+    try:
+        bill = Bill.objects.get(id=pk)
+    except Bill.DoesNotExist:
+        return redirect('bill:bills')
+
+    if bill.client!=request.user:
+        return redirect('errors:error')
+    else:
+        _operations=Action.objects.all().filter(bill=bill).order_by('-id')
+        return render(request,'bill/billoperations.html',{
+            'operations': _operations
+        })
+
+
+@login_required
+def billtransact(request):
+    if request.POST:
+        try:
+            _from =int(request.POST["_from"])
+            _to = int(request.POST["_to"])
+
+            frombill = Bill.objects.get(id=_from)
+            tobill = Bill.objects.get(id=_to)
+
+            if frombill==tobill:
+                return render(request, 'bill/billtransact.html',{
+                    'bills': Bill.objects.all().filter(client=request.user)
+                })
+
+            if frombill.client!=request.user or tobill.client!=request.user:
+                return render(request, 'errors/error.html', {
+                    'errors': u'Что-то пошло не так'
+                })
+            else:
+                _money = int(request.POST["money"])
+                if _money<frombill.money:
+
+                    frombill.pop(_money)
+                    tobill.push(_money)
+
+                    Action.add('TAKE_PART', None, frombill, _money)
+                    Action.add('FILL', None, tobill, _money)
+                    return redirect('bill:bills')
+                else:
+                    return render(request, 'errors/error.html',{
+                        'errors': u'Недостаточно средств'
+                    })
+        except:
+            return render(request, 'errors/error.html', {
+                'errors': u'Что-то пошло не так'
+            })
+    else:
+        return render(request,'bill/billtransact.html', {
+            'bills':Bill.objects.all().filter(client=request.user)
         })

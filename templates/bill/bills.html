@@ -16,7 +16,11 @@
                 <tr>
                     <td>{{  b.id}}</td>
                     <td>{{ b.money }} рублей</td>
-                    <td><a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a></td>
+                    <td>
+                        <a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a>
+                        <br>
+                        <a href={% url 'bill:billoperations' pk=b.id %}>Завершённые операции</a>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
