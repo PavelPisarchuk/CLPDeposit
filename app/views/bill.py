@@ -19,7 +19,7 @@ def addcard(request, pk=None):
         except Bill.DoesNotExist:
             return redirect('index')
 
-        Card.objects.create(bill=bill, limit=request.POST['limit'])
+        bill.add_card(limit=request.POST['limit'])
         return redirect('client:list')
     else:
         try:
@@ -89,7 +89,7 @@ def addonbill(request, pk=None):
 
         pushmoney = int(request.POST['money'])
         bill.push(pushmoney)
-        Action.add('FILL', None, bill, pushmoney)
+        Action.add(action='FILL', bill=bill, money=pushmoney)
         return redirect('client:list')
     else:
         try:
@@ -119,8 +119,8 @@ def addbill(request, pk=None):
         except Currency.DoesNotExist:
             currency = Currency.objects.create(title='BYN', icon='p')
 
-        _bill = Bill.add(_user, 0, currency)
-        Action.add('CREATE', None, _bill, 0)
+        _bill = _user.add_bill(currency=currency, money=0)
+        Action.add(action='CREATE',bill=_bill, money=0)
         return redirect('client:list')
     else:
         return render(request, 'bill/addbill.html', {
@@ -170,8 +170,8 @@ def billtransact(request):
                     frombill.pop(_money)
                     tobill.push(_money)
 
-                    Action.add('TAKE_PART', None, frombill, _money)
-                    Action.add('FILL', None, tobill, _money)
+                    Action.add(action='TAKE_PART', bill=frombill, money=_money)
+                    Action.add(action='FILL', bill=tobill, money=_money)
                     return redirect('bill:bills')
                 else:
                     return render(request, 'errors/error.html', {

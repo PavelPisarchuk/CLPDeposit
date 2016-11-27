@@ -17,10 +17,10 @@ def send_message(request, pk):
 
     if request.method == 'POST':
         message = MessageForm(request.POST)
-        Message.objects.create(
+        model.send_message(
             message=message.data.get('message'),
-            header=message.data.get('header'),
-            user=model)
+            header=message.data.get('header')
+        )
 
         return redirect('client:list')
     else:

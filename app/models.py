@@ -24,6 +24,23 @@ class User(AbstractUser):
         from datetime import date
         return (date.today() - self.birthday).days // 365
 
+    def send_message(self, header=None, message=None):
+        Message.objects.create(
+            user=self,
+            header=header,
+            message=message
+        ).save()
+
+    def add_bill(self, currency=None, money=None, is_private=None):
+        obj = Bill.objects.create(
+            client=self,
+            money=money,
+            currency=currency,
+            is_private=is_private
+        )
+        obj.save()
+        return obj
+
 
 class Currency(models.Model):
     title = models.CharField(max_length=3, verbose_name='Название')
@@ -40,14 +57,13 @@ class Bill(models.Model):
     client = models.ForeignKey(User, verbose_name='Клиент')
     money = models.FloatField(verbose_name='Денежная сумма', default=0)
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
+    is_private = models.BooleanField(verbose_name='Личный счет?', default=True)
 
-    @classmethod
-    def add(cls, _client, _money, _currency):
-        return Bill.objects.create(
-            client=_client,
-            money=_money,
-            currency=_currency
-        )
+    def add_card(self, limit=None):
+        Card.objects.create(
+            bill=self,
+            limit=limit
+        ).save()
 
     def push(self, value):
         self.money += value
@@ -160,9 +176,9 @@ class Action(models.Model):
     money = models.FloatField(verbose_name='Денежная сумма')
 
     @classmethod
-    def add(cls, action_type_title, contract, bill, money):
+    def add(cls, action=None, contract=None, bill=None, money=None):
         Action.objects.create(
-            actionType=ActionType.objects.get(description=action_type_title),
+            actionType=ActionType.objects.get(description=action),
             contract=contract,
             bill=bill,
             money=money
