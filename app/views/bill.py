@@ -119,7 +119,7 @@ def addbill(request, pk=None):
         except Currency.DoesNotExist:
             currency = Currency.objects.create(title='BYN', icon='p')
 
-        _bill = _user.add_bill(currency=currency, money=0)
+        _bill = _user.add_bill(currency=currency, money=0, is_private=True)
         Action.add(action='CREATE',bill=_bill, money=0)
         return redirect('client:list')
     else:
