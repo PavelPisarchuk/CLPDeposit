@@ -21,8 +21,7 @@ class User(AbstractUser):
         return self.username if self.is_superuser else "{} {}. {}.".format(self.last_name, self.first_name[:1], self.father_name[:1])
 
     def get_age(self):
-        from datetime import date
-        return (date.today() - self.birthday).days // 365
+        return (datetime.date.today() - self.birthday).days // 365
 
     def send_message(self, header, message):
         Message.objects.create(
@@ -76,6 +75,9 @@ class Bill(models.Model):
             return True
         else:
             return False
+
+    def value_in_currency(self):
+        return self.currency.format_value(self.money)
 
 
 class Card(models.Model):

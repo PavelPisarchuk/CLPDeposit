@@ -14,8 +14,8 @@
             </tr>
             {% for b in bills %}
                 <tr>
-                    <td>{{  b.id}}</td>
-                    <td>{{ b.money }} рублей</td>
+                    <td>{{ b.id }}</td>
+                    <td>{{ b.value_in_currency }}</td>
                     <td>
                         <a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a>
                         <br>
