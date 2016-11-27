@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -58,7 +59,7 @@ def updatemsg(request):
             return JsonResponse({'data': False})
 
     except Exception:
-        return JsonResponse({'data':False})
+        return JsonResponse({'data': False})
 
 
 @login_required

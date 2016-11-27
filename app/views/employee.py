@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect
@@ -57,11 +58,11 @@ def edit(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def edit_user(request,pk):
+def edit_user(request, pk):
     if not pk:
-        pk=request.pk
+        pk = request.pk
     else:
-        request.pk=pk
+        request.pk = pk
 
     Form = modelform_factory(User, fields=clientfields)
     model = User.objects.get(id=pk)

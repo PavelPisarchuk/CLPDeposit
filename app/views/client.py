@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect
@@ -29,6 +30,7 @@ def list(request):
         'form': SearchForm()
     })
 
+
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def search(request):
@@ -39,15 +41,14 @@ def search(request):
         Form = SearchForm(request.POST)
 
         if(Form.data.get('first_name')):
-            users=users.filter(first_name__contains=Form.data.get('first_name'))
+            users = users.filter(first_name__contains=Form.data.get('first_name'))
         if(Form.data.get('last_name')):
-            users=users.filter(last_name__contains=Form.data.get('last_name'))
+            users = users.filter(last_name__contains=Form.data.get('last_name'))
         if(Form.data.get('passport_id')):
-            users=users.filter(passport_id__contains=Form.data.get('passport_id'))
-
+            users = users.filter(passport_id__contains=Form.data.get('passport_id'))
 
         return render(request, 'client/list.html', {
-            'form':Form,'clients': users.filter(is_superuser=False)
+            'form': Form, 'clients': users.filter(is_superuser=False)
         })
     else:
         return redirect('client:list')

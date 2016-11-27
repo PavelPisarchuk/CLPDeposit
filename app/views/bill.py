@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
@@ -33,7 +32,7 @@ def addcard(request, pk=None):
                 'bills': _bills
             })
         else:
-            return addbill(request,pk)
+            return addbill(request, pk)
 
 
 @login_required
@@ -103,7 +102,7 @@ def addonbill(request, pk=None):
                 'bills': _bills
             })
         else:
-            return addbill(request,pk)
+            return addbill(request, pk)
 
 
 @login_required
@@ -136,11 +135,11 @@ def billoperations(request, pk=None):
     except Bill.DoesNotExist:
         return redirect('bill:bills')
 
-    if bill.client!=request.user:
+    if bill.client != request.user:
         return redirect('errors:error')
     else:
-        _operations=Action.objects.all().filter(bill=bill).order_by('-id')
-        return render(request,'bill/billoperations.html',{
+        _operations = Action.objects.all().filter(bill=bill).order_by('-id')
+        return render(request, 'bill/billoperations.html', {
             'operations': _operations
         })
 
@@ -149,24 +148,24 @@ def billoperations(request, pk=None):
 def billtransact(request):
     if request.POST:
         try:
-            _from =int(request.POST["_from"])
+            _from = int(request.POST["_from"])
             _to = int(request.POST["_to"])
 
             frombill = Bill.objects.get(id=_from)
             tobill = Bill.objects.get(id=_to)
 
-            if frombill==tobill:
-                return render(request, 'bill/billtransact.html',{
+            if frombill == tobill:
+                return render(request, 'bill/billtransact.html', {
                     'bills': Bill.objects.all().filter(client=request.user)
                 })
 
-            if frombill.client!=request.user or tobill.client!=request.user:
+            if frombill.client != request.user or tobill.client != request.user:
                 return render(request, 'errors/error.html', {
                     'errors': u'Что-то пошло не так'
                 })
             else:
                 _money = int(request.POST["money"])
-                if _money<frombill.money:
+                if _money < frombill.money:
 
                     frombill.pop(_money)
                     tobill.push(_money)
@@ -175,7 +174,7 @@ def billtransact(request):
                     Action.add('FILL', None, tobill, _money)
                     return redirect('bill:bills')
                 else:
-                    return render(request, 'errors/error.html',{
+                    return render(request, 'errors/error.html', {
                         'errors': u'Недостаточно средств'
                     })
         except:
@@ -183,6 +182,6 @@ def billtransact(request):
                 'errors': u'Что-то пошло не так'
             })
     else:
-        return render(request,'bill/billtransact.html', {
-            'bills':Bill.objects.all().filter(client=request.user)
+        return render(request, 'bill/billtransact.html', {
+            'bills': Bill.objects.all().filter(client=request.user)
         })

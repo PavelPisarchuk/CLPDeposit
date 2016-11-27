@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -117,7 +116,7 @@ class Contract(models.Model):
     deposit_bill = models.FloatField(verbose_name='Сумма')
     bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
-    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None,null=True)
+    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
     def is_active(self):

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import app.views.bill as bill
 import app.views.client as client
 import app.views.contract as contract
@@ -70,8 +71,8 @@ urlpatterns = [
         url(r'^list/', contract.list, name='list'),
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
-    url(r'errors/',include([
+    url(r'errors/', include([
         url('r^error/', errors.error, name='error')
-    ],namespace='errors')),
+    ], namespace='errors')),
     url(r'', index, name='index'),
 ]
