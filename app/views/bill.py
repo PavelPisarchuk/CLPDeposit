@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
-from app.models import User, Card, Bill, Currency, Action
+from app.models import User, Card, Bill, Currency
 
 
 @login_required
@@ -89,7 +89,6 @@ def addonbill(request, pk=None):
 
         pushmoney = int(request.POST['money'])
         bill.push(pushmoney)
-        Action.add(action='FILL', bill=bill, money=pushmoney)
         return redirect('client:list')
     else:
         try:
@@ -120,27 +119,10 @@ def addbill(request, pk=None):
             currency = Currency.objects.create(title='BYN', icon='p')
 
         _bill = _user.add_bill(currency=currency, money=0, is_private=True)
-        Action.add(action='CREATE',bill=_bill, money=0)
         return redirect('client:list')
     else:
         return render(request, 'bill/addbill.html', {
             'bill_user': _user
-        })
-
-
-@login_required
-def billoperations(request, pk=None):
-    try:
-        bill = Bill.objects.get(id=pk)
-    except Bill.DoesNotExist:
-        return redirect('bill:bills')
-
-    if bill.client != request.user:
-        return redirect('errors:error')
-    else:
-        _operations = Action.objects.all().filter(bill=bill).order_by('-id')
-        return render(request, 'bill/billoperations.html', {
-            'operations': _operations
         })
 
 
@@ -166,12 +148,8 @@ def billtransact(request):
             else:
                 _money = int(request.POST["money"])
                 if _money < frombill.money:
-
                     frombill.pop(_money)
                     tobill.push(_money)
-
-                    Action.add(action='TAKE_PART', bill=frombill, money=_money)
-                    Action.add(action='FILL', bill=tobill, money=_money)
                     return redirect('bill:bills')
                 else:
                     return render(request, 'errors/error.html', {

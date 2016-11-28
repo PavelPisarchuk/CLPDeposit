@@ -38,6 +38,11 @@ class User(AbstractUser):
             is_private=is_private
         )
         obj.save()
+        Action.add(
+            action='CREATE',
+            bill=self,
+            money=money
+        )
         return obj
 
 
@@ -50,6 +55,18 @@ class Currency(models.Model):
 
     def format_value(self, value):
         return "{}{}".format(self.title, round(value, 2))
+
+    def from_exchange_rates(self):
+        return ExchangeRate.objects.filter(
+            from_currency=self,
+            date=datetime.date.today()
+        )
+
+    def to_exchange_rates(self):
+        return ExchangeRate.objects.filter(
+            to_currency=self,
+            date=datetime.date.today()
+        )
 
 
 class Bill(models.Model):
@@ -67,17 +84,30 @@ class Bill(models.Model):
     def push(self, value):
         self.money += value
         self.save()
+        Action.add(
+            action='FILL',
+            bill=self,
+            money=value
+        )
 
     def pop(self, value):
         if self.money >= value:
             self.money -= value
             self.save()
+            Action.add(
+                action='TAKE',
+                bill=self,
+                money=value
+            )
             return True
         else:
             return False
 
     def value_in_currency(self):
         return self.currency.format_value(self.money)
+
+    def toString(self):
+        return "Счет #{}".format(self.id)
 
 
 class Card(models.Model):
