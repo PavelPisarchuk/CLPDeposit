@@ -1,14 +1,14 @@
+from django.conf.urls import url, include
+
 import app.views.bill as bill
 import app.views.client as client
 import app.views.contract as contract
+import app.views.deposit as deposit
 import app.views.employee as admin
 import app.views.errors as errors
 import app.views.messages as messages
 from app.views.general import index, rates
 from app.views.general import login, logout, password
-from django.conf.urls import url, include
-
-import app.views.deposit as deposit
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
@@ -48,7 +48,8 @@ urlpatterns = [
         url(r'^addonbill/', bill.addonbill, name='addonbill'),
         url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
         url(r'^billoperations/(?P<pk>[0-9]+)/$', bill.billoperations, name='billoperations'),
-        url(r'^billtransact/', bill.billtransact, name='billtransact')
+        url(r'^billtransact/', bill.billtransact, name='billtransact'),
+        url(r'^getuserbills/(?P<pk>[0-9]+)/$', bill.getuserbills, name='getuserbills'),
     ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
