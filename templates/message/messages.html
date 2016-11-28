@@ -6,22 +6,24 @@
 
 {% block content %}
     {% if messages %}
-        <table class="table table-striped">
-            <tr>
-                <td>Дата</td>
-                <td>Заголовок</td>
-            </tr>
-            {% for message in messages %}
-                <tr {% if not message.readed %}style="font-weight: bold;"{% endif  %}>
-                    <td>{{ message.date }}</td>
-                    <td>
-                        <a href={% url 'message:readmsg' pk=message.id %}>
-                            {{ message.header }}
-                        </a>
-                    </td>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr>
+                    <td>Дата</td>
+                    <td>Заголовок</td>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for message in messages %}
+                    <tr {% if not message.readed %}style="font-weight: bold;"{% endif %}>
+                        <td>{{ message.date }}</td>
+                        <td>
+                            <a href={% url 'message:readmsg' pk=message.id %}>
+                                {{ message.header }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         <h2>У Вас нет сообщений</h2>
     {% endif %}

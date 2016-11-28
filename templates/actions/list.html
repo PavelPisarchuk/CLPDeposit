@@ -7,20 +7,22 @@
 {% block content %}
     {% if operations %}
         <h2>{{ info }}</h2>
-        <table class="table table-striped">
-            <tr>
-                <td>Тип операции</td>
-                <td>Дата</td>
-                <td>Сумма</td>
-            </tr>
-            {% for o in operations %}
+        <div class="table-responsive">
+            <table class="table table-striped">
                 <tr>
-                    <td>{{ o.actionType.description }}</td>
-                    <td>{{ o.datetime }} </td>
-                    <td>{{ o.format_money }} </td>
+                    <td>Тип операции</td>
+                    <td>Дата</td>
+                    <td>Сумма</td>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for o in operations %}
+                    <tr>
+                        <td>{{ o.actionType.description }}</td>
+                        <td>{{ o.datetime }} </td>
+                        <td>{{ o.format_money }} </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         <h2>Нет операций.</h2>
     {% endif %}

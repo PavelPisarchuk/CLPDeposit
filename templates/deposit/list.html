@@ -6,28 +6,30 @@
 
 {% block content %}
     {% if depositList %}
-        <table class="table table-striped">
-            <tr>
-                <td>Название</td>
-                <td>Процент</td>
-                <td>Минимальная сумма</td>
-                <td>Срок хранения</td>
-                <td>Архивный</td>
-                <td></td>
-                <td></td>
-            </tr>
-            {% for deposit in depositList %}
+        <div class="table-responsive">
+            <table class="table table-striped">
                 <tr>
-                    <td>{{ deposit.title }}</td>
-                    <td>{{ deposit.percent }}%</td>
-                    <td>{{ deposit.format_min_amount }}</td>
-                    <td>{{ deposit.format_duration }}</td>
-                    <td>{{ deposit.is_archive }}</td>
-                    <td><a href="{% url 'deposit:edit' deposit.id %}">редактировать</a></td>
-                    <td><a href="{% url 'deposit:listToArch' deposit.id %}">добавить в архив</a></td>
+                    <td>Название</td>
+                    <td>Процент</td>
+                    <td>Минимальная сумма</td>
+                    <td>Срок хранения</td>
+                    <td>Архивный</td>
+                    <td></td>
+                    <td></td>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for deposit in depositList %}
+                    <tr>
+                        <td>{{ deposit.title }}</td>
+                        <td>{{ deposit.percent }}%</td>
+                        <td>{{ deposit.format_min_amount }}</td>
+                        <td>{{ deposit.format_duration }}</td>
+                        <td>{{ deposit.is_archive }}</td>
+                        <td><a href="{% url 'deposit:edit' deposit.id %}">редактировать</a></td>
+                        <td><a href="{% url 'deposit:listToArch' deposit.id %}">добавить в архив</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         <h2>Вкладов нет.</h2>
     {% endif %}

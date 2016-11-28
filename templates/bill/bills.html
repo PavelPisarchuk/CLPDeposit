@@ -6,24 +6,26 @@
 
 {% block content %}
     {% if bills %}
-        <table class="table table-striped">
-            <tr>
-                <td>Счёт №</td>
-                <td>Баланс</td>
-                <td></td>
-            </tr>
-            {% for b in bills %}
+        <div class="table-responsive">
+            <table class="table table-striped">
                 <tr>
-                    <td>{{ b.id }}</td>
-                    <td>{{ b.value_in_currency }}</td>
-                    <td>
-                        <a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a>
-                        <br>
-                        <a href={% url 'actions:bill' pk=b.id %}>Завершённые операции</a>
-                    </td>
+                    <td>Счёт №</td>
+                    <td>Баланс</td>
+                    <td></td>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for b in bills %}
+                    <tr>
+                        <td>{{ b.id }}</td>
+                        <td>{{ b.value_in_currency }}</td>
+                        <td>
+                            <a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a>
+                            <br>
+                            <a href={% url 'actions:bill' pk=b.id %}>Завершённые операции</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         <h2>Счетов нет.</h2>
     {% endif %}

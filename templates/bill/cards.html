@@ -6,22 +6,24 @@
 
 {% block content %}
     {% if cards %}
-        <table class="table table-striped">
-            <tr>
-                <td>Карточка №</td>
-                <td>Счёт номер</td>
-                <td>Лимит карточки</td>
-            </tr>
-            {% for c in cards %}
+        <div class="table-responsive">
+            <table class="table table-striped">
                 <tr>
-                    <td>{{ c.id }}</td>
-                    <td>
-                        <a href={% url 'bill:cardsinbill' pk=c.bill_id %}>{{ c.bill_id }}</a>
-                    </td>
-                    <td>{{ c.limit }} рубля</td>
+                    <td>Карточка №</td>
+                    <td>Счёт номер</td>
+                    <td>Лимит карточки</td>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for c in cards %}
+                    <tr>
+                        <td>{{ c.id }}</td>
+                        <td>
+                            <a href={% url 'bill:cardsinbill' pk=c.bill_id %}>{{ c.bill_id }}</a>
+                        </td>
+                        <td>{{ c.limit }} рубля</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         <h2>Карточек нет</h2>
     {% endif %}

@@ -6,16 +6,18 @@
 
 {% block content %}
     {% if deposits %}
-        <table class="table table-striped">
-            {% for deposit in deposits %}
-                <tr>
-                    <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.title }}</a></td>
-                    <td>{{ deposit.percent }}%</td>
-                    <td>{{ deposit.format_min_amount }}</td>
-                    <td>{{ deposit.format_duration }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                {% for deposit in deposits %}
+                    <tr>
+                        <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.title }}</a></td>
+                        <td>{{ deposit.percent }}%</td>
+                        <td>{{ deposit.format_min_amount }}</td>
+                        <td>{{ deposit.format_duration }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         <h2>Вкладов нет</h2>
     {% endif %}

@@ -6,13 +6,15 @@
 
 {% block content %}
     {% if deposits %}
-        <table class="table table-striped">
-            {% for deposit in deposits %}
-                <tr>
-                    <td><a href="{% url 'contract:info' deposit.id %}">{{ deposit.deposit }}</a></td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                {% for deposit in deposits %}
+                    <tr>
+                        <td><a href="{% url 'contract:info' deposit.id %}">{{ deposit.deposit }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         <h2>Вкладов нет</h2>
     {% endif %}

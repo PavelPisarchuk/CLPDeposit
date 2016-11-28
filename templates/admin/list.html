@@ -6,18 +6,20 @@
 
 {% block content %}
     {% if admins %}
-        <table class="table table-striped">
-            <tr>
-                <td>Логин</td>
-                <td>Почта</td>
-            </tr>
-            {% for admin in admins %}
+        <div class="table-responsive">
+            <table class="table table-striped">
                 <tr>
-                    <td>{{ admin.username }}</td>
-                    <td>{{ admin.email }}</td>
+                    <td>Логин</td>
+                    <td>Почта</td>
                 </tr>
+                {% for admin in admins %}
+                    <tr>
+                        <td>{{ admin.username }}</td>
+                        <td>{{ admin.email }}</td>
+                    </tr>
 
-            {% endfor %}
-        </table>
+                {% endfor %}
+            </table>
+        </div>
     {% endif %}
 {% endblock %}
