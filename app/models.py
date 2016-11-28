@@ -231,19 +231,20 @@ class Contract(models.Model):
     def is_needs_pay(self):
         last_pay = self.get_last_pay()
         if not last_pay:
-            return True
+            last_pay_date = self.sign_date
         else:
             last_pay_date = last_pay.datetime
-            if self.deposit.is_pay_period_month:
-                d1, d2 = datetime.datetime.now(), last_pay_date
-                timedelta = (d1.year - d2.year) * 12 + d1.month - d2.month
-            else:
-                timedelta = (datetime.date.today() - last_pay_date.date()).days
 
-            if timedelta >= self.deposit.pay_period:
-                return True
-            else:
-                return False
+        if self.deposit.is_pay_period_month:
+            d1, d2 = datetime.datetime.now(), last_pay_date
+            timedelta = (d1.year - d2.year) * 12 + d1.month - d2.month
+        else:
+            timedelta = (datetime.datetime.now() - last_pay_date).days
+
+        if timedelta >= self.deposit.pay_period:
+            return True
+        else:
+            return False
 
     def get_actions(self):
         return Action.objects.filter(
