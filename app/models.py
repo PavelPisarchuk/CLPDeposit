@@ -30,6 +30,11 @@ class User(AbstractUser):
             message=message
         ).save()
 
+    def get_messages(self):
+        return Message.objects.filter(
+            user=self
+        )
+
     def add_bill(self, currency, money, is_private):
         obj = Bill.objects.create(
             client=self,
@@ -44,6 +49,17 @@ class User(AbstractUser):
             money=money
         )
         return obj
+
+    def get_bills(self):
+        return Bill.objects.filter(
+            client=self,
+            is_private=True
+        )
+
+    def get_contracts(self):
+        return Contract.objects.filter(
+            bill__client=self
+        )
 
 
 class Currency(models.Model):
@@ -108,6 +124,16 @@ class Bill(models.Model):
 
     def toString(self):
         return "Счет #{}".format(self.id)
+
+    def get_cards(self):
+        return Card.objects.filter(
+            bill=self
+        )
+
+    def get_actions(self):
+        return Action.objects.filter(
+            bill=self
+        )
 
 
 class Card(models.Model):
@@ -203,7 +229,7 @@ class Contract(models.Model):
         return "No"
 
     def is_needs_pay(self):
-        last_pay = Action.get_last_pay(self)
+        last_pay = self.get_last_pay()
         if not last_pay:
             return True
         else:
@@ -218,6 +244,16 @@ class Contract(models.Model):
                 return True
             else:
                 return False
+
+    def get_actions(self):
+        return Action.objects.filter(
+            contract=self
+        )
+
+    def get_last_pay(self):
+        return self.get_actions().filter(
+            actionType=ActionType.objects.get(description='PAY')
+        ).last()
 
 
 class ActionType(models.Model):
@@ -239,13 +275,6 @@ class Action(models.Model):
             bill=bill,
             money=money
         ).save()
-
-    @classmethod
-    def get_last_pay(cls, contract):
-        return Action.objects.all().filter(
-            actionType=ActionType.objects.get(description='PAY'),
-            contract=contract
-        ).last()
 
     def format_money(self):
         if self.bill:
