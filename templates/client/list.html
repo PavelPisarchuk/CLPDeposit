@@ -46,36 +46,230 @@
                         </a>
                     </td>
                     <td>
-                        <a href={% url 'message:send' pk=client.id  %}>
-                            <button type="button" class="btn btn-warning">
-                                Отправить сообщение
-                            </button>
-                        </a>
+                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                data-target="#myModalMessage" data-contentname="{{ client.get_full_name }}"
+                                data-contentid="{{ client.id }}">Отправить сообщение
+                        </button>
+
                     </td>
                     <td>
-                        <a href={% url 'bill:addbill' pk=client.id  %}>
-                            <button type="button" class="btn btn-warning">
-                                Открыть счёт
-                            </button>
-                        </a>
+                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                data-target="#myModalNewBill" data-contentname="{{ client.get_full_name }}"
+                                data-contentid="{{ client.id }}">Новый счёт
+                        </button>
+
                     </td>
                     <td>
-                            <a href={% url 'bill:addonbill' pk=client.id  %}>
-                                <button type="button" class="btn btn-warning">
-                                    Пополнить счёт
-                                </button>
-                            </a>
+                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                data-target="#myModalFill" data-contentname="{{ client.get_full_name }}"
+                                data-contentid="{{ client.id }}">Пополнить счёт
+                        </button>
+
                     </td>
                     <td>
-                        <a href={% url 'bill:addcard' pk=client.id  %}>
-                            <button type="button" class="btn btn-warning">
-                                Добавить карточку
-                            </button>
-                        </a>
+                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                data-target="#myModalNewCard" data-contentname="{{ client.get_full_name }}"
+                                data-contentid="{{ client.id }}">Новая карточка
+                        </button>
+
                     </td>
                 </tr>
 
             {% endfor %}
         </table>
+
+
+        <div class="modal fade" id="myModalNewBill" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                        <h4 class="modal-title">Новый счёт</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Добавить новый счёт для : </p>
+                        <p id="contentname" style="font-weight: bold;"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="addbillForm" class="form-horizontal" action="" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <input class="btn btn-warning" type="submit" value="Добавить"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModalNewCard" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                        <h4 class="modal-title">Новая карточка</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Добавить карточку для : </p>
+                        <p id="contentname" style="font-weight: bold;"></p>
+                        <div>
+                            <p><select id="billselecttocard" name="num" form="addcardForm">
+                                <option disabled>Загрузка...</option>
+                            </select></p>
+                            <p><input placeholder="Лимит" form="addcardForm" type="number" name="limit"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="addcardForm" class="form-horizontal" action="{% url 'bill:addcard' %}" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <input class="btn btn-warning" type="submit" value="Добавить"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModalFill" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                        <h4 class="modal-title">Пополнение</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Пополнение счёта для : </p>
+                        <p id="contentname" style="font-weight: bold;"></p>
+                        <div>
+                            <p><select id="billfillselecttocard" name="num" form="addonbillForm">
+                                <option disabled>Загрузка...</option>
+                            </select></p>
+                            <p><input placeholder="Сумма" form="addonbillForm" type="number" name="money"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="addonbillForm" class="form-horizontal" action="{% url 'bill:addonbill' %}"
+                              method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <input class="btn btn-warning" type="submit" value="Добавить"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModalMessage" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                        <h4 class="modal-title">Сообщение</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Отправить сообщение для : </p>
+                        <p id="contentname" style="font-weight: bold;"></p>
+                        <div>
+                            <p><input placeholder="Зоголовок" id="headerFormVal" form="messageForm" type="text"
+                                      name="header"></p>
+                            <p><textarea placeholder="Сообщение" id="messageFormVal" cols="50" rows="10"
+                                         form="messageForm" type="text" name="message"></textarea></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="messageForm" class="form-horizontal" action="" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <input class="btn btn-warning" type="submit" value="Добавить"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            $("#addbillForm").submit(function (event) {
+                $.post('/bill/addbill/' + userid + "/", function (data) {
+                });
+            });
+            $("#messageForm").submit(function (event) {
+                message = $('#messageFormVal').val();
+                header = $('#headerFormVal').val();
+                $.post('/message/send/' + userid + "/", {'message': message, 'header': header}, function (data) {
+                });
+            });
+
+        </script>
+        <script>
+            $('#myModalNewBill').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var contentid = Number(button.data('contentid'));
+                userid = contentid;
+                var contentname = button.data('contentname');
+                $(this).find('#contentname').text(contentname);
+            });
+            $('#myModalMessage').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var contentid = Number(button.data('contentid'));
+                userid = contentid;
+                var contentname = button.data('contentname');
+                $(this).find('#contentname').text(contentname);
+            });
+            $('#myModalFill').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var contentid = Number(button.data('contentid'));
+                userid = contentid;
+                var contentname = button.data('contentname');
+                $(this).find('#contentname').text(contentname);
+                $.get('/bill/getuserbills/' + userid + "/", function (data) {
+                    bills = data['bills'];
+                    $('#billfillselecttocard').empty();
+                    for (i in bills)
+                        $('#billfillselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
+                });
+            });
+            $('#myModalNewCard').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var contentid = Number(button.data('contentid'));
+                userid = contentid;
+                var contentname = button.data('contentname');
+                $(this).find('#contentname').text(contentname);
+
+                $.get('/bill/getuserbills/' + userid + "/", function (data) {
+                    bills = data['bills'];
+                    $('#billselecttocard').empty();
+                    for (i in bills)
+                        $('#billselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
+                });
+            })
+        </script>
+
     {% endif %}
 {% endblock %}

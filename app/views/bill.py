@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from app.models import User, Card, Bill, Currency
+
+from app.models import User, Card, Bill, Currency, Action
 
 
 @login_required
@@ -12,28 +15,15 @@ def card(request, pk=None):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def addcard(request, pk=None):
-    if request.POST:
+    if request.method == 'POST':
         try:
             pk = request.POST["num"]
             bill = Bill.objects.get(id=pk)
         except Bill.DoesNotExist:
-            return redirect('index')
+            return redirect('client:list')
 
         bill.add_card(limit=request.POST['limit'])
         return redirect('client:list')
-    else:
-        try:
-            _user = User.objects.get(id=pk)
-        except Bill.DoesNotExist:
-            return redirect('index')
-        _bills = Bill.objects.all().filter(client=_user)
-        if _bills:
-            return render(request, 'bill/addcard.html', {
-                'bills': _bills
-            })
-        else:
-            return addbill(request, pk)
-
 
 @login_required
 def cards(request):
@@ -80,7 +70,7 @@ def bills(request):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def addonbill(request, pk=None):
-    if request.POST:
+    if request.method == 'POST':
         try:
             pk = request.POST["num"]
             bill = Bill.objects.get(id=pk)
@@ -90,19 +80,6 @@ def addonbill(request, pk=None):
         pushmoney = int(request.POST['money'])
         bill.push(pushmoney)
         return redirect('client:list')
-    else:
-        try:
-            _user = User.objects.get(id=pk)
-        except User.DoesNotExist:
-            return redirect('client:list')
-        _bills = Bill.objects.all().filter(client=_user)
-        if _bills:
-            return render(request, 'bill/addonbill.html', {
-                'bills': _bills
-            })
-        else:
-            return addbill(request, pk)
-
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -110,19 +87,31 @@ def addbill(request, pk=None):
     try:
         _user = User.objects.get(id=pk)
     except User.DoesNotExist:
-        return redirect('client:list')
+        return JsonResponse()
 
-    if request.POST:
+    if request.method == 'POST':
         try:
             currency = Currency.objects.get(title='BYN')
         except Currency.DoesNotExist:
             currency = Currency.objects.create(title='BYN', icon='p')
 
         _bill = _user.add_bill(currency=currency, money=0, is_private=True)
-        return redirect('client:list')
+        return JsonResponse()
+
+
+@login_required
+def billoperations(request, pk=None):
+    try:
+        bill = Bill.objects.get(id=pk)
+    except Bill.DoesNotExist:
+        return redirect('bill:bills')
+
+    if bill.client!=request.user:
+        return redirect('errors:error')
     else:
-        return render(request, 'bill/addbill.html', {
-            'bill_user': _user
+        _operations=Action.objects.all().filter(bill=bill).order_by('-id')
+        return render(request,'bill/billoperations.html',{
+            'operations': _operations
         })
 
 
@@ -163,3 +152,20 @@ def billtransact(request):
         return render(request, 'bill/billtransact.html', {
             'bills': Bill.objects.all().filter(client=request.user)
         })
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def getuserbills(request, pk=None):
+    try:
+        _user = User.objects.get(id=pk)
+    except User.DoesNotExist:
+        return redirect('client:list')
+    _bills = Bill.objects.all().filter(client=_user)
+    _bills_id = []
+    for a in _bills:
+        _bills_id.append(a.id)
+    if _bills:
+        return JsonResponse({'bills': _bills_id})
+    else:
+        return redirect('client:list')

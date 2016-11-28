@@ -3,32 +3,25 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from app.forms import MessageForm
 from app.models import User, Message
 
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def send_message(request, pk):
+def send_message(request, pk=None):
     try:
-        model = User.objects.get(id=pk)
+        user = User.objects.get(id=pk)
     except User.DoesNotExist:
         return redirect('client:list')
 
     if request.method == 'POST':
         message = MessageForm(request.POST)
-        model.send_message(
+        user.send_message(
             message=message.data.get('message'),
             header=message.data.get('header')
         )
 
         return redirect('client:list')
-    else:
-        request.pk = pk
-        message = MessageForm(request.POST)
-        return render(request, 'message/sendmessage.html', {
-            'form': message
-        })
 
 
 @login_required
