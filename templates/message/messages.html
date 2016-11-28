@@ -1,37 +1,28 @@
 {% extends "body.html" %}
 
 {% block title %}
-    <title>Клиенты</title>
+    <title>Мои сообщения</title>
 {% endblock %}
 
 {% block content %}
-
-
-
+    {% if messages %}
         <table class="table table-striped">
             <tr>
                 <td>Дата</td>
                 <td>Заголовок</td>
-                <td></td>
             </tr>
-        {% if messages %}
             {% for message in messages %}
-                <tr>
+                <tr {% if not message.readed %}style="font-weight: bold;"{% endif  %}>
                     <td>{{ message.date }}</td>
-                    <td>{{ message.header }}</td>
                     <td>
-                        {% if not message.readed %}
-                            Непрочитанное->
-                        {% endif %}
                         <a href={% url 'message:readmsg' pk=message.id %}>
-                            <button type="button" class="btn btn-warning">
-                                Прочитать
-                            </button>
+                            {{ message.header }}
                         </a>
                     </td>
                 </tr>
-
             {% endfor %}
         </table>
+    {% else %}
+        <h2>У Вас нет сообщений</h2>
     {% endif %}
 {% endblock %}

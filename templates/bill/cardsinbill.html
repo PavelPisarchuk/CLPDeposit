@@ -8,7 +8,7 @@
 
     {% if bill %}
     <div>Счёт №{{ bill.id }}</div>
-        <div>Денег на счету {{ bill.money }} рублей</div>
+        <div>Денег на счету {{ bill.value_in_currency }}</div>
     <br>
     {% endif %}
     <div>Мои карточки в текущем счёте:</div>

@@ -1,25 +1,27 @@
+# -*- coding: utf-8 -*-
+from django.conf.urls import url, include
+
+import app.views.actions as actions
+import app.views.employee as admin
 import app.views.bill as bill
 import app.views.client as client
 import app.views.contract as contract
-import app.views.employee as admin
-import app.views.errors as errors
-import app.views.messages as messages
-from app.views.general import index, rates
-from app.views.general import login, logout, password
-from django.conf.urls import url, include
-
 import app.views.deposit as deposit
+import app.views.errors as errors
+import app.views.general as general
+import app.views.messages as messages
 
 urlpatterns = [
-    url(r'^login/', login, name='login'),
-    url(r'^logout/', logout, name='logout'),
-    url(r'^rates/', rates, name='rates'),
-    url(r'^password/', password, name='password'),
+    url(r'^login/', general.login, name='login'),
+    url(r'^logout/', general.logout, name='logout'),
+    url(r'^rates/', general.rates, name='rates'),
+    url(r'^password/', general.password, name='password'),
     url(r'^message/', include([
         url(r'^send/(?P<pk>[0-9]+)/$', messages.send_message, name='send'),
         url(r'^updatemsg/', messages.updatemsg, name='updatemsg'),
         url(r'^messages/', messages.messages, name='messages'),
         url(r'^readmsg/(?P<pk>[0-9]+)/$', messages.readmessage, name='readmsg'),
+        url(r'^delete/(?P<pk>[0-9]+)/$', messages.delete, name='delete'),
     ], namespace='message')),
     url(r'^employee/', include([
         url(r'^new/', admin.new, name='new'),
@@ -37,6 +39,9 @@ urlpatterns = [
         url(r'^search/', client.search, name='search'),
         url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),
+    url(r'^actions/', include([
+        url(r'^bill/(?P<pk>[0-9]+)/$', actions.bill, name='bill'),
+    ], namespace='actions')),
     url(r'^bill/', include([
         url(r'^bills/', bill.bills, name='bills'),
         url(r'^addbill/(?P<pk>[0-9]+)/$', bill.addbill, name='addbill'),
@@ -46,13 +51,13 @@ urlpatterns = [
         url(r'^addonbill/(?P<pk>[0-9]+)/$', bill.addonbill, name='addonbill'),
         url(r'^addonbill/', bill.addonbill, name='addonbill'),
         url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
+        url(r'^billtransact/', bill.billtransact, name='billtransact')
     ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
         url(r'^list/', deposit.list, name='list'),
         url(r'^new/', deposit.new, name='new'),
         url(r'^edit/(?P<deposit_id>[0-9]+)/', deposit.edit, name='edit'),
-        url(r'^currency/', deposit.currency, name='currency'),
 
 
         url(r'^refill/', deposit.refill, name='refill'),
@@ -67,8 +72,8 @@ urlpatterns = [
         url(r'^list/', contract.list, name='list'),
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
-    url(r'errors/',include([
-        url('r^permission/', errors.permission_error, name='error')
-    ],namespace='errors')),
-    url(r'', index, name='index'),
+    url(r'errors/', include([
+        url('r^error/', errors.error, name='error')
+    ], namespace='errors')),
+    url(r'', general.index, name='index'),
 ]

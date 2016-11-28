@@ -14,11 +14,17 @@
             </tr>
             {% for b in bills %}
                 <tr>
-                    <td>{{  b.id}}</td>
-                    <td>{{ b.money }} рублей</td>
-                    <td><a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a></td>
+                    <td>{{ b.id }}</td>
+                    <td>{{ b.value_in_currency }}</td>
+                    <td>
+                        <a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a>
+                        <br>
+                        <a href={% url 'actions:bill' pk=b.id %}>Завершённые операции</a>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
+    {% else %}
+        <h2>Счетов нет.</h2>
     {% endif %}
 {% endblock %}

@@ -33,5 +33,12 @@
     "fields":{
       "description":"TAKE_PART"
     }
+  },
+  {
+    "model":"app.actiontype",
+    "pk":6,
+    "fields":{
+      "description":"CREATE"
+    }
   }
 ]

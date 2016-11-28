@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -22,8 +21,29 @@ class User(AbstractUser):
         return self.username if self.is_superuser else "{} {}. {}.".format(self.last_name, self.first_name[:1], self.father_name[:1])
 
     def get_age(self):
-        from datetime import date
-        return (date.today() - self.birthday).days // 365
+        return (datetime.date.today() - self.birthday).days // 365
+
+    def send_message(self, header, message):
+        Message.objects.create(
+            user=self,
+            header=header,
+            message=message
+        ).save()
+
+    def add_bill(self, currency, money, is_private):
+        obj = Bill.objects.create(
+            client=self,
+            money=money,
+            currency=currency,
+            is_private=is_private
+        )
+        obj.save()
+        Action.add(
+            action='CREATE',
+            bill=self,
+            money=money
+        )
+        return obj
 
 
 class Currency(models.Model):
@@ -36,27 +56,58 @@ class Currency(models.Model):
     def format_value(self, value):
         return "{}{}".format(self.title, round(value, 2))
 
+    def from_exchange_rates(self):
+        return ExchangeRate.objects.filter(
+            from_currency=self,
+            date=datetime.date.today()
+        )
+
+    def to_exchange_rates(self):
+        return ExchangeRate.objects.filter(
+            to_currency=self,
+            date=datetime.date.today()
+        )
+
 
 class Bill(models.Model):
     client = models.ForeignKey(User, verbose_name='Клиент')
     money = models.FloatField(verbose_name='Денежная сумма', default=0)
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
+    is_private = models.BooleanField(verbose_name='Личный счет?', default=True)
 
-    @classmethod
-    def add(cls, _client, _money, _currency):
-        return Bill.objects.create(
-            client=_client,
-            money=_money,
-            currency=_currency
-        )
+    def add_card(self, limit):
+        Card.objects.create(
+            bill=self,
+            limit=limit
+        ).save()
 
     def push(self, value):
         self.money += value
         self.save()
+        Action.add(
+            action='FILL',
+            bill=self,
+            money=value
+        )
 
     def pop(self, value):
-        self.money -= value
-        self.save()
+        if self.money >= value:
+            self.money -= value
+            self.save()
+            Action.add(
+                action='TAKE',
+                bill=self,
+                money=value
+            )
+            return True
+        else:
+            return False
+
+    def value_in_currency(self):
+        return self.currency.format_value(self.money)
+
+    def toString(self):
+        return "Счет #{}".format(self.id)
 
 
 class Card(models.Model):
@@ -103,8 +154,12 @@ class Deposit(models.Model):
     def __str__(self):
         return self.title
 
-    def getCurrencyTitle(self):
-        return self.currency.title
+    def format_duration(self):
+        interval = "дней" if self.is_pay_period_month else "месяцев"
+        return "{} {}".format(self.duration, interval)
+
+    def format_min_amount(self):
+        return self.currency.format_value(self.min_amount)
 
 
 class Contract(models.Model):
@@ -113,7 +168,7 @@ class Contract(models.Model):
     deposit_bill = models.FloatField(verbose_name='Сумма')
     bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
-    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None,null=True)
+    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
     def is_active(self):
@@ -151,15 +206,17 @@ class ActionType(models.Model):
 
 class Action(models.Model):
     actionType = models.ForeignKey(ActionType, verbose_name='Тип действия')
-    contract = models.ForeignKey(Contract, verbose_name='Договор')
+    contract = models.ForeignKey(Contract, verbose_name='Договор', default=None, editable=False, null=True)
+    bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя', default=None, editable=False, null=True)
     datetime = models.DateTimeField(verbose_name='Дата', default=datetime.datetime.now)
     money = models.FloatField(verbose_name='Денежная сумма')
 
     @classmethod
-    def add(cls, action_type_title, contract, money):
+    def add(cls, action=None, contract=None, bill=None, money=0):
         Action.objects.create(
-            actionType=ActionType.objects.get(description=action_type_title),
+            actionType=ActionType.objects.get(description=action),
             contract=contract,
+            bill=bill,
             money=money
         ).save()
 
@@ -169,6 +226,10 @@ class Action(models.Model):
             actionType=ActionType.objects.get(description='PAY'),
             contract=contract
         ).last()
+
+    def format_money(self):
+        if self.bill:
+            return self.bill.currency.format_value(self.money)
 
 
 class ExchangeRate(models.Model):
