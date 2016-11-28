@@ -81,21 +81,21 @@ class Bill(models.Model):
             limit=limit
         ).save()
 
-    def push(self, value):
+    def push(self, value, action='FILL'):
         self.money += value
         self.save()
         Action.add(
-            action='FILL',
+            action=action,
             bill=self,
             money=value
         )
 
-    def pop(self, value):
+    def pop(self, value, action='TAKE'):
         if self.money >= value:
             self.money -= value
             self.save()
             Action.add(
-                action='TAKE',
+                action=action,
                 bill=self,
                 money=value
             )
@@ -155,8 +155,11 @@ class Deposit(models.Model):
         return self.title
 
     def format_duration(self):
-        interval = "дней" if self.is_pay_period_month else "месяцев"
-        return "{} {}".format(self.duration, interval)
+        return "{} месяцев".format(self.duration)
+
+    def format_pay_period(self):
+        interval = "месяцев" if self.is_pay_period_month else "дней"
+        return "{} {}".format(self.pay_period, interval)
 
     def format_min_amount(self):
         return self.currency.format_value(self.min_amount)
