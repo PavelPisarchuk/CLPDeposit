@@ -75,23 +75,6 @@ def edit(request, deposit_id):
     })
 
 
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def currency(request):
-    if request.method == 'POST':
-        form = CurrencyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            form = CurrencyForm()
-    else:
-        form = CurrencyForm()
-
-    return render(request, 'deposit/currency.html', {
-        'form': form,
-        'currencyList': Currency.objects.all()
-    })
-
-
 def refill(request):
     return
 

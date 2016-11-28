@@ -5,21 +5,12 @@
 {% endblock %}
 
 {% block content %}
-
     {% for error in errors %}
-        <br> {{ error }}
+        <p class="bg-danger">{{ error }}</p>
     {% endfor %}
-
-    <br>
-    <br>
-
-
     <form action="{% url 'deposit:edit' ID %}" method="post">
         {% csrf_token %}
         {{ depositForm.as_p }}
         <input class="btn btn-default" type="submit" value="Подтвердить" />
     </form>
-
-
-
 {% endblock %}

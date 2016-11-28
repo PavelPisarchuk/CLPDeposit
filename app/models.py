@@ -154,8 +154,12 @@ class Deposit(models.Model):
     def __str__(self):
         return self.title
 
-    def getCurrencyTitle(self):
-        return self.currency.title
+    def format_duration(self):
+        interval = "дней" if self.is_pay_period_month else "месяцев"
+        return "{} {}".format(self.duration, interval)
+
+    def format_min_amount(self):
+        return self.currency.format_value(self.min_amount)
 
 
 class Contract(models.Model):
@@ -222,6 +226,10 @@ class Action(models.Model):
             actionType=ActionType.objects.get(description='PAY'),
             contract=contract
         ).last()
+
+    def format_money(self):
+        if self.bill:
+            return self.bill.currency.format_value(self.money)
 
 
 class ExchangeRate(models.Model):

@@ -1,23 +1,22 @@
 {% extends "body.html" %}
 
 {% block title %}
-    <title>Клиенты</title>
+    <title>Вклады</title>
 {% endblock %}
 
 {% block content %}
-        {% if deposits %}
-            <table class="table table-striped">
-                {% for deposit in deposits %}
-                    <tr>
-                        <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.title }}</a></td>
-                        <td>{{  deposit.percent }}%</td>
-                        <td>{{  deposit.min_amount }} {{ deposit.getCurrencyTitle }}</td>
-                        <td>{{  deposit.duration }} months</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <br>
-            <p>No available Deposits</p>
-        {% endif %}
+    {% if deposits %}
+        <table class="table table-striped">
+            {% for deposit in deposits %}
+                <tr>
+                    <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.title }}</a></td>
+                    <td>{{ deposit.percent }}%</td>
+                    <td>{{ deposit.format_min_amount }}</td>
+                    <td>{{ deposit.format_duration }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2>Вкладов нет</h2>
+    {% endif %}
 {% endblock %}
