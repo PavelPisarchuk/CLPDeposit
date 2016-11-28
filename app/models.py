@@ -199,6 +199,23 @@ class Contract(models.Model):
             return "Yes"
         return "No"
 
+    def is_needs_pay(self):
+        last_pay = Action.get_last_pay(self)
+        if not last_pay:
+            return True
+        else:
+            last_pay_date = last_pay.datetime
+            if self.deposit.is_pay_period_month:
+                d1, d2 = datetime.datetime.now(), last_pay_date
+                timedelta = (d1.year - d2.year) * 12 + d1.month - d2.month
+            else:
+                timedelta = (datetime.date.today() - last_pay_date.date()).days
+
+            if timedelta >= self.deposit.pay_period:
+                return True
+            else:
+                return False
+
 
 class ActionType(models.Model):
     description = models.CharField(max_length=300, verbose_name='Описание')
