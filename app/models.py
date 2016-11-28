@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-
 import datetime
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class User(AbstractUser):
@@ -40,7 +40,7 @@ class User(AbstractUser):
         obj.save()
         Action.add(
             action='CREATE',
-            bill=self,
+            bill=obj,
             money=money
         )
         return obj
