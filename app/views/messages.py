@@ -15,12 +15,10 @@ def send_message(request, pk=None):
         return redirect('client:list')
 
     if request.method == 'POST':
-        message = MessageForm(request.POST)
         user.send_message(
-            message=message.data.get('message'),
-            header=message.data.get('header')
+            message=request.POST['message'],
+            header=request.POST['header']
         )
-
         return redirect('client:list')
 
 
