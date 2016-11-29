@@ -8,47 +8,41 @@ from app.models import User, Message
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def send_message(request, pk=None):
+def send_message(request):
     try:
-        user = User.objects.get(id=pk)
-    except User.DoesNotExist:
-        return redirect('client:list')
-
-    if request.method == 'POST':
-        user.send_message(
-            message=request.POST['message'],
-            header=request.POST['header']
-        )
+        user = User.objects.get(id=request.POST['num'])
+        if request.method == 'POST':
+            user.send_message(
+                message=request.POST['message'],
+                header=request.POST['header']
+            )
+            return redirect('client:list')
+    except:
         return redirect('client:list')
 
 
 @login_required
-def readmessage(request, pk):
+def readmessage(request):
     try:
-        msg = Message.objects.get(id=pk)
-    except Message.DoesNotExist:
+        if request.method == 'POST':
+            msg = Message.objects.get(id=request.POST["num"])
+            if request.user != msg.user:
+                return redirect('errors:permission')
+            msg.readed = True
+            msg.save()
+            return JsonResponse()
+    except:
         return redirect('message:messages')
-
-    if request.user != msg.user:
-        return redirect('errors:permission')
-    else:
-        msg.readed = True
-        msg.save()
-        return render(request, 'message/message.html', {
-            'msg': msg
-        })
 
 
 @login_required
 def updatemsg(request):
     try:
         mymessages = Message.objects.all().filter(user=request.user, readed=False)
-
         if mymessages:
             return JsonResponse({'data': True, 'count': len(mymessages)})
         else:
             return JsonResponse({'data': False})
-
     except Exception:
         return JsonResponse({'data': False})
 
@@ -57,22 +51,22 @@ def updatemsg(request):
 def messages(request):
     try:
         mymessages = Message.objects.all().filter(user=request.user).order_by('-id')
-
         return render(request, 'message/messages.html', {
             'messages': mymessages
         })
     except:
-        return render(request, 'message/messages.html')
+        return redirect('message:messages')
 
 
 @login_required
-def delete(request, pk):
+def delete(request):
     try:
-        msg = Message.objects.get(id=pk)
-        if request.user != msg.user:
-            return redirect('errors:permission')
-        else:
-            msg.delete()
-            return redirect('message:messages')
-    except Message.DoesNotExist:
+        if request.POST:
+            msg = Message.objects.get(id=request.POST['num'])
+            if request.user != msg.user:
+                return redirect('errors:permission')
+            else:
+                msg.delete()
+                return redirect('message:messages')
+    except:
         return redirect('message:messages')

@@ -3,23 +3,26 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect
 
-from app.forms import AdminForm, adminfields, clientfields
+from app.forms import AdminForm, adminfields
 from app.models import User
 
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new(request):
-    if request.method == 'POST':
-        form = AdminForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_superuser(**form.cleaned_data)
-            user.save()
+    try:
+        if request.method == 'POST':
+            form = AdminForm(request.POST)
+            if form.is_valid():
+                user = User.objects.create_superuser(**form.cleaned_data)
+                user.save()
+            return redirect('employee:list')
+        else:
+            return render(request, 'admin/registration.html', {
+                'form': AdminForm()
+            })
+    except:
         return redirect('employee:list')
-    else:
-        return render(request, 'admin/registration.html', {
-            'form': AdminForm()
-        })
 
 
 @login_required
@@ -58,23 +61,14 @@ def edit(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def edit_user(request, pk):
-    if not pk:
-        pk = request.pk
-    else:
-        request.pk = pk
-
-    Form = modelform_factory(User, fields=clientfields)
-    model = User.objects.get(id=pk)
-
-    if request.method == 'POST':
-        form = Form(request.POST, instance=model)
-        if form.is_valid():
-            user = form.save(commit=False)
-            model.save()
-            user.save()
+def edit_user(request):
+    try:
+        if request.method == 'POST':
+            _user = User.objects.get(id=request.POST["num"])
+            print _user
+            _user.first_name, _user.last_name, _user.father_name = request.POST["firstname"], \
+                                                                   request.POST["lastname"], request.POST["fathername"]
+            _user.save()
+            return redirect('client:list')
+    except:
         return redirect('client:list')
-    else:
-        return render(request, 'admin/edituser.html', {
-            'form': Form(instance=model)
-        })

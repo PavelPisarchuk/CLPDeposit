@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block content %}
+    {% if errors %}
+        {% for e in errors %}
+            <div>{{ e }}</div>
+        {% endfor %}
+    {% endif %}
     <form class="form-horizontal" action="{% url 'client:search' %}" method="post">
             {% csrf_token %}
                         <div class="fieldWrapper">
@@ -41,11 +46,13 @@
                         <td>{{ client.get_full_name }}</td>
                         <td>{{ client.passport_id }}</td>
                         <td>
-                            <a href={% url 'employee:uedit' pk=client.id %}>
-                                <button type="button" class="btn btn-warning">
-                                    Изменить
-                                </button>
-                            </a>
+                            <button type="button" class="btn btn-warning" data-toggle="modal"
+                                    data-target="#myModalChangeUser" data-father="{{ client.father_name }}"
+                                    data-last="{{ client.last_name }}" data-first="{{ client.first_name }}"
+                                    data-contentname="{{ client.get_full_name }}"
+                                    data-contentid="{{ client.id }}">Изменить
+                            </button>
+
                         </td>
                         <td>
                             <button type="button" class="btn btn-warning" data-toggle="modal"
@@ -92,9 +99,10 @@
                     <div class="modal-body">
                         <p>Добавить новый счёт для : </p>
                         <p id="contentname" style="font-weight: bold;"></p>
+                        <p><input name="num" style="display: none" form="addbillForm" id="userid"></p>
                     </div>
                     <div class="modal-footer">
-                        <form id="addbillForm" class="form-horizontal" action="" method="post">
+                        <form id="addbillForm" class="form-horizontal" action="{% url 'bill:addbill' %}" method="post">
                             {% csrf_token %}
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                             <input class="btn btn-warning" type="submit" value="Добавить"/>
@@ -171,6 +179,7 @@
                     <div class="modal-body">
                         <p>Отправить сообщение для : </p>
                         <p id="contentname" style="font-weight: bold;"></p>
+                        <p><input name="num" style="display: none" form="messageForm" id="userid"></p>
                         <div>
                             <p><input class="form-control" placeholder="Зоголовок" id="headerFormVal" form="messageForm"
                                       type="text"
@@ -180,7 +189,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <form id="messageForm" class="form-horizontal" action="" method="post">
+                        <form id="messageForm" class="form-horizontal" action="{% url 'message:send' %}" method="post">
                             {% csrf_token %}
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                             <input class="btn btn-warning" type="submit" value="Добавить"/>
@@ -190,68 +199,62 @@
             </div>
         </div>
 
-        <script>
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            var csrftoken = getCookie('csrftoken');
-            function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
+        <div class="modal fade" id="myModalChangeUser" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                        <h4 class="modal-title">Изменение</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Изменить данные для : </p>
+                        <p id="contentname" style="font-weight: bold;"></p>
+                        <div>
+                            <p><input name="num" style="display: none" form="changeuserForm" id="userid"></p>
+                            <p><input type="text" name="firstname" placeholder="Имя" form="changeuserForm"
+                                      id="userfirstname"></p>
+                            <p><input type="text" name="lastname" placeholder="Фамилия" form="changeuserForm"
+                                      id="userlastname"></p>
+                            <p><input type="text" name="fathername" placeholder="Отчество" form="changeuserForm"
+                                      id="userfathername"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="changeuserForm" class="form-horizontal" action="{% url 'employee:uedit' %}"
+                              method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <input class="btn btn-warning" type="submit" value="Изменить"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            $("#addbillForm").submit(function (event) {
-                $.post('/bill/addbill/' + userid + "/", function (data) {
-                });
-            });
-            $("#messageForm").submit(function (event) {
-                message = $('#messageFormVal').val();
-                header = $('#headerFormVal').val();
-                $.post('/message/send/' + userid + "/", {'message': message, 'header': header}, function (data) {
-                });
-            });
-
-        </script>
         <script>
+            $('#myModalChangeUser').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                $(this).find('#contentname').text(button.data('contentname'));
+                $(this).find('#userfirstname').val(button.data('first'));
+                $(this).find('#userlastname').val(button.data('last'));
+                $(this).find('#userfathername').val(button.data('father'));
+                $(this).find('#userid').val(button.data('contentid'))
+
+            });
             $('#myModalNewBill').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
-                var contentid = Number(button.data('contentid'));
-                userid = contentid;
-                var contentname = button.data('contentname');
-                $(this).find('#contentname').text(contentname);
+                $(this).find('#contentname').text(button.data('contentname'));
+                $(this).find('#userid').val(button.data('contentid'))
             });
             $('#myModalMessage').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
-                var contentid = Number(button.data('contentid'));
-                userid = contentid;
-                var contentname = button.data('contentname');
-                $(this).find('#contentname').text(contentname);
+                $(this).find('#contentname').text(button.data('contentname'));
+                $(this).find('#userid').val(button.data('contentid'))
             });
             $('#myModalFill').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
-                var contentid = Number(button.data('contentid'));
-                userid = contentid;
-                var contentname = button.data('contentname');
-                $(this).find('#contentname').text(contentname);
+                userid = Number(button.data('contentid'));
+                $(this).find('#contentname').text(button.data('contentname'));
                 $.get('/bill/getuserbills/' + userid + "/", function (data) {
                     bills = data['bills'];
                     $('#billfillselecttocard').empty();
@@ -261,11 +264,8 @@
             });
             $('#myModalNewCard').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
-                var contentid = Number(button.data('contentid'));
-                userid = contentid;
-                var contentname = button.data('contentname');
-                $(this).find('#contentname').text(contentname);
-
+                userid = Number(button.data('contentid'));
+                $(this).find('#contentname').text(button.data('contentname'));
                 $.get('/bill/getuserbills/' + userid + "/", function (data) {
                     bills = data['bills'];
                     $('#billselecttocard').empty();

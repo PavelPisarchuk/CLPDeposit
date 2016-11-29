@@ -2,11 +2,11 @@
 from django.conf.urls import url, include
 
 import app.views.actions as actions
-import app.views.employee as admin
 import app.views.bill as bill
 import app.views.client as client
 import app.views.contract as contract
 import app.views.deposit as deposit
+import app.views.employee as admin
 import app.views.errors as errors
 import app.views.general as general
 import app.views.messages as messages
@@ -17,18 +17,17 @@ urlpatterns = [
     url(r'^rates/', general.rates, name='rates'),
     url(r'^password/', general.password, name='password'),
     url(r'^message/', include([
-        url(r'^send/(?P<pk>[0-9]+)/$', messages.send_message, name='send'),
+        url(r'^send/', messages.send_message, name='send'),
         url(r'^updatemsg/', messages.updatemsg, name='updatemsg'),
         url(r'^messages/', messages.messages, name='messages'),
-        url(r'^readmsg/(?P<pk>[0-9]+)/$', messages.readmessage, name='readmsg'),
-        url(r'^delete/(?P<pk>[0-9]+)/$', messages.delete, name='delete'),
+        url(r'^readmsg/', messages.readmessage, name='readmsg'),
+        url(r'^delete/', messages.delete, name='delete'),
     ], namespace='message')),
     url(r'^employee/', include([
         url(r'^new/', admin.new, name='new'),
         url(r'^list/', admin.list, name='list'),
         url(r'^info/', admin.info, name='info'),
         url(r'^edit/', admin.edit, name='edit'),
-        url(r'^edituser/(?P<pk>[0-9]+)/$', admin.edit_user, name='uedit'),
         url(r'^edituser/', admin.edit_user, name='uedit'),
     ], namespace='employee')),
     url(r'^client/', include([
@@ -40,15 +39,13 @@ urlpatterns = [
         url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),
     url(r'^actions/', include([
-        url(r'^bill/(?P<pk>[0-9]+)/$', actions.bill, name='bill'),
+        url(r'^bill/', actions.bill, name='bill'),
     ], namespace='actions')),
     url(r'^bill/', include([
         url(r'^bills/', bill.bills, name='bills'),
-        url(r'^addbill/(?P<pk>[0-9]+)/$', bill.addbill, name='addbill'),
+        url(r'^addbill/', bill.addbill, name='addbill'),
         url(r'^cards/', bill.cards, name='cards'),
-        url(r'^addcard/(?P<pk>[0-9]+)/$', bill.addcard, name='addcard'),
         url(r'^addcard/', bill.addcard, name='addcard'),
-        url(r'^addonbill/(?P<pk>[0-9]+)/$', bill.addonbill, name='addonbill'),
         url(r'^addonbill/', bill.addonbill, name='addonbill'),
         url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
         url(r'^billoperations/(?P<pk>[0-9]+)/$', bill.billoperations, name='billoperations'),
