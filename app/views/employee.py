@@ -65,7 +65,6 @@ def edit_user(request):
     try:
         if request.method == 'POST':
             _user = User.objects.get(id=request.POST["num"])
-            print _user
             _user.first_name, _user.last_name, _user.father_name = request.POST["firstname"], \
                                                                    request.POST["lastname"], request.POST["fathername"]
             _user.save()
