@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.forms import modelform_factory
 
 from app.forms import *
+from app.models import *
 
 
 @login_required
@@ -22,11 +23,12 @@ def new(request, deposit_id):
     errors = []
     d = Deposit.objects.filter(id=deposit_id)[0]
     dt = d.depositType
+    querySet=Bill.objects.filter(client=request.user).filter(currency=d.currency)
 
     if dt == 'Сберегательный вклад':
-        F = modelform_factory(Contract, exclude=("is_prolongation",))
+        F = modelform_factory(Contract, exclude=("is_prolongation",), widgets={"title": forms.ModelChoiceField(queryset=querySet)})
     else:
-        F = modelform_factory(Contract, exclude=())
+        F = modelform_factory(Contract, exclude=(), widgets={"title": forms.ModelChoiceField(queryset=querySet)})
 
     if request.method == 'POST':
         form = F(request.POST)
@@ -55,7 +57,7 @@ def new(request, deposit_id):
 @login_required
 def list(request):
 
-    deposits = Contract.objects.all()  # filter(bill__client_=request.user)
+    deposits = Contract.objects.filter(bill__client_=request.user)
 
     return render(request, 'contract/list.html', {
         'deposits': deposits

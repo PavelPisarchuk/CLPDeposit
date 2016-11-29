@@ -164,7 +164,7 @@ class Deposit(models.Model):
     description = models.TextField(max_length=300, verbose_name='Описание')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
     min_amount = models.PositiveIntegerField(verbose_name='Минимальная сумма')
-    duration = models.PositiveIntegerField(verbose_name='Срок хранения (в месяцах)')
+    duration = models.PositiveIntegerField(verbose_name='Срок хранения (в месяцах)', default=0)
     is_pay_period_month = models.BooleanField(verbose_name='Период выплат день/месяц', default=False)
     pay_period = models.PositiveIntegerField(verbose_name='Период выплат')
     percent = models.FloatField(verbose_name='Ставка')
@@ -181,6 +181,8 @@ class Deposit(models.Model):
         return self.title
 
     def format_duration(self):
+        if self.duration==0:
+            return "нет ограничений"
         return "{} месяцев".format(self.duration)
 
     def format_pay_period(self):
@@ -193,12 +195,25 @@ class Deposit(models.Model):
 
 class Contract(models.Model):
     deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False, blank=True, null=True)
-    bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя', default=None, editable=False, null=True)
+    bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя')
     deposit_bill = models.FloatField(verbose_name='Сумма')
     bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
     end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
+
+    @classmethod
+    def add(cls, action=None, contract=None, bill=None, money=0):
+        Action.objects.create(
+            actionType=ActionType.objects.get(description=action),
+            contract=contract,
+            bill=bill,
+            money=money
+        ).save()
+
+    def calculate_payment(self):
+
+
 
     def is_active(self):
         tz_info = self.sign_date.tzinfo
@@ -221,7 +236,7 @@ class Contract(models.Model):
             from_currency=self.deposit.currency,
             to_currency=self.deposit.binding_currency
         )
-        self.bonus = ((today_rate / sign_rate) * 100 - 100) * self.get_duration_in_days() / self.get_storing_term()
+        self.bonus = ((today_rate / sign_rate) * 100 - 100) * 365 / self.get_storing_term()
 
     def prolongation_to_string(self):
         if self.is_prolongation:
