@@ -153,6 +153,13 @@ class Bill(models.Model):
             bill=self
         )
 
+    def transfer(self, other, value):
+        if self.pop(value):
+            other.push(value)
+            return True
+        else:
+            return False
+
 
 class Card(models.Model):
     bill = models.ForeignKey(Bill, verbose_name='Счёт')

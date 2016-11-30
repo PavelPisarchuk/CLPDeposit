@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from app.models import User, Card, Bill, Currency, Action
+from app.models import User, Card, Bill, Currency
 
 
 @login_required
@@ -33,7 +33,7 @@ def cards(request):
 def cardsinbill(request, pk=None):
     try:
         _bill = Bill.objects.get(id=pk)
-        _cards = Card.objects.all().filter(bill=_bill)
+        _cards = _bill.get_cards()
         return render(request, 'bill/cardsinbill.html', {
             'cards': _cards,
             'bill': _bill
@@ -72,7 +72,7 @@ def addbill(request):
     if request.method == 'POST':
         try:
             _user = User.objects.get(id=request.POST["num"])
-            currency = Currency.objects.get(title='BYN')
+            currency = Currency.objects.get_or_create(title='BYN')[0]
             _bill = _user.add_bill(currency=currency, money=0, is_private=True)
             return redirect('client:list')
         except Exception:
@@ -89,7 +89,7 @@ def billoperations(request, pk=None):
     if bill.client!=request.user:
         return redirect('errors:error')
     else:
-        _operations=Action.objects.all().filter(bill=bill).order_by('-id')
+        _operations = bill.get_actions().order_by('-id')
         return render(request,'bill/billoperations.html',{
             'operations': _operations
         })
@@ -107,7 +107,7 @@ def billtransact(request):
 
             if frombill == tobill:
                 return render(request, 'bill/billtransact.html', {
-                    'bills': Bill.objects.all().filter(client=request.user)
+                    'bills': request.user.get_bills()
                 })
 
             if frombill.client != request.user or tobill.client != request.user:
@@ -116,9 +116,7 @@ def billtransact(request):
                 })
             else:
                 _money = int(request.POST["money"])
-                if _money < frombill.money:
-                    frombill.pop(_money)
-                    tobill.push(_money)
+                if frombill.transfer(tobill, _money):
                     return redirect('bill:bills')
                 else:
                     return render(request, 'errors/error.html', {
@@ -130,7 +128,7 @@ def billtransact(request):
             })
     else:
         return render(request, 'bill/billtransact.html', {
-            'bills': Bill.objects.all().filter(client=request.user)
+            'bills': request.user.get_bills()
         })
 
 
@@ -139,10 +137,8 @@ def billtransact(request):
 def getuserbills(request, pk=None):
     try:
         _user = User.objects.get(id=pk)
-        _bills = Bill.objects.all().filter(client=_user)
-        _bills_id = []
-        for a in _bills:
-            _bills_id.append(a.id)
+        _bills = _user.get_bills()
+        _bills_id = [a.id for a in _bills]
         if _bills:
             return JsonResponse({'bills': _bills_id})
         else:
