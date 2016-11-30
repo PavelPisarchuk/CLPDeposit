@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
 
-import app.views.actions as actions
-import app.views.bill as bill
-import app.views.client as client
-import app.views.contract as contract
-import app.views.deposit as deposit
-import app.views.employee as admin
-import app.views.errors as errors
-import app.views.general as general
-import app.views.messages as messages
+from app.views import actions, bill, client, contract, deposit, employee, errors, general, messages
 
 urlpatterns = [
     url(r'^login/', general.login, name='login'),
@@ -24,11 +16,11 @@ urlpatterns = [
         url(r'^delete/', messages.delete, name='delete'),
     ], namespace='message')),
     url(r'^employee/', include([
-        url(r'^new/', admin.new, name='new'),
-        url(r'^list/', admin.list, name='list'),
-        url(r'^info/', admin.info, name='info'),
-        url(r'^edit/', admin.edit, name='edit'),
-        url(r'^edituser/', admin.edit_user, name='uedit'),
+        url(r'^new/', employee.new, name='new'),
+        url(r'^list/', employee.list, name='list'),
+        url(r'^info/', employee.info, name='info'),
+        url(r'^edit/', employee.edit, name='edit'),
+        url(r'^edituser/', employee.edit_user, name='uedit'),
     ], namespace='employee')),
     url(r'^client/', include([
         url(r'^list/', client.list, name='list'),

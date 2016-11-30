@@ -18,7 +18,7 @@ def new(request):
                 user.save()
             return redirect('employee:list')
         else:
-            return render(request, 'admin/registration.html', {
+            return render(request, 'employee/registration.html', {
                 'form': AdminForm()
             })
     except:
@@ -28,7 +28,7 @@ def new(request):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def list(request):
-    return render(request, 'admin/list.html', {
+    return render(request, 'employee/list.html', {
         'admins': User.objects.all().filter(is_superuser=True)
     })
 
@@ -37,7 +37,7 @@ def list(request):
 @user_passes_test(lambda u: u.is_superuser)
 def info(request):
     Form = modelform_factory(User, fields=adminfields)
-    return render(request, 'admin/info.html', {
+    return render(request, 'employee/info.html', {
         'form': Form(instance=request.user)
     })
 
@@ -54,7 +54,7 @@ def edit(request):
             form.save()
         return redirect('employee:info')
     else:
-        return render(request, 'admin/edit.html', {
+        return render(request, 'employee/edit.html', {
             'form': Form(instance=user)
         })
 
