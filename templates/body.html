@@ -3,7 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}"/>
+        <script type="text/javascript" src="{% static "jquery-3.1.1.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
 
         <script type="text/javascript">
             $(document).ready(function(){
@@ -22,9 +26,6 @@
             });
         </script>
         {% block title %} {% endblock %}
-        {% load bootstrap3 %}
-        {% bootstrap_css %}
-        {% bootstrap_javascript jquery=1 %}
     </head>
     <body role="document" >
         <nav class="navbar navbar-inverse navbar-static-top">
