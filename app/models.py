@@ -256,6 +256,21 @@ class Contract(models.Model):
             actionType=ActionType.objects.get(description='PAY')
         ).last()
 
+    def push(self, value, action='FILL'):
+        self.deposit_bill += value
+        self.save()
+        Action.add(
+            action=action,
+            contract=self,
+            money=value
+        )
+
+    def pay(self, value, action='PAY'):
+        if self.deposit.is_capitalization:
+            self.push(value, action)
+        else:
+            self.bill.push(value, action)
+
 
 class ActionType(models.Model):
     description = models.CharField(max_length=300, verbose_name='Описание')
