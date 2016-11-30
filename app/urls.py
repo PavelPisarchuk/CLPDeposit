@@ -40,6 +40,7 @@ urlpatterns = [
     ], namespace='client')),
     url(r'^actions/', include([
         url(r'^bill/', actions.bill, name='bill'),
+        url(r'^contract/', actions.contract, name='contract'),
     ], namespace='actions')),
     url(r'^bill/', include([
         url(r'^bills/', bill.bills, name='bills'),
