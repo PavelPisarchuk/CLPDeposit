@@ -313,6 +313,11 @@ class Contract(models.Model):
         )
 
     def pay(self, value, action='PAY'):
+        Action.add(
+            action=action,
+            contract=self,
+            money=value
+        )
         if self.deposit.is_capitalization:
             self.push(value, action)
         else:
@@ -345,6 +350,8 @@ class Action(models.Model):
     def format_money(self):
         if self.bill:
             return self.bill.currency.format_value(self.money)
+        elif self.contract:
+            return self.contract.deposit.currency.format_value(self.money)
 
     def __str__(self):
         return self.actionType
