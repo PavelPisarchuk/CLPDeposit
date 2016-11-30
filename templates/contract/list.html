@@ -5,14 +5,27 @@
 {% endblock %}
 
 {% block content %}
-    {% if deposits %}
+    {% if contracts %}
         <div class="table-responsive">
             <table class="table table-striped">
-                {% for deposit in deposits %}
+                <tr>
+                    <td>Вклад</td>
+                    <td>Сумма</td>
+                    <td>Дата подписания</td>
+                    <td>Дата окончания</td>
+                    <td></td>
+                </tr>
+                {% for contract in contracts %}
                     <tr>
-                        <td><a href="{% url 'contract:info' deposit.id %}">{{ deposit.deposit }}</a></td>
+                        <td><a href={% url 'deposit:info' contract.deposit.id %}>{{ contract.deposit.title }}</a></td>
+                        <td>{{ contract.deposit_bill }}</td>
+                        <td>{{ contract.sign_date }}</td>
+                        <td>{{ contract.end_date }}</td>
                         <td>
-                            <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ deposit.id }}">
+                            {% if contract.is_prolongation %}
+                                <a>Продлить</a>
+                            {% endif %}
+                            <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">
                                 Завершённые операции
                             </a>
                         </td>

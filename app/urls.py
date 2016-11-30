@@ -52,6 +52,7 @@ urlpatterns = [
         url(r'^list/', deposit.list, name='list'),
         url(r'^new/', deposit.new, name='new'),
         url(r'^edit/(?P<deposit_id>[0-9]+)/', deposit.edit, name='edit'),
+        url(r'^info/(?P<deposit_id>[0-9]+)/', deposit.info, name='info'),
 
 
         url(r'^refill/', deposit.refill, name='refill'),

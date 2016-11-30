@@ -13,7 +13,11 @@
                     <td>Процент</td>
                     <td>Минимальная сумма</td>
                     <td>Срок хранения</td>
-                    <td>Архивный</td>
+                    <td>Период выплат</td>
+                    <td>Возможность пополнения</td>
+                    <td>Капитализация</td>
+                    <td>Валюта привязки</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -23,9 +27,23 @@
                         <td>{{ deposit.percent }}%</td>
                         <td>{{ deposit.format_min_amount }}</td>
                         <td>{{ deposit.format_duration }}</td>
-                        <td>{{ deposit.is_archive }}</td>
-                        <td><a href="{% url 'deposit:edit' deposit.id %}">редактировать</a></td>
-                        <td><a href="{% url 'deposit:listToArch' deposit.id %}">добавить в архив</a></td>
+                        <td>{{ deposit.format_pay_period }}</td>
+                        <td>{{ deposit.is_refill }}</td>
+                        {% if deposit.is_capitalization %}
+                            <td>{{ deposit.is_capitalization }}</td>
+                            <td>{{ deposit.binding_currency.title }}</td>
+                        {% else %}
+                            <td></td>
+                            <td></td>
+                        {% endif %}
+                        {% if not deposit.is_archive %}
+                            <td>
+                                <a href="{% url 'deposit:edit' deposit.id %}">редактировать</a>
+                                <a href="{% url 'deposit:listToArch' deposit.id %}">добавить в архив</a>
+                            </td>
+                        {% else %}
+                            <td>Архивный</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </table>

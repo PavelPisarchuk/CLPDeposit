@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.forms import modelform_factory
+from django.shortcuts import render, redirect
 
 from app.models import Deposit, Bill, Contract
 
@@ -61,19 +61,13 @@ def new(request, deposit_id):
 
 @login_required
 def list(request):
-
-    deposits = Contract.objects.filter(bill__client=request.user)
-
     return render(request, 'contract/list.html', {
-        'deposits': deposits
+        'contracts': request.user.get_contracts()
     })
 
 
 @login_required
 def info(request, deposit_id):
-
-    contract = Contract.objects.get(pk=deposit_id)
-
     return render(request, 'contract/info.html', {
-        'contract': contract
+        'contract': Contract.objects.get(pk=deposit_id)
     })

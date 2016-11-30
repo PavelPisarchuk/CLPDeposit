@@ -75,6 +75,12 @@ def edit(request, deposit_id):
     })
 
 
+def info(request, deposit_id):
+    return render(request, 'deposit/info.html', {
+        'deposit': Deposit.objects.get(id=deposit_id)
+    })
+
+
 def refill(request):
     return
 

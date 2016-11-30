@@ -1,0 +1,41 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Информация</title>
+{% endblock %}
+
+{% block content %}
+    {% if deposit %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr>
+                    <td>Название</td>
+                    <td>Процент</td>
+                    <td>Минимальная сумма</td>
+                    <td>Срок хранения</td>
+                    <td>Период выплат</td>
+                    <td>Возможность пополнения</td>
+                    <td>Архивный</td>
+                    {% if deposit.is_capitalization %}
+                        <td>Капитализация</td>
+                        <td>Валюта привязки</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>{{ deposit.title }}</td>
+                    <td>{{ deposit.percent }}%</td>
+                    <td>{{ deposit.format_min_amount }}</td>
+                    <td>{{ deposit.format_duration }}</td>
+                    <td>{{ deposit.format_pay_period }}</td>
+                    <td>{{ deposit.is_refill }}</td>
+                    <td>{{ deposit.is_archive }}</td>
+                    {% if deposit.is_capitalization %}
+                        <td>{{ deposit.is_capitalization }}</td>
+                        <td>{{ deposit.binding_currency.title }}</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}
