@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+
 class User(AbstractUser):
     #first_name = models.CharField(max_length=30, verbose_name='Имя')
     #last_name = models.CharField(max_length=30, verbose_name='Фамилия')
@@ -106,7 +107,7 @@ class Bill(models.Model):
             money=value
         )
 
-    def pop(self, value, action='TAKE'):
+    def pop(self, value, action='TAKE_PART'):
         if self.money >= value:
             self.money -= value
             self.save()
@@ -123,6 +124,9 @@ class Bill(models.Model):
         return self.currency.format_value(self.money)
 
     def toString(self):
+        return "Счет #{}".format(self.id)
+
+    def __str__(self):
         return "Счет #{}".format(self.id)
 
     def get_cards(self):
@@ -165,7 +169,7 @@ class Deposit(models.Model):
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
     min_amount = models.PositiveIntegerField(verbose_name='Минимальная сумма')
     duration = models.PositiveIntegerField(verbose_name='Срок хранения (в месяцах)', default=0)
-    is_pay_period_month = models.BooleanField(verbose_name='Период выплат день/месяц', default=False)
+    is_pay_period_month = models.BooleanField(verbose_name='Период выплат в месяцах', default=False)
     pay_period = models.PositiveIntegerField(verbose_name='Период выплат')
     percent = models.FloatField(verbose_name='Ставка')
     is_refill = models.BooleanField(verbose_name='Возможность пополнения', default=True)
@@ -202,16 +206,21 @@ class Contract(models.Model):
     end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
-    @classmethod
-    def add(cls, action=None, contract=None, bill=None, money=0):
-        Action.objects.create(
-            actionType=ActionType.objects.get(description=action),
-            contract=contract,
-            bill=bill,
-            money=money
-        ).save()
 
-    def calculate_payment(self):
+    # def calculate_payment(self):
+    #
+
+    def calculate_end_date(self):
+        if self.deposit.duration==0:
+            self.end_date=None
+            return
+
+        if not self.deposit.is_pay_period_month:
+            self.end_date=self.sign_date+datetime.timedelta(days=self.deposit.duration)
+        else:
+            in_months=self.sign_date.month+self.deposit.duration
+            self.end_date=datetime.datetime(year=self.sign_date.year+int(in_months/12),month=self.sign_date.month+in_months%12,day=self.sign_date.day)
+            a=5
 
 
 
@@ -275,6 +284,9 @@ class Contract(models.Model):
 class ActionType(models.Model):
     description = models.CharField(max_length=300, verbose_name='Описание')
 
+    def __str__(self):
+        return self.description
+
 
 class Action(models.Model):
     actionType = models.ForeignKey(ActionType, verbose_name='Тип действия')
@@ -295,6 +307,9 @@ class Action(models.Model):
     def format_money(self):
         if self.bill:
             return self.bill.currency.format_value(self.money)
+
+    def __str__(self):
+        return self.actionType
 
 
 class ExchangeRate(models.Model):
