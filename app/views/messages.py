@@ -10,8 +10,8 @@ from app.models import User, Message
 @user_passes_test(lambda u: u.is_superuser)
 def send_message(request):
     try:
-        user = User.objects.get(id=request.POST['num'])
         if request.method == 'POST':
+            user = User.objects.get(id=request.POST['num'])
             user.send_message(
                 message=request.POST['message'],
                 header=request.POST['header']
@@ -28,8 +28,7 @@ def readmessage(request):
             msg = Message.objects.get(id=request.POST["num"])
             if request.user != msg.user:
                 return redirect('errors:permission')
-            msg.readed = True
-            msg.save()
+            msg.read()
             return JsonResponse()
     except:
         return redirect('message:messages')
@@ -38,11 +37,12 @@ def readmessage(request):
 @login_required
 def updatemsg(request):
     try:
-        mymessages = Message.objects.all().filter(user=request.user, readed=False)
-        if mymessages:
-            return JsonResponse({'data': True, 'count': len(mymessages)})
+        user = User.objects.get(id=request.user.id)
+        count = user.get_unread_messages_count()
+        if count:
+            return JsonResponse({'data': count, 'count': count})
         else:
-            return JsonResponse({'data': False})
+            raise
     except Exception:
         return JsonResponse({'data': False})
 
@@ -50,9 +50,9 @@ def updatemsg(request):
 @login_required
 def messages(request):
     try:
-        mymessages = Message.objects.all().filter(user=request.user).order_by('-id')
+        user = User.objects.get(id=request.user.id)
         return render(request, 'message/messages.html', {
-            'messages': mymessages
+            'messages': user.get_messages().order_by('-id')
         })
     except:
         return redirect('message:messages')
@@ -62,11 +62,10 @@ def messages(request):
 def delete(request):
     try:
         if request.POST:
-            msg = Message.objects.get(id=request.POST['num'])
-            if request.user != msg.user:
-                return redirect('errors:permission')
-            else:
-                msg.delete()
-                return redirect('message:messages')
+            Message.objects.get(
+                id=request.POST['num'],
+                user=request.user
+            ).delete()
+            return redirect('message:messages')
     except:
-        return redirect('message:messages')
+        return redirect('errors:permission')

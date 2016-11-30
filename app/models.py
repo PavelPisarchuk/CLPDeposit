@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
-from dateutil.relativedelta import relativedelta
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -36,6 +36,9 @@ class User(AbstractUser):
             user=self
         )
 
+    def get_unread_messages_count(self):
+        return self.get_messages().filter(readed=False).count()
+
     def add_bill(self, currency, money, is_private):
         obj = Bill.objects.create(
             client=self,
@@ -62,6 +65,13 @@ class User(AbstractUser):
             bill__client=self
         )
 
+    def change_password(self, old, new, repeat):
+        if self.check_password(old) and new == repeat:
+            self.set_password(new)
+            self.save()
+            return True
+        else:
+            raise
 
 class Currency(models.Model):
     title = models.CharField(max_length=3, verbose_name='Название')
@@ -151,6 +161,10 @@ class Message(models.Model):
     readed = models.BooleanField(default=False, verbose_name='Прочитано?')
     user = models.ForeignKey(User, verbose_name='Пользователь')
     date = models.DateField(default=datetime.date.today, verbose_name='Дата')
+
+    def read(self):
+        self.readed = True
+        self.save()
 
 
 class Deposit(models.Model):
@@ -311,7 +325,7 @@ class Action(models.Model):
     @classmethod
     def add(cls, action=None, contract=None, bill=None, money=0):
         Action.objects.create(
-            actionType=ActionType.objects.get(description=action),
+            actionType=ActionType.objects.get_or_create(description=action),
             contract=contract,
             bill=bill,
             money=money

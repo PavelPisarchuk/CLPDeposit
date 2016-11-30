@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+from app.models import User
 
 
 def index(request):
@@ -29,18 +31,20 @@ def logout(request):
 
 @login_required
 def password(request):
-    if (request.method == "POST"):
-        user = request.user
-        if user.check_password(request.POST.get("password_old")):
-            password_new = request.POST.get("password_new")
-            password_new_repeat = request.POST.get("password_new_repeat")
-            if password_new == password_new_repeat:
-                user.set_password(password_new)
-                user.save()
-                return logout(request)
-        return redirect('index')
-    else:
-        return render(request, 'password.html')
+    try:
+        if (request.method == "POST"):
+            pk = request.user.id
+            user = User.objects.get(id=pk)
+            user.change_password(
+                request.POST.get("password_old"),
+                request.POST.get("password_new"),
+                request.POST.get("password_new_repeat")
+            )
+            return redirect('logout')
+        else:
+            return render(request, 'password.html')
+    except:
+        return redirect('password')
 
 
 def rates(request):
