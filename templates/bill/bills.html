@@ -6,6 +6,7 @@
 
 {% block content %}
     {% if bills %}
+        <p><a class="btn btn-default" href={% url 'bill:billtransact' %}>Переводы</a></p>
         <div class="table-responsive">
             <table class="table table-striped">
                 <tr>
