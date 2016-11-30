@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -48,19 +50,11 @@ def password(request):
 
 
 def rates(request):
-    from app.models import Currency, ExchangeRate
-    from itertools import permutations
+    from app.models import Currency
 
-    exchange_rates = ExchangeRate.objects.all()
-    result = []
-
-    for date in exchange_rates.values_list('date', flat=True).distinct():
-        result.append(
-            [date] +
-            list(map(lambda item: round(item.index, 2), exchange_rates.filter(date=date)))
-        )
+    rates_data = [[currency.title, currency.from_exchange_rates()] for currency in Currency.objects.all()]
 
     return render(request, 'rates.html', {
-        'headers': ['Дата'] + list(map(lambda items: "{} > {}".format(items[0].icon, items[1].icon), permutations(Currency.objects.all(), 2))),
-        'data': result
+        'date': datetime.date.today(),
+        'rates_data': rates_data
     })

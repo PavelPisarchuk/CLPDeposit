@@ -84,13 +84,17 @@ class Currency(models.Model):
         return "{}{}".format(self.title, round(value, 2))
 
     def from_exchange_rates(self):
-        return ExchangeRate.objects.filter(
+        return ExchangeRate.objects.exclude(
+            to_currency=self
+        ).filter(
             from_currency=self,
-            date=datetime.date.today()
+            date=datetime.date.today(),
         )
 
     def to_exchange_rates(self):
-        return ExchangeRate.objects.filter(
+        return ExchangeRate.objects.exclude(
+            from_currency=self
+        ).filter(
             to_currency=self,
             date=datetime.date.today()
         )

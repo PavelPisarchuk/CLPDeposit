@@ -5,20 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <div class="table-responsive">
+    <h2>
+        {{ date }}
+    </h2>
+    {% for title, rates in rates_data %}
+        <h3>{{ title }}</h3>
         <table class="table">
-            <tr>
-                {% for header in headers %}
-                    <td>{{ header }}</td>
-                {% endfor %}
-            </tr>
-            {% for row in data %}
+            {% for rate in rates %}
                 <tr>
-                    {% for column in row %}
-                        <td>{{ column }}</td>
-                    {% endfor %}
+                    <td>{{ rate.to_currency.title }} {{ rate.index|floatformat:2 }}</td>
                 </tr>
             {% endfor %}
         </table>
-    </div>
+    {% endfor %}
 {% endblock %}
