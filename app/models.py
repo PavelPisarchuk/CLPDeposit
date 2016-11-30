@@ -329,7 +329,7 @@ class Action(models.Model):
     @classmethod
     def add(cls, action=None, contract=None, bill=None, money=0):
         Action.objects.create(
-            actionType=ActionType.objects.get_or_create(description=action),
+            actionType=ActionType.objects.get_or_create(description=action)[0],
             contract=contract,
             bill=bill,
             money=money
