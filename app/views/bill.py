@@ -46,8 +46,7 @@ def cardsinbill(request, pk=None):
 @login_required
 def bills(request):
     try:
-        _user = User.objects.get(id=request.user.id)
-        _bills = Bill.objects.all().filter(client_id=_user.id).order_by('id')
+        _bills = request.user.get_bills().order_by('id')
         return render(request, 'bill/bills.html', {
             'bills': _bills
         })

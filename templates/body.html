@@ -40,7 +40,7 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
                   <ul class="nav navbar-nav">
-                      <li><a href={% url 'rates' %}>Курсы валют</a></li>
+                      <li><a href={% url 'rate:today' %}>Курсы валют</a></li>
                     {% if user.is_authenticated %}
                         {% if user.is_superuser %}
                             {% include 'menu/admin_actions.html' %}

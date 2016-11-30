@@ -37,8 +37,7 @@ def readmessage(request):
 @login_required
 def updatemsg(request):
     try:
-        user = User.objects.get(id=request.user.id)
-        count = user.get_unread_messages_count()
+        count = request.user.get_unread_messages_count()
         if count:
             return JsonResponse({'data': count, 'count': count})
         else:
@@ -50,9 +49,8 @@ def updatemsg(request):
 @login_required
 def messages(request):
     try:
-        user = User.objects.get(id=request.user.id)
         return render(request, 'message/messages.html', {
-            'messages': user.get_messages().order_by('-id')
+            'messages': request.user.get_messages().order_by('-id')
         })
     except:
         return redirect('message:messages')

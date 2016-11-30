@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
 
-from app.views import actions, bill, client, contract, deposit, employee, errors, general, messages
+from app.views import actions, bill, client, contract, deposit, employee, errors, general, messages, rate
 
 urlpatterns = [
     url(r'^login/', general.login, name='login'),
     url(r'^logout/', general.logout, name='logout'),
-    url(r'^rates/', general.rates, name='rates'),
     url(r'^password/', general.password, name='password'),
+    url(r'^rate/', include([
+        url(r'^today/', rate.today, name='today'),
+    ], namespace='rate')),
     url(r'^message/', include([
         url(r'^send/', messages.send_message, name='send'),
         url(r'^updatemsg/', messages.updatemsg, name='updatemsg'),
