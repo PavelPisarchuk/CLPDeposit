@@ -7,7 +7,9 @@
         {% load staticfiles %}
         <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}"/>
         <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/sticky-footer.css" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static "foundation/foundation.min.css" %}"/>
         <script type="text/javascript" src="{% static "jquery-3.1.1.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "foundation/foundation.min.js" %}"></script>
         <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
 
         <script type="text/javascript">
@@ -61,9 +63,9 @@
                                 <a>
                                     <form class="form-inline" action="{% url 'login' %}" method="post">
                                         {% csrf_token %}
-                                        <input style="height: inherit; padding: 0px;" class="form-control"
+                                        <input style="height: inherit; padding: 0px; margin: 0px;" class="form-control"
                                                name="username" type="text" placeholder="Email">
-                                        <input style="height: inherit; padding: 0px;" class="form-control"
+                                        <input style="height: inherit; padding: 0px; margin: 0px;" class="form-control"
                                                name="password" type="password" placeholder="Password">
                                         <button style="padding: 0px 8px;" class="btn btn-default" type="submit">Log in
                                         </button>
