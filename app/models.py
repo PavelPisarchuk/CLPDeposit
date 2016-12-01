@@ -233,7 +233,9 @@ class Contract(models.Model):
 
 
     def calculate_payment(self):
-        return self.deposit_bill * self.deposit.percent * (datetime.datetime.now - self.get_last_pay().datetime).days / 365
+        last_pay_date = self.get_last_pay_date()
+        tz_info = last_pay_date.tzinfo
+        return self.deposit_bill * self.deposit.percent * (datetime.datetime.now(tz_info) - last_pay_date).days / 365
 
 
     def calculate_end_date(self):
@@ -278,16 +280,12 @@ class Contract(models.Model):
         return "No"
 
     def is_needs_pay(self):
-        last_pay = self.get_last_pay()
-        if not last_pay:
-            last_pay_date = self.sign_date
-        else:
-            last_pay_date = last_pay.datetime
-
+        last_pay_date = self.get_last_pay_date()
+        tz_info = last_pay_date.tzinfo
         if self.deposit.is_pay_period_month:
-            timedelta = relativedelta(datetime.datetime.now(), last_pay_date).months
+            timedelta = relativedelta(datetime.datetime.now(tz_info), last_pay_date).months
         else:
-            timedelta = (datetime.datetime.now() - last_pay_date).days
+            timedelta = relativedelta(datetime.datetime.now(tz_info), last_pay_date).days
 
         if timedelta >= self.deposit.pay_period:
             return True
@@ -299,10 +297,13 @@ class Contract(models.Model):
             contract=self
         )
 
-    def get_last_pay(self):
-        return self.get_actions().filter(
-            actionType=ActionType.objects.get(description='PAY')
-        ).last()
+    def get_last_pay_date(self):
+        try:
+            return self.get_actions().filter(
+                actionType=ActionType.objects.get(description='PAY')
+            ).last().datetime
+        except:
+            return self.sign_date
 
     def push(self, value, action='FILL'):
         self.deposit_bill += value
