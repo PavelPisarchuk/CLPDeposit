@@ -5,16 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <form class="form-horizontal" action="{% url 'employee:edit' %}" method="post">
+    <form class="abide-form" data-abide novalidate action="{% url 'employee:edit' %}" method="post">
         {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                <label class="col-sm-2 control-label">{{ field.label_tag }}</label>
-                <div class="col-sm-10">
-                    {{ field }}
-                </div>
-            </div>
-        {% endfor %}
-        <input class="btn btn-default" type="submit" value="Подтвердить" />
+        <label>E-mail адрес
+            <input type="email" name={{ form.email.html_name }} value={{ form.email.value }} required>
+            <span class="form-error">
+              Обязательное поле. Допустимы только цифры и англ. буквы
+            </span>
+        </label>
+        <input class="btn btn-default" type="submit" value="Подтвердить"/>
     </form>
+    <script>
+        $(document).foundation();
+    </script>
 {% endblock %}

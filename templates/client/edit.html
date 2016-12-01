@@ -5,16 +5,32 @@
 {% endblock %}
 
 {% block content %}
-    <form class="form-horizontal" action="{% url 'client:edit' %}" method="post">
+    <form class="abide-form" data-abide novalidate action="{% url 'client:edit' %}" method="post">
         {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                <label class="col-sm-2 control-label">{{ field.label_tag }}</label>
-                <div class="col-sm-10">
-                    {{ field }}
-                </div>
-            </div>
-        {% endfor %}
-        <input class="btn btn-default" type="submit" value="Подтвердить" />
+        <label>Фамилия
+            <input type="text" name={{ form.last_name.html_name }} value={{ form.last_name.value }} required
+                   pattern="^[А-ЯЁ][а-яё]*$">
+            <span class="form-error">
+              Обязательное поле. Допустимы только русские буквы
+            </span>
+        </label>
+        <label>Имя
+            <input type="text" name={{ form.first_name.html_name }} value={{ form.first_name.value }} required
+                   pattern="^[А-ЯЁ][а-яё]*$">
+            <span class="form-error">
+              Обязательное поле. Допустимы только русские буквы
+            </span>
+        </label>
+        <label>Отчество
+            <input type="text" name={{ form.father_name.html_name }} value={{ form.father_name.value }} required
+                   pattern="^[А-ЯЁ][а-яё]*$">
+            <span class="form-error">
+              Обязательное поле. Допустимы только русские буквы
+            </span>
+        </label>
+        <input class="btn btn-default" type="submit" value="Подтвердить"/>
     </form>
+    <script>
+        $(document).foundation();
+    </script>
 {% endblock %}
