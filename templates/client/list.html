@@ -150,6 +150,9 @@
                                 <option disabled>Загрузка...</option>
                             </select></p>
                             <p><input placeholder="Сумма" form="addonbillForm" type="number" name="money"></p>
+                            <p><select id="currencyselect" name="currency" form="addonbillForm">
+                                <option disabled>Загрузка...</option>
+                            </select></p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -227,6 +230,17 @@
         </div>
 
         <script>
+            $(document).ready(function () {
+                $('#currencyselect').empty();
+                $('#currencyselect').append('<option disabled selected value="Загрузка...">Загрузка...</option>');
+                $.get('/bill/getcurrency/', function (data) {
+                    currid = data['currency'];
+                    currname = data['currencyname'];
+                    $('#currencyselect').empty();
+                    for (i in currid)
+                        $('#currencyselect').append('<option selected value=' + currid[i] + '>' + currname[i] + '</option>');
+                })
+            });
             $('#myModalChangeUser').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 $(this).find('#contentname').text(button.data('contentname'));

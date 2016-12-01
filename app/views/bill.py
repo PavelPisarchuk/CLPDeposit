@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+from app.models import ExchangeRate, today
 from app.models import User, Card, Bill, Currency
 
 
@@ -51,6 +52,14 @@ def addonbill(request):
         try:
             bill = Bill.objects.get(id=request.POST["num"])
             pushmoney = int(request.POST['money'])
+            _currency = Currency.objects.get(id=request.POST["currency"])
+            if _currency != bill.currency:  # ??!!
+                to_currency = ExchangeRate.objects.get(
+                    to_currency=bill.currency,
+                    from_currency=_currency,
+                    date=today()
+                )
+                pushmoney = to_currency.calc(pushmoney)
             bill.push(pushmoney)
             return JsonResponse({'succes': True,
                                  'operation': 'Пополнение счёта {0} для {1} на {2} выполнено'.format(bill.id,
@@ -137,3 +146,16 @@ def getuserbillsfromuser(request):
             return JsonResponse({'bills': []})
     except Exception:
         return JsonResponse({'bills': []})
+
+@login_required
+def getcurrency(request):
+    try:
+        _currency = Currency.objects.all()
+        _currencyname = [a.title for a in _currency]
+        _currency = [a.id for a in _currency]
+        if _currency:
+            return JsonResponse({'currency': _currency, 'currencyname': _currencyname})
+        else:
+            return JsonResponse({'currency': [], 'currencyname': []})
+    except Exception:
+        return JsonResponse({'currency': [], 'currencyname': []})
