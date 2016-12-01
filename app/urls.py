@@ -39,13 +39,12 @@ urlpatterns = [
     url(r'^bill/', include([
         url(r'^bills/', bill.bills, name='bills'),
         url(r'^addbill/', bill.addbill, name='addbill'),
-        url(r'^cards/', bill.cards, name='cards'),
         url(r'^addcard/', bill.addcard, name='addcard'),
         url(r'^addonbill/', bill.addonbill, name='addonbill'),
-        url(r'^cardsinbill/(?P<pk>[0-9]+)/$', bill.cardsinbill, name='cardsinbill'),
-        url(r'^billoperations/(?P<pk>[0-9]+)/$', bill.billoperations, name='billoperations'),
+        url(r'^cardsinbill/', bill.cardsinbill, name='cardsinbill'),
         url(r'^billtransact/', bill.billtransact, name='billtransact'),
-        url(r'^getuserbills/(?P<pk>[0-9]+)/$', bill.getuserbills, name='getuserbills'),
+        url(r'^getuserbills/', bill.getuserbills, name='getuserbills'),
+        url(r'^getuserbillsfromuser/', bill.getuserbillsfromuser, name='getuserbills'),
     ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
