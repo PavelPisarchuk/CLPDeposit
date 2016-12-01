@@ -232,12 +232,13 @@ class Contract(models.Model):
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
 
-    # def calculate_payment(self):
-    #
+    def calculate_payment(self):
+        return self.deposit_bill * self.deposit.percent * (datetime.datetime.now - self.get_last_pay().datetime).days / 365
+
 
     def calculate_end_date(self):
-        if self.deposit.duration==0:
-            self.end_date=None
+        if self.deposit.duration == 0:
+            self.end_date = None
             return
 
         if self.deposit.is_pay_period_month:
