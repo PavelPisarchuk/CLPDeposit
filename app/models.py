@@ -20,11 +20,11 @@ class DateDelta(models.Model):
 
 
 def today():
-    return timezone.now().date() + DateDelta.get_relativedelta()
+    return timezone.now().date()  # + DateDelta.get_relativedelta()
 
 
 def now():
-    return timezone.now() + DateDelta.get_relativedelta()
+    return timezone.now()  #+ DateDelta.get_relativedelta()
 
 
 class User(AbstractUser):
@@ -176,6 +176,13 @@ class Bill(models.Model):
 
     def transfer(self, other, value):
         if self.pop(value):
+            if self.currency != other.currency:
+                to_currency = ExchangeRate.objects.get(
+                    to_currency=other.currency,
+                    from_currency=self.currency,
+                    date=today()
+                )
+                value = to_currency.calc(value)
             other.push(value)
             return True
         else:

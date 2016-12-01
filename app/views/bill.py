@@ -85,7 +85,7 @@ def addbill(request):
 @login_required
 def billtransact(request):
     if request.POST:
-        try:
+        # try:
             _from = int(request.POST["from"])
             _to = int(request.POST["to"])
 
@@ -100,6 +100,18 @@ def billtransact(request):
 
             else:
                 _money = int(request.POST["money"])
+                _currency = Currency.objects.get(id=request.POST["currency"])
+                print 'Сумма до преоброзования  {0}'.format(_money)
+
+                if _currency != frombill.currency or _currency != tobill.currency or frombill.currency != tobill.currency:  # ??!!
+                    to_currency = ExchangeRate.objects.get(
+                        to_currency=tobill.currency,
+                        from_currency=_currency,
+                        date=today()
+                    )
+                    _money = to_currency.calc(_money)
+                    print 'Сумма после преоброзования  {0}'.format(_money)
+
                 if frombill.transfer(tobill, _money):
                     return JsonResponse({'succes': True,
                                          'operation': 'Переведено из счёта № {0} {1} на счёт № {2} !'.format(_from,
@@ -108,13 +120,9 @@ def billtransact(request):
                 else:
                     return JsonResponse({'succes': False, 'errors': 'Недостаточно средств!'})
 
-        except:
+                    #except:
             return JsonResponse({'succes': False, 'errors': 'Неизвестная ошибка'})
 
-    else:
-        return render(request, 'bill/billtransact.html', {
-            'bills': request.user.get_bills()
-        })
 
 
 @login_required
