@@ -1,0 +1,12 @@
+[
+  {
+    "model": "app.bill",
+    "pk": 1,
+    "fields": {
+      "client": 4,
+      "money": 100.0,
+      "currency": 2,
+      "is_private": true
+    }
+  }
+]
