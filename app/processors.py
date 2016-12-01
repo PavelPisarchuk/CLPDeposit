@@ -1,4 +1,4 @@
-import datetime
+from app.models import now
 
 
 def unread_messages(request):
@@ -12,7 +12,6 @@ def unread_messages(request):
 
 
 def date(request):
-    request.user
     return {
-        'today': datetime.datetime.now()
+        'today': now()
     }

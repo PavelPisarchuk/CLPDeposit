@@ -1,9 +1,30 @@
 # -*- coding: utf-8 -*-
-import datetime
-
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
+
+
+class DateDelta(models.Model):
+    name = models.CharField(max_length=10)
+    value = models.IntegerField(default=0)
+
+    @classmethod
+    def get_relativedelta(cls):
+        return relativedelta(
+            years=DateDelta.objects.get_or_create(name='years')[0].value,
+            months=DateDelta.objects.get_or_create(name='months')[0].value,
+            days=DateDelta.objects.get_or_create(name='days')[0].value,
+            hours=DateDelta.objects.get_or_create(name='hours')[0].value
+        )
+
+
+def today():
+    return timezone.now().date() + DateDelta.get_relativedelta()
+
+
+def now():
+    return timezone.now() + DateDelta.get_relativedelta()
 
 
 class User(AbstractUser):
@@ -22,7 +43,7 @@ class User(AbstractUser):
         return self.username if self.is_superuser else "{} {}. {}.".format(self.last_name, self.first_name[:1], self.father_name[:1])
 
     def get_age(self):
-        return (datetime.date.today() - self.birthday).days // 365
+        return (today() - self.birthday).days // 365
 
     def send_message(self, header, message):
         Message.objects.create(
@@ -88,7 +109,7 @@ class Currency(models.Model):
             to_currency=self
         ).filter(
             from_currency=self,
-            date=datetime.date.today(),
+            date=today(),
         )
 
     def to_exchange_rates(self):
@@ -96,7 +117,7 @@ class Currency(models.Model):
             from_currency=self
         ).filter(
             to_currency=self,
-            date=datetime.date.today()
+            date=today()
         )
 
 
@@ -171,7 +192,7 @@ class Message(models.Model):
     header = models.CharField(max_length=100, verbose_name='Заголовок')
     readed = models.BooleanField(default=False, verbose_name='Прочитано?')
     user = models.ForeignKey(User, verbose_name='Пользователь')
-    date = models.DateField(default=datetime.date.today, verbose_name='Дата')
+    date = models.DateField(default=today, verbose_name='Дата')
 
     def read(self):
         self.readed = True
@@ -227,7 +248,7 @@ class Contract(models.Model):
     bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя')
     deposit_bill = models.FloatField(verbose_name='Сумма')
     bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
-    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
+    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=now, editable=False)
     end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
 
@@ -235,7 +256,7 @@ class Contract(models.Model):
     def calculate_payment(self):
         last_pay_date = self.get_last_pay_date()
         tz_info = last_pay_date.tzinfo
-        return self.deposit_bill * self.deposit.percent * (datetime.datetime.now(tz_info) - last_pay_date).days / 365
+        return self.deposit_bill * self.deposit.percent * (now() - last_pay_date).days / 365
 
 
     def calculate_end_date(self):
@@ -246,20 +267,20 @@ class Contract(models.Model):
         if self.deposit.is_pay_period_month:
             self.end_date = self.sign_date + relativedelta(months=self.deposit.duration)
         else:
-            self.end_date = self.sign_date + datetime.timedelta(days=self.deposit.duration)
+            self.end_date = self.sign_date + relativedelta(days=self.deposit.duration)
 
     def is_active(self):
         if self.end_date is None:
             return True
         else:
             tz_info = self.sign_date.tzinfo
-            return self.sign_date < datetime.datetime.now(tz_info) < self.end_date
+            return self.sign_date < now() < self.end_date
 
     def get_duration_in_days(self):
         return (self.end_date - self.sign_date).days
 
     def get_storing_term(self):
-        return (datetime.datetime.now() - self.sign_date).days
+        return (now() - self.sign_date).days
 
     def calculate_bonuce(self):
         sign_rate = ExchangeRate.objects.get(
@@ -268,7 +289,7 @@ class Contract(models.Model):
             to_currency=self.deposit.binding_currency
         )
         today_rate = ExchangeRate.objects.get(
-            date=datetime.date.today(),
+            date=today(),
             from_currency=self.deposit.currency,
             to_currency=self.deposit.binding_currency
         )
@@ -283,9 +304,9 @@ class Contract(models.Model):
         last_pay_date = self.get_last_pay_date()
         tz_info = last_pay_date.tzinfo
         if self.deposit.is_pay_period_month:
-            timedelta = relativedelta(datetime.datetime.now(tz_info), last_pay_date).months
+            timedelta = relativedelta(now(), last_pay_date).months
         else:
-            timedelta = relativedelta(datetime.datetime.now(tz_info), last_pay_date).days
+            timedelta = relativedelta(now(), last_pay_date).days
 
         if timedelta >= self.deposit.pay_period:
             return True
@@ -314,16 +335,23 @@ class Contract(models.Model):
             money=value
         )
 
-    def pay(self, value, action='PAY'):
+    def pay(self, value, action='PAY', datetime=now()):
         Action.add(
             action=action,
             contract=self,
-            money=value
+            money=value,
+            datetime=datetime
         )
         if self.deposit.is_capitalization:
             self.push(value, action)
         else:
             self.bill.push(value, action)
+
+    def get_relative_pay_period(self):
+        if self.deposit.is_pay_period_month:
+            return relativedelta(months=self.deposit.pay_period)
+        else:
+            return relativedelta(days=self.deposit.pay_period)
 
 
 class ActionType(models.Model):
@@ -337,16 +365,17 @@ class Action(models.Model):
     actionType = models.ForeignKey(ActionType, verbose_name='Тип действия')
     contract = models.ForeignKey(Contract, verbose_name='Договор', default=None, editable=False, null=True)
     bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя', default=None, editable=False, null=True)
-    datetime = models.DateTimeField(verbose_name='Дата', default=datetime.datetime.now)
+    datetime = models.DateTimeField(verbose_name='Дата', default=now)
     money = models.FloatField(verbose_name='Денежная сумма')
 
     @classmethod
-    def add(cls, action=None, contract=None, bill=None, money=0):
+    def add(cls, action=None, contract=None, bill=None, money=0, datetime=now()):
         Action.objects.create(
             actionType=ActionType.objects.get_or_create(description=action)[0],
             contract=contract,
             bill=bill,
-            money=money
+            money=money,
+            datetime=datetime
         ).save()
 
     def format_money(self):
@@ -360,7 +389,7 @@ class Action(models.Model):
 
 
 class ExchangeRate(models.Model):
-    date = models.DateField(verbose_name='Дата', default=datetime.date.today)
+    date = models.DateField(verbose_name='Дата', default=today)
     from_currency = models.ForeignKey(Currency, verbose_name='Эталон', related_name="from_currency")
     to_currency = models.ForeignKey(Currency, verbose_name='Валюта', related_name="to_currency")
     index = models.FloatField(verbose_name='Кросс-курс')
