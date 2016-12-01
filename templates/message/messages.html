@@ -13,13 +13,12 @@
                     <td>Заголовок</td>
                 </tr>
                 {% for message in messages %}
-                    <tr {% if not message.readed %}style="font-weight: bold;"{% endif %}>
+                    <tr id="message_{{ message.id }}" {% if not message.readed %}style="font-weight: bold;"{% endif %}>
                         <td>{{ message.date }}</td>
                         <td>
                             <a data-toggle="modal" data-target="#myModalReadMessage" data-header="{{ message.header }}"
                                data-message="{{ message.message }}"
-                               data-messageid="{{ message.id }}">
-                                {{ message.header }}
+                               data-messageid="{{ message.id }}">{{ message.header }}
                             </a>
                         </td>
                     </tr>
@@ -62,10 +61,12 @@
     <script>
         $('#myModalReadMessage').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
+            messagetag = '#message_' + button.data('messageid');
             $(this).find('#messageinMessage').text(button.data('message'));
             $(this).find('#headerinMessage').val(button.data('header'));
             $(this).find('#messageid').val(button.data('messageid'));
             $.post('/message/readmsg/', {'num': button.data('messageid')}, function (data) {
+                $(messagetag).css({"font-weight": "normal"})
             });
         });
     </script>

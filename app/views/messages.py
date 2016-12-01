@@ -16,9 +16,10 @@ def send_message(request):
                 message=request.POST['message'],
                 header=request.POST['header']
             )
-            return redirect('client:list')
-    except:
-        return redirect('client:list')
+            return JsonResponse(
+                {'succes': True, 'operation': 'Сообщение для {0} отправлено'.format(user.get_full_name())})
+    except Exception:
+        return JsonResponse({'succes': False, 'errors': ''})
 
 
 @login_required

@@ -6,6 +6,9 @@
 
 {% block content %}
     {% if bills %}
+        <div><a class="btn btn-default" data-toggle="modal" data-target="#myModalTransact">Переводы</a>
+            <span id="lastoperation" class="label label-success"></span>
+        </div>
         <div class="table-responsive">
             <table class="table table-striped">
                 <tr>
@@ -18,25 +21,85 @@
                         <td>{{ b.id }}</td>
                         <td>{{ b.value_in_currency }}</td>
                         <td>
-                            <a href={% url 'bill:cardsinbill' pk=b.id %}>Карточки</a>
+                            <a data-toggle="modal" data-target="#myModalCards" data-billid="{{ b.id }}">Карточки</a>
                             <br>
                             <a data-toggle="modal" data-target="#myModalOperations" data-billid="{{ b.id }}">
                                 Завершённый операции</a>
-
+                            <br>
+                            <a data-toggle="modal" data-target="" data-billid="{{ b.id }}">
+                                Депозиты в текущем счёте</a>
                         </td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
+
+        <div class="modal fade" id="myModalTransact" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                        <h4 class="modal-title">Перевод денег </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="errors" style="color: red"></p>
+                        <div>
+                            <p><select id="billtransactelecttocard" name="from" form="transactForm">
+                                <option selected value="Из счёта" disabled>Из счёта</option>
+                            </select></p>
+                            <p><select id="billtransactelecttocard2" name="to" form="transactForm">
+                                <option selected value="В счёт" disabled>В счёт</option>
+                            </select></p>
+                            <p><input placeholder="Сумма" form="transactForm" type="number" name="money"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="transactForm" class="form-horizontal" action="" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <input class="btn btn-warning" type="submit" value="Перевести"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModalCards" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                        <h4 class="modal-title">Карточки</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <span id="billnum"></span>
+                            <table id="billcards" class="table table-striped">
+                                <tr>
+                                    <td>Номер карточки</td>
+                                    <td>Лимит</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="myModalOperations" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                        <h4 class="modal-title">Операции</h4>
+                        <h4 class="modal-title">История операций</h4>
                     </div>
                     <div class="modal-body">
                         <div>
+                            <span id="billnum"></span>
                             <table id="billoperations" class="table table-striped">
                                 <tr>
                                     <td>Тип операции</td>
@@ -55,12 +118,38 @@
         </div>
 
         <script>
+            $('#myModalTransact').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                $('#errors').text('');
+                $('#transactForm')[0].reset();
+                $.get('/bill/getuserbillsfromuser/', function (data) {
+                    $('#transactForm').find("input[type=submit]").prop("disabled", false);
+                    bills = data['bills'];
+                    $('#billtransactelecttocard').empty();
+                    $('#billtransactelecttocard2').empty();
+                    for (i in bills) {
+                        $('#billtransactelecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>');
+                        $('#billtransactelecttocard2').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
+                    }
+                });
+            });
+            $('#myModalCards').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                $('#billcards').empty();
+                $('#billcards').append('<tr><td>Номер карточки</td><td>Лимит</td></tr>');
+                $('#billnum').text('Счёт №' + button.data('billid'));
+                $.get('/bill/cardsinbill/', {'num': button.data('billid')}, function (data) {
+                    operations = data['operations'];
+                    cards = data['cards'];
+                    limits = data['limits'];
+                    for (i in cards)
+                        $('#billcards').append('<tr> <td>' + cards[i] + '</td>' +
+                                '  <td>' + limits[i] + ' </td></tr>')
+                });
+            });
             $('#myModalOperations').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
-                $(this).find('#messageinMessage').text(button.data('message'));
-                $(this).find('#headerinMessage').val(button.data('header'));
-                $(this).find('#messageid').val(button.data('messageid'));
-                $.post('/actions/bill/', {'num': button.data('billid')}, function (data) {
+                $.get('/actions/bill/', {'num': button.data('billid')}, function (data) {
                     operations = data['operations'];
                     money = data['money'];
                     dates = data['dates'];
@@ -71,6 +160,27 @@
                                 '  <td>' + dates[i] + ' </td>  <td>' + money[i] + '</td> </tr>')
                 });
             });
+
+
+            $('#transactForm').submit(function (event) {
+                event.preventDefault();
+                $('#transactForm').find("input[type=submit]").prop("disabled", true);
+                $.post('/bill/billtransact/', $('#transactForm').serializeArray(), function (data) {
+                    if (data['succes'] == false) {
+                        $('#errors').text(data['errors']);
+                        $('#transactForm').find("input[type=submit]").prop("disabled", false)
+                    }
+                    else {
+                        $('#myModalTransact').modal('hide');
+                        $('#lastoperation').text(data['operation']).fadeIn(1);
+                        setTimeout(function () {
+                            $('#lastoperation').fadeOut(300)
+                        }, 3000);
+                        $('#errors').text('');
+                        $('#transactForm')[0].reset();
+                    }
+                });
+            })
         </script>
 
     {% else %}

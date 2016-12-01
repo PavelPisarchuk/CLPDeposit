@@ -13,10 +13,7 @@
                 <a href={% url 'client:info' %}>Мой профиль</a>
             </li>
             <li >
-                <a id="newmsg" href={% url 'message:messages' %}>Мои сообщения</a>
-            </li>
-            <li>
-                <a href={% url 'bill:billtransact' %}>Перевод на другой счёт</a>
+                <a href={% url 'message:messages' %}>Мои сообщения <span class="badge badge-inverse" id="newmsg"></span></a>
             </li>
         {% endif %}
         <li>

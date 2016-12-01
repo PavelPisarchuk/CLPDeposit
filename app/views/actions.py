@@ -9,7 +9,7 @@ from app.models import Bill
 @login_required
 def bill(request):
     try:
-        bill = Bill.objects.get(id=request.POST['num'], client=request.user)
+        bill = Bill.objects.get(id=request.GET['num'], client=request.user)
         opers, date, money = [], [], []
         for i in bill.get_actions().order_by('-id'):
             opers.append(i.actionType.description)

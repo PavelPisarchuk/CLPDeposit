@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from app.models import User, Card, Bill, Currency, Action
+from app.models import User, Card, Bill, Currency
 
 
 @login_required
@@ -13,34 +13,24 @@ def addcard(request):
         try:
             bill = Bill.objects.get(id=request.POST["num"])
             bill.add_card(limit=request.POST['limit'])
-            return redirect('client:list')
+            return JsonResponse({'succes': True,
+                                 'operation': 'Добавление карточки к счёту {0} для {1} выполнено'.format(bill.id,
+                                                                                                         bill.client.get_full_name())})
         except Exception:
-            return redirect('client:list')
+            return JsonResponse({'succes': False, 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'})
 
 @login_required
-def cards(request):
+def cardsinbill(request):
     try:
-        _user = request.user
-        cards = Card.objects.all().filter(bill__client_id=_user.id).order_by('bill_id')
-        return render(request, 'bill/cards.html', {
-            'cards': cards
-        })
-    except Exception:
-        return redirect('index')
-
-
-@login_required
-def cardsinbill(request, pk=None):
-    try:
-        _bill = Bill.objects.get(id=pk)
+        _bill = Bill.objects.get(id=request.GET['num'])
         _cards = Card.objects.all().filter(bill=_bill)
-        return render(request, 'bill/cardsinbill.html', {
-            'cards': _cards,
-            'bill': _bill
-        })
+        cards, limits = [], []
+        for i in _cards:
+            cards.append(i.id)
+            limits.append(i.limit)
+        return JsonResponse({'limits': limits, 'cards': cards})
     except Exception:
-        return redirect('index')
-
+        return JsonResponse()
 
 
 @login_required
@@ -62,9 +52,12 @@ def addonbill(request):
             bill = Bill.objects.get(id=request.POST["num"])
             pushmoney = int(request.POST['money'])
             bill.push(pushmoney)
-            return redirect('client:list')
+            return JsonResponse({'succes': True,
+                                 'operation': 'Пополнение счёта {0} для {1} на {2} выполнено'.format(bill.id,
+                                                                                                     bill.client.get_full_name(),
+                                                                                                     pushmoney)})
         except Exception:
-            return redirect('client:list')
+            return JsonResponse({'succes': False, 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'})
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -74,60 +67,43 @@ def addbill(request):
             _user = User.objects.get(id=request.POST["num"])
             currency = Currency.objects.get(title='BYN')
             _bill = _user.add_bill(currency=currency, money=0, is_private=True)
-            return redirect('client:list')
+            return JsonResponse({'succes': True, 'operation': 'Добавление счёта {0} для {1} выполнено'.format(_bill.id,
+                                                                                                              _bill.client.get_full_name())})
         except Exception:
-            return redirect('client:list')
-
-
-@login_required
-def billoperations(request, pk=None):
-    try:
-        bill = Bill.objects.get(id=pk)
-    except Bill.DoesNotExist:
-        return redirect('bill:bills')
-
-    if bill.client!=request.user:
-        return redirect('errors:error')
-    else:
-        _operations=Action.objects.all().filter(bill=bill).order_by('-id')
-        return render(request,'bill/billoperations.html',{
-            'operations': _operations
-        })
+            return JsonResponse({'succes': False, 'errors': 'dsa'})
 
 
 @login_required
 def billtransact(request):
     if request.POST:
         try:
-            _from = int(request.POST["_from"])
-            _to = int(request.POST["_to"])
+            _from = int(request.POST["from"])
+            _to = int(request.POST["to"])
 
             frombill = Bill.objects.get(id=_from)
             tobill = Bill.objects.get(id=_to)
 
             if frombill == tobill:
-                return render(request, 'bill/billtransact.html', {
-                    'bills': Bill.objects.all().filter(client=request.user)
-                })
+                return JsonResponse({'succes': False, 'errors': 'Перевод в тот же самый счёт !'})
 
             if frombill.client != request.user or tobill.client != request.user:
-                return render(request, 'errors/error.html', {
-                    'errors': u'Что-то пошло не так'
-                })
+                return JsonResponse({'succes': False, 'errors': 'Перевод невозможен !'})
+
             else:
                 _money = int(request.POST["money"])
                 if _money < frombill.money:
                     frombill.pop(_money)
                     tobill.push(_money)
-                    return redirect('bill:bills')
+                    return JsonResponse({'succes': True,
+                                         'operation': 'Переведено из счёта № {0} {1} на счёт № {2} !'.format(_from,
+                                                                                                             _money,
+                                                                                                             _to)})
                 else:
-                    return render(request, 'errors/error.html', {
-                        'errors': u'Недостаточно средств'
-                    })
+                    return JsonResponse({'succes': False, 'errors': 'Недостаточно средств!'})
+
         except:
-            return render(request, 'errors/error.html', {
-                'errors': u'Что-то пошло не так'
-            })
+            return JsonResponse({'succes': False, 'errors': 'Неизвестная ошибка'})
+
     else:
         return render(request, 'bill/billtransact.html', {
             'bills': Bill.objects.all().filter(client=request.user)
@@ -136,9 +112,9 @@ def billtransact(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def getuserbills(request, pk=None):
+def getuserbills(request):
     try:
-        _user = User.objects.get(id=pk)
+        _user = User.objects.get(id=request.GET['num'])
         _bills = Bill.objects.all().filter(client=_user)
         _bills_id = []
         for a in _bills:
@@ -146,6 +122,22 @@ def getuserbills(request, pk=None):
         if _bills:
             return JsonResponse({'bills': _bills_id})
         else:
-            return JsonResponse()
+            return JsonResponse({'bills': []})
     except Exception:
-        return redirect('client:list')
+        return JsonResponse({'bills': []})
+
+
+@login_required
+def getuserbillsfromuser(request):
+    try:
+        _user = User.objects.get(id=request.user.id)
+        _bills = Bill.objects.all().filter(client=_user)
+        _bills_id = []
+        for a in _bills:
+            _bills_id.append(a.id)
+        if _bills:
+            return JsonResponse({'bills': _bills_id})
+        else:
+            return JsonResponse({'bills': []})
+    except Exception:
+        return JsonResponse({'bills': []})
