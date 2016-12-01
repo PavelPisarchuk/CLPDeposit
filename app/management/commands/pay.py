@@ -13,7 +13,7 @@ class Command(BaseCommand):
             payment = contract.calculate_payment()
             contract.pay(
                 payment,
-                datetime=contract.get_last_pay_date() + contract.get_relative_pay_period()
+                datetime=contract.get_last_pay_date()
             )
             contract.bill.client.send_message(
                 header='Выплата по вкладу',
