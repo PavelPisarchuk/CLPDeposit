@@ -15,3 +15,14 @@ def date(request):
     return {
         'today': now()
     }
+
+
+def alerts(request):
+    try:
+        return {
+            'alerts': request.user.get_alerts()
+        }
+    except:
+        return {
+            'alerts': []
+        }

@@ -92,7 +92,24 @@ class User(AbstractUser):
             self.save()
             return True
         else:
-            raise
+            return False
+
+    def alert(self, text):
+        Alert.objects.create(
+            user=self,
+            text=text
+        )
+
+    def get_alerts(self):
+        alerts = Alert.objects.filter(
+            user=self
+        )
+        texts = map(
+            lambda alert: alert.text,
+            alerts
+        )
+        alerts.delete()
+        return texts
 
 class Currency(models.Model):
     title = models.CharField(max_length=3, verbose_name='Название')
@@ -396,3 +413,8 @@ class ExchangeRate(models.Model):
 
     def calc(self, value):
         return value * self.index
+
+
+class Alert(models.Model):
+    user = models.ForeignKey(User)
+    text = models.CharField(max_length=300)

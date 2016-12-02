@@ -29,15 +29,15 @@ def logout(request):
 
 @login_required
 def password(request):
-    try:
-        if (request.method == "POST"):
-            request.user.change_password(
+    if (request.method == "POST"):
+        if request.user.change_password(
                 request.POST.get("password_old"),
                 request.POST.get("password_new"),
                 request.POST.get("password_new_repeat")
-            )
+        ):
             return redirect('logout')
         else:
-            return render(request, 'password.html')
-    except:
-        return redirect('password')
+            request.user.alert('Текущий пароль введен неверно')
+            return redirect('password')
+    else:
+        return render(request, 'password.html')

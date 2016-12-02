@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'app.processors.date',
                 'app.processors.unread_messages',
+                'app.processors.alerts',
             ],
         },
     },
