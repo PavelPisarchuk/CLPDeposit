@@ -68,6 +68,7 @@ TEMPLATES = [
                 'app.processors.date',
                 'app.processors.unread_messages',
                 'app.processors.alerts',
+                'app.processors.patterns',
             ],
         },
     },

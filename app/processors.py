@@ -26,3 +26,9 @@ def alerts(request):
         return {
             'alerts': []
         }
+
+
+def patterns(request):
+    return {
+        'alpha_rus': "^[А-ЯЁ][а-яё]*$",
+    }

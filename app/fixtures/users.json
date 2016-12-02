@@ -11,13 +11,15 @@
       "is_staff":true,
       "is_active":true,
       "date_joined":"2016-11-15T12:14:49.478Z",
-      "first_name":"",
-      "last_name":"",
-      "father_name":"",
-      "passport_id":"",
-      "phone":"",
-      "address":"",
-      "birthday":null,
+      "first_name": "Артур",
+      "last_name": "Чумак",
+      "father_name": "Игоревич",
+      "passport_date": "2012-11-23",
+      "passport_id": "MP0000000",
+      "passport_ser": "1123456A123РВ1",
+      "phone": "+375 17 000-00-00",
+      "address": "г. Минск",
+      "birthday": "1995-06-21",
       "groups":[
 
       ],
@@ -30,75 +32,23 @@
     "model":"app.user",
     "pk":2,
     "fields":{
-      "password":"pbkdf2_sha256$30000$WlKUZeZdRMl7$r2lDTjnXV8p6Mw+2NCJPzAulE7JVFGsV38K8+1HSdMw=",
-      "last_login":null,
-      "is_superuser":true,
-      "username":"pasha",
-      "email":"pasha@mail.ru",
-      "is_staff":true,
-      "is_active":true,
-      "date_joined":"2016-11-15T12:15:05.749Z",
-      "first_name":"",
-      "last_name":"",
-      "father_name":"",
-      "passport_id":"",
-      "phone":"",
-      "address":"",
-      "birthday":null,
-      "groups":[
-
-      ],
-      "user_permissions":[
-
-      ]
-    }
-  },
-  {
-    "model":"app.user",
-    "pk":3,
-    "fields":{
-      "password":"pbkdf2_sha256$30000$KnRcWSW63Py3$jC4dZrrrYzPGJ3oRGcuPRN6ac8p+6FUDsmaPp/0BgHE=",
-      "last_login":null,
-      "is_superuser":true,
-      "username":"artem",
-      "email":"artem@mail.ru",
-      "is_staff":true,
-      "is_active":true,
-      "date_joined":"2016-11-15T12:15:21.101Z",
-      "first_name":"",
-      "last_name":"",
-      "father_name":"",
-      "passport_id":"",
-      "phone":"",
-      "address":"",
-      "birthday":null,
-      "groups":[
-
-      ],
-      "user_permissions":[
-
-      ]
-    }
-  },
-  {
-    "model":"app.user",
-    "pk":4,
-    "fields":{
       "password":"pbkdf2_sha256$30000$APCpQLzTc33l$08eVMOxFmfNZsDlis9FijnS+JfwW2K95wKkGS8ML66s=",
       "last_login":null,
       "is_superuser":false,
       "username":"test",
-      "first_name":"test",
-      "last_name":"test",
-      "email":"",
+      "email": "petrov@mail.ru",
       "is_staff":false,
       "is_active":true,
       "date_joined":"2016-11-24T18:44:22.637Z",
-      "father_name":"test",
-      "passport_id":"",
-      "phone":"",
-      "address":"",
-      "birthday":null,
+      "first_name": "Степан",
+      "last_name": "Иванов",
+      "father_name": "Петрович",
+      "passport_date": "2013-07-21",
+      "passport_id": "MP0000000",
+      "passport_ser": "1123456A123РВ1",
+      "phone": "+375 17 000-00-00",
+      "address": "г. Минск",
+      "birthday": "1990-02-17",
       "groups":[
 
       ],

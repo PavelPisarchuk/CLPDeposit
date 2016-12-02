@@ -10,16 +10,20 @@ from app.models import User
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(**form.cleaned_data)
-            user.save()
-        return redirect('client:list')
-    else:
+    if request.method == 'GET':
         return render(request, 'client/registration.html', {
             'form': UserForm()
         })
+    else:
+        try:
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user = User.objects.create_user(**form.cleaned_data)
+                user.save()
+            else:
+                request.user.alert(form.errors)
+        finally:
+            return redirect('client:list')
 
 
 @login_required

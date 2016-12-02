@@ -4,7 +4,7 @@ from django.forms import modelform_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from app.forms import AdminForm, adminfields
+from app.forms import UserForm, adminfields
 from app.models import User
 
 
@@ -13,14 +13,14 @@ from app.models import User
 def new(request):
     try:
         if request.method == 'POST':
-            form = AdminForm(request.POST)
+            form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.create_superuser(**form.cleaned_data)
                 user.save()
             return redirect('employee:list')
         else:
             return render(request, 'employee/registration.html', {
-                'form': AdminForm()
+                'form': UserForm()
             })
     except:
         return redirect('employee:list')
