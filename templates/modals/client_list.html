@@ -1,0 +1,149 @@
+<div class="modal fade" id="myModalNewBill" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                <h4 class="modal-title">Новый счёт</h4>
+            </div>
+            <div class="modal-body">
+                <p>Добавить новый счёт для : </p>
+                <p id="errors" style="color: red"></p>
+                <p id="contentname" style="font-weight: bold;"></p>
+                <p><input name="num" style="display: none" form="addbillForm" id="userid"></p>
+            </div>
+            <div class="modal-footer">
+                <form id="addbillForm" class="form-horizontal" action="" method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-warning" type="submit" value="Добавить"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalNewCard" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                <h4 class="modal-title">Новая карточка</h4>
+            </div>
+            <div class="modal-body">
+                <p>Добавить карточку для : </p>
+                <p id="contentname" style="font-weight: bold;"></p>
+                <p id="errors" style="color: red"></p>
+                <div>
+                    <p><select id="billselecttocard" name="num" form="addcardForm">
+                        <option disabled>Загрузка...</option>
+                    </select></p>
+                    <p><input placeholder="Лимит" form="addcardForm" type="number" name="limit"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form id="addcardForm" class="form-horizontal" action="" method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-warning" type="submit" value="Добавить"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalFill" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                <h4 class="modal-title">Пополнение</h4>
+            </div>
+            <div class="modal-body">
+                <p>Пополнение счёта для : </p>
+                <p id="contentname" style="font-weight: bold;"></p>
+                <p id="errors" style="color: red"></p>
+                <div>
+                    <p><select id="billfillselecttocard" name="num" form="addonbillForm">
+                        <option disabled>Загрузка...</option>
+                    </select></p>
+                    <p><input placeholder="Сумма" form="addonbillForm" type="number" name="money"></p>
+                    <p><select id="currencyselect" name="currency" form="addonbillForm">
+                        <option disabled>Загрузка...</option>
+                    </select></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form id="addonbillForm" class="form-horizontal" action=""
+                      method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-warning" type="submit" value="Добавить"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalMessage" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                <h4 class="modal-title">Сообщение</h4>
+            </div>
+            <div class="modal-body">
+                <p>Отправить сообщение для : </p>
+                <p id="contentname" style="font-weight: bold;"></p>
+                <p id="errors" style="color: red"></p>
+                <p><input name="num" style="display: none" form="messageForm" id="userid"></p>
+                <div>
+                    <p><input class="form-control" placeholder="Зоголовок" id="headerFormVal" form="messageForm"
+                              type="text"
+                              name="header"></p>
+                    <p><textarea class="form-control" placeholder="Сообщение" id="messageFormVal" rows="3"
+                                 form="messageForm" type="text" name="message"></textarea></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form id="messageForm" class="form-horizontal" action="" method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-warning" type="submit" value="Добавить"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalChangeUser" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                <h4 class="modal-title">Изменение</h4>
+            </div>
+            <div class="modal-body">
+                <p>Изменить данные для : </p>
+                <p id="contentname" style="font-weight: bold;"></p>
+                <p id="errors" style="color: red"></p>
+                <div>
+                    <p><input name="num" style="display: none" form="changeuserForm" id="userid"></p>
+                    <p><input type="text" name="firstname" placeholder="Имя" form="changeuserForm"
+                              id="userfirstname"></p>
+                    <p><input type="text" name="lastname" placeholder="Фамилия" form="changeuserForm"
+                              id="userlastname"></p>
+                    <p><input type="text" name="fathername" placeholder="Отчество" form="changeuserForm"
+                              id="userfathername"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form id="changeuserForm" class="form-horizontal" action=""
+                      method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <input class="btn btn-warning" type="submit" value="Изменить"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

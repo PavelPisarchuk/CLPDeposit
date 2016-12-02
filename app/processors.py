@@ -2,9 +2,9 @@ from app.models import now
 
 
 def unread_messages(request):
-    if request.user.is_authenticated:
+    try:
         count = request.user.get_unread_messages_count()
-    else:
+    except:
         count = 0
     return {
         'unread_messages_count': count

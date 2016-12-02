@@ -12,6 +12,8 @@ def send_message(request):
     try:
         if request.method == 'POST':
             user = User.objects.get(id=request.POST['num'])
+            if not request.POST['header']:
+                return JsonResponse({'succes': False, 'errors': 'Пустой заголовок !'})
             user.send_message(
                 message=request.POST['message'],
                 header=request.POST['header']
@@ -28,11 +30,11 @@ def readmessage(request):
         if request.method == 'POST':
             msg = Message.objects.get(id=request.POST["num"])
             if request.user != msg.user:
-                return redirect('errors:permission')
+                return JsonResponse({})
             msg.read()
-            return JsonResponse()
+            return JsonResponse({})
     except:
-        return redirect('message:messages')
+        return JsonResponse({})
 
 
 @login_required
@@ -54,7 +56,7 @@ def messages(request):
             'messages': request.user.get_messages().order_by('-id')
         })
     except:
-        return redirect('message:messages')
+        return redirect('index')
 
 
 @login_required
@@ -65,6 +67,6 @@ def delete(request):
                 id=request.POST['num'],
                 user=request.user
             ).delete()
-            return redirect('message:messages')
+            return JsonResponse({'succes': True, 'msgid': request.POST['num']})
     except:
-        return redirect('errors:permission')
+        return JsonResponse({'succes': False, 'errors': 'Недостаточно прав !'})

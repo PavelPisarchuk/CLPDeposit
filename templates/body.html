@@ -9,25 +9,12 @@
         <link rel="stylesheet" type="text/css" href="{% static "foundation/foundation.min.css" %}"/>
         <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/sticky-footer.css" %}"/>
         <script type="text/javascript" src="{% static "jquery-3.1.1.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "foundation/foundation.min.js" %}"></script>
         <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "foundation/foundation.min.js" %}"></script>
         <script type="text/javascript" src="{% static "jquery.inputmask.bundle.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "myjs/body_update_message.js" %}"></script>
 
-        <script type="text/javascript">
-            $(document).ready(function(){
 
-               $('#msg').bind('click', function(){
-                   $.get('/message/updatemsg/', function(data) {
-                        if (data['data']==true)
-                            $("#newmsg").text(data['count']);
-                        else
-                            $("#newmsg").text("")
-
-                     });
-                });
-
-            });
-        </script>
         {% block title %} {% endblock %}
     </head>
     <body role="document">
@@ -89,35 +76,7 @@
                 </p>
             </div>
         </footer>
+        <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
 
-        <script>
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            var csrftoken = getCookie('csrftoken');
-            function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        </script>
     </body>
 </html>

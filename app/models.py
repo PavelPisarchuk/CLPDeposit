@@ -195,6 +195,13 @@ class Bill(models.Model):
 
     def transfer(self, other, value):
         if self.pop(value):
+            if self.currency != other.currency:
+                to_currency = ExchangeRate.objects.get(
+                    to_currency=other.currency,
+                    from_currency=self.currency,
+                    date=today()
+                )
+                value = to_currency.calc(value)
             other.push(value)
             return True
         else:

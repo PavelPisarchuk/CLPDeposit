@@ -10,7 +10,7 @@
             <div>{{ e }}</div>
         {% endfor %}
     {% endif %}
-    <form class="form-horizontal" action="{% url 'client:search' %}" method="post">
+    <form style="display: none" class="form-horizontal" action="{% url 'client:search' %}" method="post">
             {% csrf_token %}
                         <div class="fieldWrapper">
                             {{ form.first_name }}
@@ -35,7 +35,7 @@
                 <tr>
                     <td>ФИО</td>
                     <td>Идентификационный номер</td>
-                    <td colspan="5"><span id="lastoperation" class="label label-success"></span></td>
+                    <td colspan="4"><span id="lastoperation" class="label label-success"></span></td>
                 </tr>
                 {% for client in clients %}
                     <tr>
@@ -68,7 +68,7 @@
                                data-contentid="{{ client.id }}">Пополнить счёт
                             </a>
                         </td>
-                        <td>
+                        <td style="display: none">
                             <a data-toggle="modal"
                                data-target="#myModalNewCard" data-contentname="{{ client.get_full_name }}"
                                data-contentid="{{ client.id }}">Новая карточка
@@ -82,301 +82,11 @@
         </div>
 
 
-        <div class="modal fade" id="myModalNewBill" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                        <h4 class="modal-title">Новый счёт</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Добавить новый счёт для : </p>
-                        <p id="contentname" style="font-weight: bold;"></p>
-                        <p><input name="num" style="display: none" form="addbillForm" id="userid"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <form id="addbillForm" class="form-horizontal" action="" method="post">
-                            {% csrf_token %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <input class="btn btn-warning" type="submit" value="Добавить"/>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include 'modals/client_list.html' %}
 
-        <div class="modal fade" id="myModalNewCard" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                        <h4 class="modal-title">Новая карточка</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Добавить карточку для : </p>
-                        <p id="contentname" style="font-weight: bold;"></p>
-                        <p id="addcarderrors" style="color: red"></p>
-                        <div>
-                            <p><select id="billselecttocard" name="num" form="addcardForm">
-                                <option disabled>Загрузка...</option>
-                            </select></p>
-                            <p><input placeholder="Лимит" form="addcardForm" type="number" name="limit"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <form id="addcardForm" class="form-horizontal" action="" method="post">
-                            {% csrf_token %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <input class="btn btn-warning" type="submit" value="Добавить"/>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% load staticfiles %}
+        <script type="text/javascript" src="{% static "myjs/admin_client_list.js" %}"></script>
 
-        <div class="modal fade" id="myModalFill" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                        <h4 class="modal-title">Пополнение</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Пополнение счёта для : </p>
-                        <p id="contentname" style="font-weight: bold;"></p>
-                        <p id="fillerrors" style="color: red"></p>
-                        <div>
-                            <p><select id="billfillselecttocard" name="num" form="addonbillForm">
-                                <option disabled>Загрузка...</option>
-                            </select></p>
-                            <p><input placeholder="Сумма" form="addonbillForm" type="number" name="money"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <form id="addonbillForm" class="form-horizontal" action=""
-                              method="post">
-                            {% csrf_token %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <input class="btn btn-warning" type="submit" value="Добавить"/>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="myModalMessage" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                        <h4 class="modal-title">Сообщение</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Отправить сообщение для : </p>
-                        <p id="contentname" style="font-weight: bold;"></p>
-                        <p><input name="num" style="display: none" form="messageForm" id="userid"></p>
-                        <div>
-                            <p><input class="form-control" placeholder="Зоголовок" id="headerFormVal" form="messageForm"
-                                      type="text"
-                                      name="header"></p>
-                            <p><textarea class="form-control" placeholder="Сообщение" id="messageFormVal" rows="3"
-                                         form="messageForm" type="text" name="message"></textarea></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <form id="messageForm" class="form-horizontal" action="" method="post">
-                            {% csrf_token %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <input class="btn btn-warning" type="submit" value="Добавить"/>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="myModalChangeUser" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                        <h4 class="modal-title">Изменение</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Изменить данные для : </p>
-                        <p id="contentname" style="font-weight: bold;"></p>
-                        <div>
-                            <p><input name="num" style="display: none" form="changeuserForm" id="userid"></p>
-                            <p><input type="text" name="firstname" placeholder="Имя" form="changeuserForm"
-                                      id="userfirstname"></p>
-                            <p><input type="text" name="lastname" placeholder="Фамилия" form="changeuserForm"
-                                      id="userlastname"></p>
-                            <p><input type="text" name="fathername" placeholder="Отчество" form="changeuserForm"
-                                      id="userfathername"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <form id="changeuserForm" class="form-horizontal" action=""
-                              method="post">
-                            {% csrf_token %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <input class="btn btn-warning" type="submit" value="Изменить"/>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            $('#myModalChangeUser').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                $(this).find('#contentname').text(button.data('contentname'));
-                $(this).find('#userfirstname').val(button.data('first'));
-                $(this).find('#userlastname').val(button.data('last'));
-                $(this).find('#userfathername').val(button.data('father'));
-                $(this).find('#userid').val(button.data('contentid'));
-                $('#changeuserForm').find("input[type=submit]").prop("disabled", false)
-            });
-            $('#myModalNewBill').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                $(this).find('#contentname').text(button.data('contentname'));
-                $(this).find('#userid').val(button.data('contentid'));
-                $('#addbillForm').find("input[type=submit]").prop("disabled", false)
-            });
-            $('#myModalMessage').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                $(this).find('#contentname').text(button.data('contentname'));
-                $(this).find('#userid').val(button.data('contentid'));
-                $('#messageForm').find("input[type=submit]").prop("disabled", false)
-            });
-            $('#myModalFill').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                $('#fillerrors').text('');
-                $('#addonbillForm').find("input[type=submit]").prop("disabled", false);
-                $(this).find('#contentname').text(button.data('contentname'));
-                $('#billfillselecttocard').empty();
-                $('#billfillselecttocard').append('<option disabled selected value="Загрузка...">Загрузка...</option>');
-                $.get('/bill/getuserbills/', {'num': Number(button.data('contentid'))}, function (data) {
-                    bills = data['bills'];
-                    $('#billfillselecttocard').empty();
-                    for (i in bills)
-                        $('#billfillselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
-                });
-            });
-            $('#myModalNewCard').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                $('#addcarderrors').text('');
-                $('#addcardForm').find("input[type=submit]").prop("disabled", false);
-                $(this).find('#contentname').text(button.data('contentname'));
-                $('#billselecttocard').empty();
-                $('#billselecttocard').append('<option disabled selected value="Загрузка...">Загрузка...</option>');
-                $.get('/bill/getuserbills/', {'num': Number(button.data('contentid'))}, function (data) {
-                    bills = data['bills'];
-                    $('#billselecttocard').empty();
-                    for (i in bills)
-                        $('#billselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
-                });
-            });
-
-            //==================================================================
-
-
-            $('#myModalChangeUser').submit(function (event) {
-                event.preventDefault();
-                $('#changeuserForm').find("input[type=submit]").prop("disabled", true);
-                $.post('/employee/edituser/', $('#changeuserForm').serializeArray(), function (data) {
-                    if (data['succes'] == false)
-                        $('#changeuserForm').find("input[type=submit]").prop("disabled", false);
-                    else {
-                        $('#myModalChangeUser').modal('hide');
-                        fullname = '#client_' + data['id'];
-                        $(fullname).text(data['newfull']);
-                        partname = '#client_name_' + data['id'];
-                        $(partname).data("first", data["newfirst"]);
-                        $(partname).data("last", data["newlast"]);
-                        $(partname).data("father", data["newfather"]);
-                        $('#lastoperation').text(data['operation']).fadeIn(1);
-                        setTimeout(function () {
-                            $('#lastoperation').fadeOut(300)
-                        }, 3000);
-                        $('#changeuserForm')[0].reset();
-                    }
-                });
-            });
-            $('#myModalFill').submit(function (event) {
-                event.preventDefault();
-                $('#addonbillForm').find("input[type=submit]").prop("disabled", true);
-                $.post('/bill/addonbill/', $('#addonbillForm').serializeArray(), function (data) {
-                    if (data['succes'] == false) {
-                        $('#fillerrors').text(data['errors']);
-                        $('#addonbillForm').find("input[type=submit]").prop("disabled", false)
-                    }
-                    else {
-                        $('#myModalFill').modal('hide');
-                        $('#fillerrors').text('');
-                        $('#lastoperation').text(data['operation']);
-                        $('#lastoperation').text(data['operation']).fadeIn(1);
-                        setTimeout(function () {
-                            $('#lastoperation').fadeOut(300)
-                        }, 3000);
-                        $('#addonbillForm')[0].reset();
-
-                    }
-                });
-            });
-            $('#myModalNewBill').submit(function (event) {
-                event.preventDefault();
-                $('#addbillForm').find("input[type=submit]").prop("disabled", true);
-                $.post('/bill/addbill/', $('#addbillForm').serializeArray(), function (data) {
-                    if (data['succes'] == false)
-                        $('#addbillForm').find("input[type=submit]").prop("disabled", false);
-                    else {
-                        $('#myModalNewBill').modal('hide');
-                        $('#lastoperation').text(data['operation']).fadeIn(1);
-                        setTimeout(function () {
-                            $('#lastoperation').fadeOut(300)
-                        }, 3000)
-                    }
-                    $('#addbillForm')[0].reset();
-
-                });
-            });
-            $('#myModalNewCard').submit(function (event) {
-                event.preventDefault();
-                $('#addcardForm').find("input[type=submit]").prop("disabled", true);
-                $.post('/bill/addcard/', $('#addcardForm').serializeArray(), function (data) {
-                    if (data['succes'] == false) {
-                        $('#addcarderrors').text(data['errors']);
-                        $('#addcardForm').find("input[type=submit]").prop("disabled", false)
-                    }
-                    else {
-                        $('#myModalNewCard').modal('hide');
-                        $('#addcarderrors').text('');
-                        $('#lastoperation').text(data['operation']).fadeIn(1);
-                        setTimeout(function () {
-                            $('#lastoperation').fadeOut(300)
-                        }, 3000)
-                    }
-                    $('#addcardForm')[0].reset();
-
-                });
-            });
-            $('#myModalMessage').submit(function (event) {
-                event.preventDefault();
-                $('#messageForm').find("input[type=submit]").prop("disabled", true);
-                $.post('/message/send/', $('#messageForm').serializeArray(), function (data) {
-                    if (data['succes'] == false)
-                        $('#messageForm').find("input[type=submit]").prop("disabled", false);
-                    else {
-                        $('#myModalMessage').modal('hide');
-                        $('#lastoperation').text(data['operation']).fadeIn(1);
-                        setTimeout(function () {
-                            $('#lastoperation').fadeOut(300)
-                        }, 3000)
-                    }
-                    $('#messageForm')[0].reset();
-                });
-            })
-        </script>
 
     {% endif %}
 {% endblock %}

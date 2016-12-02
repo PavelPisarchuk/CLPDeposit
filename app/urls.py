@@ -44,6 +44,7 @@ urlpatterns = [
         url(r'^cardsinbill/', bill.cardsinbill, name='cardsinbill'),
         url(r'^billtransact/', bill.billtransact, name='billtransact'),
         url(r'^getuserbills/', bill.getuserbills, name='getuserbills'),
+        url(r'^getcurrency/', bill.getcurrency, name='getcurrency'),
         url(r'^getuserbillsfromuser/', bill.getuserbillsfromuser, name='getuserbills'),
     ], namespace='bill')),
     url(r'^deposit/', include([
