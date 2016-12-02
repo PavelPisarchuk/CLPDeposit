@@ -11,6 +11,7 @@ $(document).ready(function () {
 });
 $('#myModalChangeUser').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
+    $('#myModalChangeUser').find('#errors').text('');
     $(this).find('#contentname').text(button.data('contentname'));
     $(this).find('#userfirstname').val(button.data('first'));
     $(this).find('#userlastname').val(button.data('last'));
@@ -19,6 +20,7 @@ $('#myModalChangeUser').on('show.bs.modal', function (event) {
     $('#changeuserForm').find("input[type=submit]").prop("disabled", false)
 });
 $('#myModalNewBill').on('show.bs.modal', function (event) {
+    $('#myModalNewBill').find('#errors').text('');
     var button = $(event.relatedTarget);
     $(this).find('#contentname').text(button.data('contentname'));
     $(this).find('#userid').val(button.data('contentid'));
@@ -26,13 +28,14 @@ $('#myModalNewBill').on('show.bs.modal', function (event) {
 });
 $('#myModalMessage').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
+    $('#myModalMessage').find('#errors').text('');
     $(this).find('#contentname').text(button.data('contentname'));
     $(this).find('#userid').val(button.data('contentid'));
     $('#messageForm').find("input[type=submit]").prop("disabled", false)
 });
 $('#myModalFill').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
-    $('#fillerrors').text('');
+    $('#myModalFill').find('#errors').text('');
     $('#addonbillForm').find("input[type=submit]").prop("disabled", false);
     $(this).find('#contentname').text(button.data('contentname'));
     $('#billfillselecttocard').empty();
@@ -46,7 +49,7 @@ $('#myModalFill').on('show.bs.modal', function (event) {
 });
 $('#myModalNewCard').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
-    $('#addcarderrors').text('');
+    $('#myModalNewCard').find('#errors').text('');
     $('#addcardForm').find("input[type=submit]").prop("disabled", false);
     $(this).find('#contentname').text(button.data('contentname'));
     $('#billselecttocard').empty();
@@ -66,8 +69,10 @@ $('#myModalChangeUser').submit(function (event) {
     event.preventDefault();
     $('#changeuserForm').find("input[type=submit]").prop("disabled", true);
     $.post('/employee/edituser/', $('#changeuserForm').serializeArray(), function (data) {
-        if (data['succes'] == false)
+        if (data['succes'] == false) {
             $('#changeuserForm').find("input[type=submit]").prop("disabled", false);
+            $('#myModalChangeUser').find('#errors').text(data['errors']);
+        }
         else {
             $('#myModalChangeUser').modal('hide');
             fullname = '#client_' + data['id'];
@@ -76,10 +81,7 @@ $('#myModalChangeUser').submit(function (event) {
             $(partname).data("first", data["newfirst"]);
             $(partname).data("last", data["newlast"]);
             $(partname).data("father", data["newfather"]);
-            $('#lastoperation').text(data['operation']).fadeIn(1);
-            setTimeout(function () {
-                $('#lastoperation').fadeOut(300)
-            }, 3000);
+            disolve(data);
             $('#changeuserForm')[0].reset();
         }
     });
@@ -89,19 +91,14 @@ $('#myModalFill').submit(function (event) {
     $('#addonbillForm').find("input[type=submit]").prop("disabled", true);
     $.post('/bill/addonbill/', $('#addonbillForm').serializeArray(), function (data) {
         if (data['succes'] == false) {
-            $('#fillerrors').text(data['errors']);
+            $('#myModalFill').find('#errors').text(data['errors']);
             $('#addonbillForm').find("input[type=submit]").prop("disabled", false)
         }
         else {
             $('#myModalFill').modal('hide');
-            $('#fillerrors').text('');
             $('#lastoperation').text(data['operation']);
-            $('#lastoperation').text(data['operation']).fadeIn(1);
-            setTimeout(function () {
-                $('#lastoperation').fadeOut(300)
-            }, 3000);
+            disolve(data);
             $('#addonbillForm')[0].reset();
-
         }
     });
 });
@@ -109,17 +106,15 @@ $('#myModalNewBill').submit(function (event) {
     event.preventDefault();
     $('#addbillForm').find("input[type=submit]").prop("disabled", true);
     $.post('/bill/addbill/', $('#addbillForm').serializeArray(), function (data) {
-        if (data['succes'] == false)
+        if (data['succes'] == false) {
             $('#addbillForm').find("input[type=submit]").prop("disabled", false);
+            $('#myModalNewBill').find('#errors').text(data['errors']);
+        }
         else {
             $('#myModalNewBill').modal('hide');
-            $('#lastoperation').text(data['operation']).fadeIn(1);
-            setTimeout(function () {
-                $('#lastoperation').fadeOut(300)
-            }, 3000)
+            disolve(data);
+            $('#addbillForm')[0].reset();
         }
-        $('#addbillForm')[0].reset();
-
     });
 });
 $('#myModalNewCard').submit(function (event) {
@@ -127,34 +122,36 @@ $('#myModalNewCard').submit(function (event) {
     $('#addcardForm').find("input[type=submit]").prop("disabled", true);
     $.post('/bill/addcard/', $('#addcardForm').serializeArray(), function (data) {
         if (data['succes'] == false) {
-            $('#addcarderrors').text(data['errors']);
+            $('#myModalNewCard').find('#errors').text(data['errors']);
             $('#addcardForm').find("input[type=submit]").prop("disabled", false)
         }
         else {
             $('#myModalNewCard').modal('hide');
-            $('#addcarderrors').text('');
-            $('#lastoperation').text(data['operation']).fadeIn(1);
-            setTimeout(function () {
-                $('#lastoperation').fadeOut(300)
-            }, 3000)
+            disolve(data);
+            $('#addcardForm')[0].reset();
         }
-        $('#addcardForm')[0].reset();
-
     });
 });
 $('#myModalMessage').submit(function (event) {
     event.preventDefault();
     $('#messageForm').find("input[type=submit]").prop("disabled", true);
     $.post('/message/send/', $('#messageForm').serializeArray(), function (data) {
-        if (data['succes'] == false)
+        if (data['succes'] == false) {
             $('#messageForm').find("input[type=submit]").prop("disabled", false);
+            $('#myModalMessage').find('#errors').text(data['errors']);
+        }
         else {
             $('#myModalMessage').modal('hide');
-            $('#lastoperation').text(data['operation']).fadeIn(1);
-            setTimeout(function () {
-                $('#lastoperation').fadeOut(300)
-            }, 3000)
+            disolve(data);
+            $('#messageForm')[0].reset();
+
         }
-        $('#messageForm')[0].reset();
     });
 });
+
+function disolve(data) {
+    $('#lastoperation').text(data['operation']).fadeIn(1);
+    setTimeout(function () {
+        $('#lastoperation').fadeOut(300)
+    }, 3000)
+}

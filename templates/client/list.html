@@ -10,7 +10,7 @@
             <div>{{ e }}</div>
         {% endfor %}
     {% endif %}
-    <form class="form-horizontal" action="{% url 'client:search' %}" method="post">
+    <form style="display: none" class="form-horizontal" action="{% url 'client:search' %}" method="post">
             {% csrf_token %}
                         <div class="fieldWrapper">
                             {{ form.first_name }}
@@ -35,7 +35,7 @@
                 <tr>
                     <td>ФИО</td>
                     <td>Идентификационный номер</td>
-                    <td colspan="5"><span id="lastoperation" class="label label-success"></span></td>
+                    <td colspan="4"><span id="lastoperation" class="label label-success"></span></td>
                 </tr>
                 {% for client in clients %}
                     <tr>
@@ -68,7 +68,7 @@
                                data-contentid="{{ client.id }}">Пополнить счёт
                             </a>
                         </td>
-                        <td>
+                        <td style="display: none">
                             <a data-toggle="modal"
                                data-target="#myModalNewCard" data-contentname="{{ client.get_full_name }}"
                                data-contentid="{{ client.id }}">Новая карточка

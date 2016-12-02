@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.datastructures import MultiValueDictKeyError
 
 from app.models import ExchangeRate, today
 from app.models import User, Card, Bill, Currency
@@ -65,6 +66,10 @@ def addonbill(request):
                                  'operation': 'Пополнение счёта {0} для {1} на {2} выполнено'.format(bill.id,
                                                                                                      bill.client.get_full_name(),
                                                                                                      pushmoney)})
+        except MultiValueDictKeyError:
+            return JsonResponse({'succes': False, 'errors': 'Введены не все поля'})
+        except Currency.DoesNotExist:
+            return JsonResponse({'succes': False, 'errors': 'Такой валюты нет'})
         except Exception:
             return JsonResponse({'succes': False, 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'})
 
@@ -79,13 +84,13 @@ def addbill(request):
             return JsonResponse({'succes': True, 'operation': 'Добавление счёта {0} для {1} выполнено'.format(_bill.id,
                                                                                                               _bill.client.get_full_name())})
         except Exception:
-            return JsonResponse({'succes': False, 'errors': 'dsa'})
+            return JsonResponse({'succes': False, 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'})
 
 
 @login_required
 def billtransact(request):
     if request.POST:
-        # try:
+        try:
             _from = int(request.POST["from"])
             _to = int(request.POST["to"])
 
@@ -93,10 +98,10 @@ def billtransact(request):
             tobill = Bill.objects.get(id=_to)
 
             if frombill == tobill:
-                return JsonResponse({'succes': False, 'errors': 'Перевод в тот же самый счёт !'})
+                return JsonResponse({'succes': False, 'errors': 'Перевод в тот же самый счёт невозможен!'})
 
             if frombill.client != request.user or tobill.client != request.user:
-                return JsonResponse({'succes': False, 'errors': 'Перевод невозможен !'})
+                return JsonResponse({'succes': False, 'errors': 'Перевод невозможен, один из счетов не ваш !'})
 
             else:
                 _money = int(request.POST["money"])
@@ -120,9 +125,14 @@ def billtransact(request):
                 else:
                     return JsonResponse({'succes': False, 'errors': 'Недостаточно средств!'})
 
-                    #except:
-            return JsonResponse({'succes': False, 'errors': 'Неизвестная ошибка'})
-
+        except MultiValueDictKeyError:
+            return JsonResponse({'succes': False, 'errors': 'Введены не все поля'})
+        except Bill.DoesNotExist:
+            return JsonResponse({'succes': False, 'errors': 'Такого счёта нет'})
+        except Currency.DoesNotExist:
+            return JsonResponse({'succes': False, 'errors': 'Такой валюты нет'})
+        except Exception:
+            return JsonResponse({'succes': False, 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'})
 
 
 @login_required
@@ -148,7 +158,7 @@ def getuserbillsfromuser(request):
         _bills_id = []
         for a in _bills:
             _bills_id.append(a.id)
-        if _bills:
+        if _bills and _user == request.user:
             return JsonResponse({'bills': _bills_id})
         else:
             return JsonResponse({'bills': []})

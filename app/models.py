@@ -20,11 +20,11 @@ class DateDelta(models.Model):
 
 
 def today():
-    return timezone.now().date() + DateDelta.get_relativedelta()
+    return timezone.now().date()  # + DateDelta.get_relativedelta()
 
 
 def now():
-    return timezone.now() + DateDelta.get_relativedelta()
+    return timezone.now()  # + DateDelta.get_relativedelta()
 
 
 class User(AbstractUser):

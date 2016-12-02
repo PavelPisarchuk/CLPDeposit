@@ -7,6 +7,7 @@
             </div>
             <div class="modal-body">
                 <p>Добавить новый счёт для : </p>
+                <p id="errors" style="color: red"></p>
                 <p id="contentname" style="font-weight: bold;"></p>
                 <p><input name="num" style="display: none" form="addbillForm" id="userid"></p>
             </div>
@@ -31,7 +32,7 @@
             <div class="modal-body">
                 <p>Добавить карточку для : </p>
                 <p id="contentname" style="font-weight: bold;"></p>
-                <p id="addcarderrors" style="color: red"></p>
+                <p id="errors" style="color: red"></p>
                 <div>
                     <p><select id="billselecttocard" name="num" form="addcardForm">
                         <option disabled>Загрузка...</option>
@@ -60,7 +61,7 @@
             <div class="modal-body">
                 <p>Пополнение счёта для : </p>
                 <p id="contentname" style="font-weight: bold;"></p>
-                <p id="fillerrors" style="color: red"></p>
+                <p id="errors" style="color: red"></p>
                 <div>
                     <p><select id="billfillselecttocard" name="num" form="addonbillForm">
                         <option disabled>Загрузка...</option>
@@ -93,6 +94,7 @@
             <div class="modal-body">
                 <p>Отправить сообщение для : </p>
                 <p id="contentname" style="font-weight: bold;"></p>
+                <p id="errors" style="color: red"></p>
                 <p><input name="num" style="display: none" form="messageForm" id="userid"></p>
                 <div>
                     <p><input class="form-control" placeholder="Зоголовок" id="headerFormVal" form="messageForm"
@@ -123,6 +125,7 @@
             <div class="modal-body">
                 <p>Изменить данные для : </p>
                 <p id="contentname" style="font-weight: bold;"></p>
+                <p id="errors" style="color: red"></p>
                 <div>
                     <p><input name="num" style="display: none" form="changeuserForm" id="userid"></p>
                     <p><input type="text" name="firstname" placeholder="Имя" form="changeuserForm"
