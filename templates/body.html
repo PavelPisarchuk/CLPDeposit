@@ -10,6 +10,7 @@
         <script type="text/javascript" src="{% static "jquery-3.1.1.min.js" %}"></script>
         <script type="text/javascript" src="{% static "myjs/body_update_message.js" %}"></script>
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
         <style type="text/css">
             /* make sidebar nav vertical */
             @media (min-width: 768px) {
@@ -141,131 +142,82 @@
             }
 
         </style>
-        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-
         {% block title %} {% endblock %}
+
     </head>
+
     <body role="document">
 
-
     <div class="row affix-row">
-
         <div class="col-sm-3 col-md-2 affix-sidebar">
             <div class="sidebar-nav">
                 <div class="navbar navbar-default" role="navigation">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse"
-                            data-target=".sidebar-navbar-collapse">
-                        <span class="sr-only"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <span class="visible-xs navbar-brand"></span>
-                </div>
-
-
-                    <div class="wrap" class="navbar-collapse collapse sidebar-navbar-collapse">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                data-target=".sidebar-navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <span class="visible-xs navbar-brand">Sidebar menu</span>
+                    </div>
+                    <div class="navbar-collapse collapse sidebar-navbar-collapse">
                         <ul class="nav navbar-nav" id="sidenav01">
                             <li class="active">
-                                {% if user.is_authenticated %}
-                                    <a href="#" data-toggle="collapse" data-target="#toggleDemo0"
-                                       data-parent="#sidenav01" class="collapsed">
-                                        <h4><span class="glyphicon glyphicon-user"></span> {{ user.get_short_name }}<br><br>
-                                            <small>Профиль<span class="caret"></span></small>
-                                        </h4>
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'index' %}" data-toggle="collapse" data-target="#toggleDemo0"
-                                       data-parent="#sidenav01" class="collapsed">
-                                        <h4>Войдите в систему<br><br></h4>
-                                    </a>
-                                {% endif %}
+                                <a href="#" data-toggle="collapse" data-target="#toggleDemo0" data-parent="#sidenav01"
+                                   class="collapsed">
+                                    <h4>
+                                        {% if user.is_authenticated %}
+                                            <span class="glyphicon glyphicon-user"></span> {{ user.get_full_name }}
+                                        {% else %}
+                                            <span class="glyphicon glyphicon-eye-open"></span> Anonymous
+                                        {% endif %}
+                                        <br>
+                                        <br>
+                                        <small>Профиль <span class="caret"></span></small>
+                                    </h4>
+                                </a>
                                 <div class="collapse" id="toggleDemo0" style="height: 0px;">
                                     <ul class="nav nav-list">
                                         {% include 'menu/profile.html' %}
                                     </ul>
                                 </div>
                             </li>
-                            <li>
-                                <a href="#" data-toggle="collapse" data-target="#toggleDemo" data-parent="#sidenav01"
-                                   class="collapsed">
-                                    <span class="glyphicon glyphicon-cloud"></span> Вклады <span
-                                        class="caret pull-right"></span>
-                                </a>
-                                <div class="collapse" id="toggleDemo" style="height: 0px;">
-                                    <ul class="nav nav-list">
-                                        <li><a href={% url 'rate:today' %}>Курсы валют</a></li>
-                                        {% if user.is_authenticated %}
-                                            {% if not user.is_superuser %}
-                                                <li><a href="{% url 'contract:all' %}">Открыть вклад</a></li>
-                                                <li><a href="{% url 'contract:list' %}">Мои вклады</a></li>
-                                            {% else %}
-                                                <li><a href="{% url 'deposit:list' %}">Вклады</a></li>
-                                            {% endif %}
-                                        {% endif %}
-                                    </ul>
-                                </div>
-                            </li>
                             {% if user.is_authenticated %}
-                                {% if user.is_superuser %}
+
+                                {% if  user.is_superuser %}
                                     {% include 'menu/admin_actions.html' %}
                                 {% else %}
                                     {% include 'menu/client_actions.html' %}
                                 {% endif %}
-                            {% else %}
-                                <div class="col-md-3">
-                                <form class="form-inline" action="{% url 'login' %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="text" name="username" id="userName"
-                                           class="form-control input-sm chat-input" placeholder="username"/>
-                                    </br>
-                                    <input type="password" name="password" id="userPassword"
-                                           class="form-control input-sm chat-input" placeholder="password"/>
-                                    </br>
-                                    <div class="wrapper">
-                                    <span class="group-btn">
-                                        <button class="btn btn-primary btn-md" type="submit">Войти<i
-                                                class="fa fa-sign-in"></i>
-                                                                </button>
-                                    </span>
-                                    </div>
-                                </form>
+
                             {% endif %}
+
+                            <li><a href="{% url 'rate:today' %}"><span class="glyphicon glyphicon-euro"></span> Курсы
+                                валют <span class="badge pull-right">42</span></a></li>
                         </ul>
-                    </div>
-
-                    <!--/.nav-collapse -->
-                </div>
-
+                    </div><!--/.nav-collapse -->
+    </div>
             </div>
         </div>
 
         <div class="col-sm-9 col-md-10 affix-content">
             <div class="container">
 
-                <div class="page-header"><h3><span class="glyphicon glyphicon-th-list"></span> CLP Deposit</h3></div>
-                <div>
-                    {% block alerts %}{% include 'alerts.html' %}{% endblock %}
-                    {% block content %}{% endblock %}
-            </div>
+                <div class="page-header">
+                    <h3><span class="glyphicon glyphicon-th-list"></span> CLP Deposit</h3>
+                </div>
+                {% block alerts %}{% include 'alerts.html' %}{% endblock %}
+                {% block content %}{% endblock %}
             </div>
         </div>
 
     </div>
 
-
-    <footer class="footer">
-            <div class="container">
-                <p class="text-muted">
-                    {{ today }}
-                </p>
-            </div>
-
-        </footer>
-
         {% load staticfiles %}
         <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
+
 
     </body>
 
