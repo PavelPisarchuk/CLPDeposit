@@ -40,7 +40,8 @@
         <label>
             Дата выдачи паспорта
             <input type="text" id="passport_date"
-                   name={{ form.passport_date.html_name }} value="{{ form.passport_date.value }}" required>
+                   name={{ form.passport_date.html_name }} value="{{ form.passport_date.value.day }}-{{ form.passport_date.value.month }}-{{ form.passport_date.value.year }}"
+                   required>
             <span class="form-error">Обязательное поле.</span>
         </label>
 

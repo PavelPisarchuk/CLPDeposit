@@ -3,13 +3,6 @@ from django import forms
 
 from app.models import Contract, Currency, Deposit, User
 
-userfields = ["username", "password"]
-adminfields = ["email"]
-clientfields = ["email",
-                "last_name", "first_name", "father_name",
-                "passport_date", "passport_id", "passport_ser",
-                "address", "birthday", "phone"]
-
 
 class UserForm(forms.ModelForm):
     passport_date = forms.DateField(input_formats=['%d-%m-%Y'])
