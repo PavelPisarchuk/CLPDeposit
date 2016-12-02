@@ -5,19 +5,31 @@ from app.models import Contract, Currency, Deposit, User
 
 userfields = ["username", "password"]
 adminfields = ["email"]
-clientfields = ["last_name", "first_name", "father_name",
+clientfields = ["email",
+                "last_name", "first_name", "father_name",
                 "passport_date", "passport_id", "passport_ser",
                 "address", "birthday", "phone"]
 
 
 class UserForm(forms.ModelForm):
-    passport_date = forms.DateField(input_formats=['%d/%m/%Y'])
-    birthday = forms.DateField(input_formats=['%d/%m/%Y'])
+    passport_date = forms.DateField(input_formats=['%d-%m-%Y'])
+    birthday = forms.DateField(input_formats=['%d-%m-%Y'])
     class Meta:
         model = User
-        fields = ["username", "password",
+        fields = ["username", "password", "email",
                   "last_name", "first_name", "father_name",
                   "passport_id", "passport_ser",
+                  "address", "phone"]
+
+
+class EditUserForm(forms.ModelForm):
+    passport_date = forms.DateField(input_formats=['%d-%m-%Y'])
+
+    class Meta:
+        model = User
+        fields = ["email",
+                  "last_name", "first_name", "father_name",
+                  "passport_date", "passport_id", "passport_ser",
                   "address", "phone"]
 
 

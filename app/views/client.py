@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.forms import modelform_factory
 from django.shortcuts import render, redirect
 
-from app.forms import UserForm, SearchForm, clientfields
+from app.forms import UserForm, SearchForm
 from app.models import User
 
 
@@ -14,7 +13,7 @@ def new(request):
         return render(request, 'client/registration.html', {
             'form': UserForm()
         })
-    else:
+    elif request.method == 'POST':
         try:
             form = UserForm(request.POST)
             if form.is_valid():
@@ -57,26 +56,3 @@ def search(request):
     else:
         return redirect('client:list')
 
-
-@login_required
-def info(request):
-    Form = modelform_factory(User, fields=clientfields)
-    return render(request, 'client/info.html', {
-        'form': Form(instance=request.user)
-    })
-
-
-@login_required
-def edit(request):
-    Form = modelform_factory(User, fields=clientfields)
-    user = request.user
-
-    if request.method == 'POST':
-        form = Form(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-        return redirect('client:info')
-    else:
-        return render(request, 'client/edit.html', {
-            'form': Form(instance=user)
-        })

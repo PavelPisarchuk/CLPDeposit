@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.forms import modelform_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from app.forms import UserForm, adminfields
+from app.forms import UserForm
 from app.models import User
 
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new(request):
-    try:
-        if request.method == 'POST':
+    if request.method == 'GET':
+        return render(request, 'employee/registration.html', {
+            'form': UserForm()
+        })
+    elif request.method == 'POST':
+        try:
             form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.create_superuser(**form.cleaned_data)
                 user.save()
+            else:
+                request.user.alert(form.errors)
+        finally:
             return redirect('employee:list')
-        else:
-            return render(request, 'employee/registration.html', {
-                'form': UserForm()
-            })
-    except:
-        return redirect('employee:list')
 
 
 @login_required
@@ -32,32 +32,6 @@ def list(request):
     return render(request, 'employee/list.html', {
         'admins': User.objects.all().filter(is_superuser=True)
     })
-
-
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def info(request):
-    Form = modelform_factory(User, fields=adminfields)
-    return render(request, 'employee/info.html', {
-        'form': Form(instance=request.user)
-    })
-
-
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def edit(request):
-    Form = modelform_factory(User, fields=adminfields)
-    user = request.user
-
-    if request.method == 'POST':
-        form = Form(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-        return redirect('employee:info')
-    else:
-        return render(request, 'employee/edit.html', {
-            'form': Form(instance=user)
-        })
 
 
 @login_required

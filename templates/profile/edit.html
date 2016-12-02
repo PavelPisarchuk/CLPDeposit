@@ -1,0 +1,85 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Изменение профиля</title>
+{% endblock %}
+
+{% block content %}
+
+    <form class="abide-form" data-abide novalidate action="{% url 'profile:edit' %}" method="post">
+        {% csrf_token %}
+
+        <label>
+            E-mail
+            <input type="text" pattern="email" id="email" name={{ form.email.html_name }} value="{{ form.email.value }}"
+                   required>
+            <span class="form-error">Обязательное поле. Допустимы только цифры и англ. буквы</span>
+        </label>
+
+        <label>
+            Фамилия
+            <input type="text" pattern={{ alpha_rus }} name={{ form.last_name.html_name }}
+                   value="{{ form.last_name.value }}" required>
+            <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+        </label>
+
+        <label>
+            Имя
+            <input type="text" pattern={{ alpha_rus }} name={{ form.first_name.html_name }}
+                   value="{{ form.first_name.value }}" required>
+            <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+        </label>
+
+        <label>
+            Отчество
+            <input type="text" pattern={{ alpha_rus }} name={{ form.father_name.html_name }}
+                   value="{{ form.father_name.value }}" required>
+            <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+        </label>
+
+        <label>
+            Дата выдачи паспорта
+            <input type="text" id="passport_date"
+                   name={{ form.passport_date.html_name }} value="{{ form.passport_date.value }}" required>
+            <span class="form-error">Обязательное поле.</span>
+        </label>
+
+        <label>
+            Серия паспорта
+            <input type="text" id="passport_ser"
+                   name={{ form.passport_ser.html_name }} value="{{ form.passport_ser.value }}" required>
+            <span class="form-error">Обязательное поле.</span>
+        </label>
+
+        <label>
+            Идентификационный номер
+            <input type="text" id="passport_id"
+                   name={{ form.passport_id.html_name }} value="{{ form.passport_id.value }}" required>
+            <span class="form-error">Обязательное поле.</span>
+        </label>
+
+        <label>
+            Контактный телефон
+            <input type="text" id="phone" name={{ form.phone.html_name }} value="{{ form.phone.value }}" required>
+            <span class="form-error">Обязательное поле.</span>
+        </label>
+
+        <label>
+            Адрес
+            <input type="text" id="address" name={{ form.address.html_name }} value="{{ form.address.value }}" required>
+            <span class="form-error">Обязательное поле.</span>
+        </label>
+
+        <input class="btn btn-default" type="submit" value="Подтвердить"/>
+    </form>
+    <script>
+        $(document).foundation();
+        jQuery(function ($) {
+            $('#email').inputmask("*[*{1,30}]@*[*{2,6}].[*{1,3}]");
+            $('#passport_date').inputmask("dd-mm-yyyy");
+            $('#passport_ser').inputmask("AA9999999");
+            $('#passport_id').inputmask("9999999A999AA9");
+            $('#phone').inputmask("+375 99 999-99-99");
+        });
+    </script>
+{% endblock %}

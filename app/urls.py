@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
 
-from app.views import actions, bill, client, contract, deposit, employee, errors, general, messages, rate
+from app.views import actions, bill, client, contract, deposit, employee, errors, general, messages, profile, rate
 
 urlpatterns = [
     url(r'^login/', general.login, name='login'),
     url(r'^logout/', general.logout, name='logout'),
-    url(r'^password/', general.password, name='password'),
+    url(r'^profile/', include([
+        url(r'^info/', profile.info, name='info'),
+        url(r'^edit/', profile.edit, name='edit'),
+        url(r'^password/', profile.password, name='password'),
+    ], namespace='profile')),
     url(r'^rate/', include([
         url(r'^today/', rate.today, name='today'),
     ], namespace='rate')),
@@ -20,15 +24,11 @@ urlpatterns = [
     url(r'^employee/', include([
         url(r'^new/', employee.new, name='new'),
         url(r'^list/', employee.list, name='list'),
-        url(r'^info/', employee.info, name='info'),
-        url(r'^edit/', employee.edit, name='edit'),
         url(r'^edituser/', employee.edit_user, name='uedit'),
     ], namespace='employee')),
     url(r'^client/', include([
-        url(r'^list/', client.list, name='list'),
         url(r'^new/', client.new, name='new'),
-        url(r'^info/', client.info, name='info'),
-        url(r'^edit/', client.edit, name='edit'),
+        url(r'^list/', client.list, name='list'),
         url(r'^search/', client.search, name='search'),
         url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),

@@ -25,19 +25,3 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('index')
-
-
-@login_required
-def password(request):
-    if (request.method == "POST"):
-        if request.user.change_password(
-                request.POST.get("password_old"),
-                request.POST.get("password_new"),
-                request.POST.get("password_new_repeat")
-        ):
-            return redirect('logout')
-        else:
-            request.user.alert('Текущий пароль введен неверно')
-            return redirect('password')
-    else:
-        return render(request, 'password.html')

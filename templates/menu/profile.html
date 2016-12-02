@@ -4,20 +4,16 @@
         <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-        {% if  user.is_superuser %}
-            <li>
-                <a href={% url 'employee:info' %}>Мой профиль</a>
-            </li>
-        {% else %}
-            <li>
-                <a href={% url 'client:info' %}>Мой профиль</a>
-            </li>
+        <li>
+            <a href={% url 'profile:info' %}>Мой профиль</a>
+        </li>
+        {% if not user.is_superuser %}
             <li >
                 <a href={% url 'message:messages' %}>Мои сообщения <span class="badge badge-inverse" id="newmsg"></span></a>
             </li>
         {% endif %}
         <li>
-            <a href={% url 'password' %}>Изменить пароль</a>
+            <a href={% url 'profile:password' %}>Изменить пароль</a>
         </li>
         <li>
             <a href={% url 'logout' %}>Выйти</a>
