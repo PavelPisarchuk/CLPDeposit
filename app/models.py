@@ -178,6 +178,13 @@ class Message(models.Model):
         self.save()
 
 
+class DepositType(models.model):
+    title = models.CharField(max_length=30, verbose_name='Название')
+    description = models.TextField(max_length=300, verbose_name='Описание')
+
+    def __str__(self):
+        return self.title
+
 class Deposit(models.Model):
 
     Types = (
@@ -188,7 +195,7 @@ class Deposit(models.Model):
         ('Индексируемый вклад', 'Индексируемый вклад')
     )
 
-    depositType = models.CharField(max_length=30, choices=Types, verbose_name='Тип')
+    depositType = models.ForeignKey(DepositType, verbose_name='Тип депозита')
     title = models.CharField(max_length=30, verbose_name='Название')
     description = models.TextField(max_length=300, verbose_name='Описание')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
@@ -224,12 +231,62 @@ class Deposit(models.Model):
 
 class Contract(models.Model):
     deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False, blank=True, null=True)
-    bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя')
-    deposit_bill = models.FloatField(verbose_name='Сумма')
+    start_amount=models.PositiveIntegerField(verbose_name='Сумма')
+    bill = models.ForeignKey(Bill, verbose_name='Счет привязки')
+    deposit_bill = models.ForeignKey(Bill,verbose_name='Депозитный счет',editable=False, blank=True, null=True)
     bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
     end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
+    is_use_percent_for_early_withdrawal=models.BooleanField(verbose_name='изменить процентную ставку', default=False,editable=False)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
+
+    def push(self, value, action='FILL'):
+        self.deposit_bill += value
+        self.save()
+        Action.add(
+            action=action,
+            bill=self,
+            money=value
+        )
+
+    def pop(self, value, action='TAKE_PART'):
+        if self.money >= value:
+            self.money -= value
+            self.save()
+            Action.add(
+                action=action,
+                bill=self,
+                money=value
+            )
+            return True
+        else:
+            return False
+
+    def refill(self,amount):
+        if self.deposit.is_refill and self.bill.currency==self.deposit.currency and amount>=self.deposit.min_refill:
+            if self.bill.pop(amount):
+                self.deposit_bill+=amount
+                return True
+            else:
+                return False
+        else:
+            return False
+
+
+    def withdraw(self, amount, necessarily=False):
+        if self.deposit.is_early_withdrawal and self.deposit_bill-amount>=self.deposit.minimum_balance:
+            self.bill.push(amount)
+            self.deposit_bill-=amount
+            return True
+        elif necessarily and self.deposit_bill-amount>=0:
+            self.bill.push(amount)
+            self.deposit_bill-=amount
+            self.is_use_percent_for_early_withdrawal=True
+            return True
+        return False
+
+    def close(self):
+        return
 
 
     def calculate_payment(self):
