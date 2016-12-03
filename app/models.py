@@ -178,7 +178,7 @@ class Message(models.Model):
         self.save()
 
 
-class DepositType(models.model):
+class DepositType(models.Model):
     title = models.CharField(max_length=30, verbose_name='Название')
     description = models.TextField(max_length=300, verbose_name='Описание')
 
@@ -233,12 +233,13 @@ class Contract(models.Model):
     deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False, blank=True, null=True)
     start_amount=models.PositiveIntegerField(verbose_name='Сумма')
     bill = models.ForeignKey(Bill, verbose_name='Счет привязки')
-    deposit_bill = models.ForeignKey(Bill,verbose_name='Депозитный счет',editable=False, blank=True, null=True)
+    deposit_bill = models.ForeignKey(Bill,verbose_name='Депозитный счет',related_name='deposit_bill',editable=False, blank=True, null=True)
     bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=datetime.datetime.now, editable=False)
     end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
     is_use_percent_for_early_withdrawal=models.BooleanField(verbose_name='изменить процентную ставку', default=False,editable=False)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
+    is_acttt=models.BooleanField(verbose_name='Активен', default=True)
 
     def push(self, value, action='FILL'):
         self.deposit_bill += value
