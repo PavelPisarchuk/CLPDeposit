@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect
 
@@ -7,6 +7,7 @@ from app.models import Deposit, Bill, Contract
 
 
 @login_required
+@user_passes_test(lambda u: not u.is_superuser)
 def all(request):
 
     deposits = Deposit.objects.filter(is_archive=False)
@@ -17,6 +18,7 @@ def all(request):
 
 
 @login_required
+@user_passes_test(lambda u: not u.is_superuser)
 def new(request, deposit_id):
 
     errors = []
@@ -38,11 +40,13 @@ def new(request, deposit_id):
             minAmount = deposit.min_amount
             currency = deposit.currency
 
-            if contract.deposit_bill < minAmount:
+            if contract.start_amount < minAmount:
                 errors.append('Сумма должна быть не меньше ' + str(minAmount) + " " + str(currency))
-            elif not contract.bill.pop(contract.deposit_bill):
+            elif not contract.bill.pop(contract.start_amount):
                 errors.append('Недостаточно средств на счету')
             else:
+                bill = request.user.add_bill(d.currency,contract.start_amount,True)
+                contract.deposit_bill=bill
                 contract.deposit = d
                 contract.calculate_end_date()
                 contract.save()
@@ -60,6 +64,7 @@ def new(request, deposit_id):
 
 
 @login_required
+@user_passes_test(lambda u: not u.is_superuser)
 def list(request):
     return render(request, 'contract/list.html', {
         'contracts': request.user.get_contracts()
@@ -67,6 +72,7 @@ def list(request):
 
 
 @login_required
+@user_passes_test(lambda u: not u.is_superuser)
 def info(request, deposit_id):
     return render(request, 'contract/info.html', {
         'contract': Contract.objects.get(pk=deposit_id)

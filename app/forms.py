@@ -37,11 +37,16 @@ class SearchForm(forms.Form):
     passport_id = forms.CharField(max_length=14, label='Идентификационный номер')
 
 
-class DepositForm(forms.ModelForm):
-
+class DoVostredDepositForm(forms.ModelForm):
+    min_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    pay_period=forms.IntegerField(min_value=1,max_value=100,label='Период выплат')
+    percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
+    #percent_for_early_withdrawal=forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка при нарушении неснижаемого остатка')
+    min_refill=forms.IntegerField(min_value=0,max_value=1000000,label='Минимальное пополнение',initial=0)
     class Meta:
         model = Deposit
-        exclude = ['is_archive']
+        exclude = ["duration","is_early_withdrawal","minimum_balance",\
+                                                "percent_for_early_withdrawal","binding_currency"]
 
 
 class CurrencyForm(forms.ModelForm):

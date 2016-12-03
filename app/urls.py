@@ -50,16 +50,10 @@ urlpatterns = [
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
         url(r'^list/', deposit.list, name='list'),
-        url(r'^new/', deposit.new, name='new'),
+        url(r'^new/(?P<deposit_id>[0-9]+)/', deposit.new, name='new'),
         url(r'^edit/(?P<deposit_id>[0-9]+)/', deposit.edit, name='edit'),
         url(r'^info/(?P<deposit_id>[0-9]+)/', deposit.info, name='info'),
-
-
-        url(r'^refill/', deposit.refill, name='refill'),
-        url(r'^transfer/', deposit.transfer, name='transfer'),
-        url(r'^close/', deposit.close, name='close'),
-        url(r'^extract/', deposit.extract, name='extract'),
-        url(r'^history/', deposit.history, name='history')
+        url(r'^all/', deposit.all, name='all'),
     ], namespace='deposit')),
     url(r'^contract/', include([
         url(r'^all/', contract.all, name='all'),

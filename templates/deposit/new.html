@@ -8,7 +8,7 @@
     {% for error in errors %}
         <p class="bg-danger">{{ error }}</p>
     {% endfor %}
-    <form action="{% url 'deposit:new'%}" method="post">
+    <form action="{% url 'deposit:new' ID %}" method="post">
         {% csrf_token %}
         {{ depositForm.as_p }}
         <input class="btn btn-default" type="submit" value="Подтвердить" />

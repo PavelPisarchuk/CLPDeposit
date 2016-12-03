@@ -6,8 +6,9 @@
 
 {% block content %}
 
-    <br>Deposit: {{ deposit.title }}
-    <br>Description: {{ deposit.description }}
+    <br> {{ deposit.title }}
+    <br>
+    <br>Описание: {{ deposit.depositType.description }}
 
 
     {% for error in errors %}

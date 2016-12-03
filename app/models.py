@@ -235,30 +235,21 @@ class DepositType(models.Model):
 
 class Deposit(models.Model):
 
-    Types = (
-        ('Вклад до востребования', 'Вклад до востребования'),
-        ('Сберегательный вклад', 'Сберегательный вклад'),
-        ('Накопительный вклад', 'Накопительный вклад'),
-        ('Расчетный вклад', 'Расчетный вклад'),
-        ('Индексируемый вклад', 'Индексируемый вклад')
-    )
-
-    depositType = models.ForeignKey(DepositType, verbose_name='Тип депозита')
-    title = models.CharField(max_length=30, verbose_name='Название')
-    description = models.TextField(max_length=300, verbose_name='Описание')
+    depositType = models.ForeignKey(DepositType, verbose_name='Тип депозита',editable=False)
+    title = models.CharField(max_length=50, verbose_name='Название')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
-    min_amount = models.PositiveIntegerField(verbose_name='Минимальная сумма')
-    duration = models.PositiveIntegerField(verbose_name='Срок хранения (в месяцах)', default=0)
+    min_amount = models.IntegerField(verbose_name='Минимальная сумма')
+    duration = models.IntegerField(verbose_name='Срок хранения (в месяцах)', default=0)
     is_pay_period_month = models.BooleanField(verbose_name='Период выплат в месяцах', default=False)
-    pay_period = models.PositiveIntegerField(verbose_name='Период выплат')
+    pay_period = models.IntegerField(verbose_name='Период выплат')
     percent = models.FloatField(verbose_name='Ставка')
-    is_refill = models.BooleanField(verbose_name='Возможность пополнения', default=True)
-    min_refill = models.PositiveIntegerField(verbose_name='Минимальное пополнение', blank=True, null=True, default=0)
-    is_early_withdrawal = models.BooleanField(verbose_name='Возможность преждевременного снятия', default=False)
-    minimum_balance = models.PositiveIntegerField(verbose_name='Неснижаемый остаток', blank=True, null=True, default=0)
-    percent_for_early_withdrawal = models.FloatField(verbose_name='ставка при нарушении минимального баланса', blank=True, default=0, null=True)
+    is_refill = models.BooleanField(verbose_name='Возможность пополнения', default=False)
+    min_refill = models.IntegerField(verbose_name='Минимальное пополнение', default=0)
+    is_early_withdrawal = models.BooleanField(verbose_name='Возможность частичного снятия', default=True)
+    minimum_balance = models.IntegerField(verbose_name='Неснижаемый остаток', default=0)
+    percent_for_early_withdrawal = models.FloatField(verbose_name='ставка при нарушении неснижаемого остатка', default=0)
     is_capitalization = models.BooleanField(verbose_name='Капитализация')
-    binding_currency = models.ForeignKey(Currency, related_name="BindingCurrency", verbose_name='Валюта привязки', blank=True, null=True, default=None)
+    binding_currency = models.ForeignKey(Currency, related_name="BindingCurrency", verbose_name='Валюта привязки', default=None, null=True)
     is_archive = models.BooleanField(verbose_name='В архиве', default=False, editable=False)
 
     def __str__(self):
@@ -276,45 +267,43 @@ class Deposit(models.Model):
     def format_min_amount(self):
         return self.currency.format_value(self.min_amount)
 
+    def format_refill(self):
+        if self.is_refill:
+            if self.min_refill==0:
+                return 'Да'
+            return 'Мин. '+self.currency.format_value(self.min_refill)
+        else:
+            return 'Нет'
+
+    def format_withdrawal(self):
+        if self.is_early_withdrawal:
+            if self.minimum_balance==0:
+                return 'Да'
+            return  'Неснижаемый остаток: '+self.currency.format_value(self.minimum_balance)
+        else:
+            return 'Нет'
+
+    def format_capitalization(self):
+        if self.is_capitalization:
+            return "Да"
+        return "Нет"
+
 
 class Contract(models.Model):
     deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False, blank=True, null=True)
     start_amount=models.PositiveIntegerField(verbose_name='Сумма')
     bill = models.ForeignKey(Bill, verbose_name='Счет привязки')
     deposit_bill = models.ForeignKey(Bill,verbose_name='Депозитный счет',related_name='deposit_bill',editable=False, blank=True, null=True)
-    bonus = models.FloatField(verbose_name='Бонусная индексированная ставка', default=0, editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=now, editable=False)
     end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
     is_use_percent_for_early_withdrawal=models.BooleanField(verbose_name='изменить процентную ставку', default=False,editable=False)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
-    is_acttt=models.BooleanField(verbose_name='Активен', default=True)
-
-    def push(self, value, action='FILL'):
-        self.deposit_bill += value
-        self.save()
-        Action.add(
-            action=action,
-            bill=self,
-            money=value
-        )
-
-    def pop(self, value, action='TAKE_PART'):
-        if self.money >= value:
-            self.money -= value
-            self.save()
-            Action.add(
-                action=action,
-                bill=self,
-                money=value
-            )
-            return True
-        else:
-            return False
+    is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
 
     def refill(self,amount):
         if self.deposit.is_refill and self.bill.currency==self.deposit.currency and amount>=self.deposit.min_refill:
             if self.bill.pop(amount):
-                self.deposit_bill+=amount
+                self.deposit_bill.push(amount)
                 return True
             else:
                 return False
@@ -323,18 +312,21 @@ class Contract(models.Model):
 
 
     def withdraw(self, amount, necessarily=False):
-        if self.deposit.is_early_withdrawal and self.deposit_bill-amount>=self.deposit.minimum_balance:
+        if self.deposit.is_early_withdrawal and self.deposit_bill.money-amount>=self.deposit.minimum_balance:
             self.bill.push(amount)
-            self.deposit_bill-=amount
+            self.deposit_bill.pop(amount)
             return True
         elif necessarily and self.deposit_bill-amount>=0:
             self.bill.push(amount)
-            self.deposit_bill-=amount
+            self.deposit_bill.pop(amount)
             self.is_use_percent_for_early_withdrawal=True
             return True
         return False
 
     def close(self):
+        self.is_act=False
+        if self.deposit.binding_currency!=None:
+            self.pay(self.calculate_bonuce())
         return
 
 
@@ -355,11 +347,7 @@ class Contract(models.Model):
             self.end_date = self.sign_date + relativedelta(days=self.deposit.duration)
 
     def is_active(self):
-        if self.end_date is None:
-            return True
-        else:
-            tz_info = self.sign_date.tzinfo
-            return self.sign_date < now() < self.end_date
+        return self.is_act
 
     def get_duration_in_days(self):
         return (self.end_date - self.sign_date).days
@@ -378,7 +366,7 @@ class Contract(models.Model):
             from_currency=self.deposit.currency,
             to_currency=self.deposit.binding_currency
         )
-        self.bonus = ((today_rate / sign_rate) * 100 - 100) * 365 / self.get_storing_term()
+        return ((today_rate / sign_rate) * 100 - 100) * 365 / self.get_storing_term()
 
     def prolongation_to_string(self):
         if self.is_prolongation:
@@ -411,14 +399,6 @@ class Contract(models.Model):
         except:
             return self.sign_date
 
-    def push(self, value, action='FILL'):
-        self.deposit_bill += value
-        self.save()
-        Action.add(
-            action=action,
-            contract=self,
-            money=value
-        )
 
     def pay(self, value, action='PAY', datetime=now()):
         Action.add(
@@ -428,7 +408,7 @@ class Contract(models.Model):
             datetime=datetime
         )
         if self.deposit.is_capitalization:
-            self.push(value, action)
+            self.deposit_bill.push(value, action)
         else:
             self.bill.push(value, action)
 
@@ -438,6 +418,10 @@ class Contract(models.Model):
         else:
             return relativedelta(days=self.deposit.pay_period)
 
+    def get_percent(self):
+        if self.is_use_percent_for_early_withdrawal:
+            return self.deposit.percent_for_early_withdrawal
+        return self.deposit.percent
 
 class ActionType(models.Model):
     description = models.CharField(max_length=300, verbose_name='Описание')
