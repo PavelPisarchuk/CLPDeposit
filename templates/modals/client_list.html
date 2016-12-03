@@ -62,20 +62,26 @@
                 <p>Пополнение счёта для : </p>
                 <p id="contentname" style="font-weight: bold;"></p>
                 <p id="errors" style="color: red"></p>
-                <div>
-                    <p><select id="billfillselecttocard" name="num" form="addonbillForm">
-                        <option disabled>Загрузка...</option>
-                    </select></p>
-                    <p><input placeholder="Сумма" form="addonbillForm" type="number" name="money"></p>
-                    <p><select id="currencyselect" name="currency" form="addonbillForm">
-                        <option disabled>Загрузка...</option>
-                    </select></p>
-                </div>
             </div>
             <div class="modal-footer">
-                <form id="addonbillForm" class="form-horizontal" action=""
+                <form class="abide-form" data-abide novalidate id="addonbillForm" class="form-horizontal" action=""
                       method="post">
                     {% csrf_token %}
+                    <label>
+                        <select id="billfillselecttocard" name="num" form="addonbillForm" required>
+                        </select>
+                        <span class="form-error">Не выбран счёт, возможно у пользователся нет счетов</span>
+                    </label>
+                    <label>
+                        <select id="currencyselect" name="currency" form="addonbillForm" required>
+                        </select>
+                        <span class="form-error">Не выбрана валюта</span>
+                    </label>
+                    <label>
+                        <input required pattern="^[0-9]{1,9}$" id="addonbillForm_money" placeholder="Сумма"
+                               form="addonbillForm" type="number" name="money">
+                        <span class="form-error">Введите сумму, от 0 до 999.999.999</span>
+                    </label>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                     <input class="btn btn-warning" type="submit" value="Добавить"/>
                 </form>
@@ -96,17 +102,23 @@
                 <p id="contentname" style="font-weight: bold;"></p>
                 <p id="errors" style="color: red"></p>
                 <p><input name="num" style="display: none" form="messageForm" id="userid"></p>
-                <div>
-                    <p><input class="form-control" placeholder="Зоголовок" id="headerFormVal" form="messageForm"
-                              type="text"
-                              name="header"></p>
-                    <p><textarea class="form-control" placeholder="Сообщение" id="messageFormVal" rows="3"
-                                 form="messageForm" type="text" name="message"></textarea></p>
-                </div>
             </div>
             <div class="modal-footer">
-                <form id="messageForm" class="form-horizontal" action="" method="post">
+                <form id="messageForm" class="abide-form" data-abide novalidate class="form-horizontal" action=""
+                      method="post">
                     {% csrf_token %}
+                    <label>
+                        <input placeholder="Зоголовок" id="headerFormVal" form="messageForm"
+                               type="text"
+                               name="header" required>
+                        <span class="form-error">Обязательное поле</span>
+                    </label>
+                    <label>
+                        <textarea pattern="^[A-Za-z0-9_-]{5,100}$" class="form-control" placeholder="Сообщение"
+                                  id="messageFormVal" rows="3"
+                                  form="messageForm" type="text" name="message" required></textarea>
+                        <span class="form-error">Обязательное поле, кол-во символов от 5 до 100</span>
+                    </label>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                     <input class="btn btn-warning" type="submit" value="Добавить"/>
                 </form>
@@ -114,6 +126,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="modal fade" id="myModalChangeUser" tabindex="-1">
     <div class="modal-dialog">
@@ -147,3 +160,10 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).foundation();
+    jQuery(function ($) {
+//            $('addonbillForm_money').
+    });
+</script>

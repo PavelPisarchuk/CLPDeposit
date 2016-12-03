@@ -7,7 +7,6 @@
         {% load staticfiles %}
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{% static "foundation/foundation.min.css" %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/sticky-footer.css" %}"/>
         <script type="text/javascript" src="{% static "jquery-3.1.1.min.js" %}"></script>
         <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
         <script type="text/javascript" src="{% static "foundation/foundation.min.js" %}"></script>
@@ -18,8 +17,8 @@
         {% block title %} {% endblock %}
     </head>
     <body role="document">
-        <div class="row affix-row">
-            <div class="col-sm-3 col-md-2 affix-sidebar">
+        <div class="row affix-row" style="margin: 0px; height: 100%; overflow: auto">
+            <div class="col-sm-3 col-md-2 affix-sidebar" style="padding: 0px;">
                 <div class="sidebar-nav">
                     <div class="navbar navbar-default" role="navigation">
                         <div class="navbar-header">
@@ -62,14 +61,14 @@
                                 {% endif %}
 
                                 <li><a href="{% url 'rate:today' %}"><span class="glyphicon glyphicon-euro"></span> Курсы
-                                    валют <span class="badge pull-right">42</span></a></li>
+                                    валют </a></li>
                             </ul>
                         </div><!--/.nav-collapse -->
                     </div>
                 </div>
             </div>
 
-            <div class="col-sm-9 col-md-10 affix-content">
+            <div id="body_content" class="col-sm-9 col-md-10 affix-content">
                 <div class="container">
                     <div class="page-header">
                         <h3><span class="glyphicon glyphicon-th-list"></span> CLP Deposit</h3>

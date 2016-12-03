@@ -1,12 +1,16 @@
+#body_content{
+	padding-bottom: 3em;
+	min-height: 100%;
+}
+
 @media (min-width: 768px) {
 	.affix-content .container {
-		width: 700px;
+		width: 100%;
 	}
 
 	html, body {
 		background-color: #f8f8f8;
 		height: 100%;
-		overflow: hidden;
 	}
 
 	.affix-content .container .page-header {
@@ -14,8 +18,6 @@
 	}
 
 	.sidebar-nav {
-		position: fixed;
-		width: 100%;
 	}
 
 	.affix-sidebar {
@@ -25,7 +27,6 @@
 	}
 
 	.affix-row, .affix-container, .affix-content {
-		height: 100%;
 		margin-left: 0;
 		margin-right: 0;
 	}
@@ -61,25 +62,6 @@
 	}
 }
 
-@media (min-width: 769px) {
-	.affix-content .container {
-		width: 600px;
-	}
-
-	.affix-content .container .page-header {
-		margin-top: 0;
-	}
-}
-
-@media (min-width: 992px) {
-	.affix-content .container {
-		width: 900px;
-	}
-
-	.affix-content .container .page-header {
-		margin-top: 0;
-	}
-}
 
 @media (min-width: 1220px) {
 	.affix-row {
@@ -91,7 +73,8 @@
 	}
 
 	.affix-content .container {
-		width: 1000px;
+		width: 100%;
+		overflow: hidden;
 	}
 
 	.affix-content .container .page-header {

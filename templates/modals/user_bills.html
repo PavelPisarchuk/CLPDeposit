@@ -7,24 +7,38 @@
             </div>
             <div class="modal-body">
                 <p id="errors" style="color: red"></p>
-                <div>
-                    <p><select id="billtransactelecttocard" name="from" form="transactForm">
-                        <option selected value="Из счёта" disabled>Из счёта</option>
-                    </select></p>
-                    <p><select id="billtransactelecttocard2" name="to" form="transactForm">
-                        <option selected value="В счёт" disabled>В счёт</option>
-                    </select></p>
-                    <p><input placeholder="Сумма" form="transactForm" type="number" name="money"></p>
-                    <p><select id="currencyselect" name="currency" form="transactForm">
-                        <option disabled>Загрузка...</option>
-                    </select></p>
-                </div>
             </div>
             <div class="modal-footer">
-                <form id="transactForm" class="form-horizontal" action="" method="post">
+                <form class="abide-form" data-abide novalidate id="transactForm" class="form-horizontal" action=""
+                      method="post">
                     {% csrf_token %}
+                    <label>
+                        <select id="billtransactelecttocard" name="from" form="transactForm" required>
+                        </select>
+                        <span class="form-error">Не выбран счёт, возможно у вас нет счетов</span>
+                    </label>
+
+                    <label>
+                        <select id="billtransactelecttocard2" name="to" form="transactForm" required>
+                        </select>
+                        <span class="form-error">Не выбран счёт, возможно у вас нет счетов</span>
+                    </label>
+
+                    <label>
+                        <input placeholder="Сумма" pattern="^[0-9]{1,9}$" form="transactForm" type="number" name="money"
+                               required>
+                        <span class="form-error">Введите сумму, от 0 до 999.999.999</span>
+                    </label>
+
+                    <label>
+                        <select id="currencyselect" name="currency" form="transactForm" required>
+                        </select>
+                        <span class="form-error">Не выбрана валюта</span>
+                    </label>
+
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                     <input class="btn btn-warning" type="submit" value="Перевести"/>
+
                 </form>
             </div>
         </div>

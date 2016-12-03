@@ -1,10 +1,8 @@
 $(document).ready(function () {
     $('#currencyselect').empty();
-    $('#currencyselect').append('<option disabled selected value="Загрузка...">Загрузка...</option>');
     $.get('/bill/getcurrency/', function (data) {
         currid = data['currency'];
         currname = data['currencyname'];
-        $('#currencyselect').empty();
         for (i in currid)
             $('#currencyselect').append('<option selected value=' + currid[i] + '>' + currname[i] + '</option>');
     })
@@ -13,11 +11,11 @@ $('#myModalTransact').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     $('#errors').text('');
     $('#transactForm')[0].reset();
+    $('#billtransactelecttocard').empty();
+    $('#billtransactelecttocard2').empty();
     $.get('/bill/getuserbillsfromuser/', function (data) {
         $('#transactForm').find("input[type=submit]").prop("disabled", false);
         bills = data['bills'];
-        $('#billtransactelecttocard').empty();
-        $('#billtransactelecttocard2').empty();
         for (i in bills) {
             $('#billtransactelecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>');
             $('#billtransactelecttocard2').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
