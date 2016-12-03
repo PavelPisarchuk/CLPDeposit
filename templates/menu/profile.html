@@ -1,22 +1,29 @@
-<li id="msg" class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-        {{ user.get_short_name }}
-        <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
+{% if user.is_authenticated %}
+
+    <li>
+        <a href={% url 'profile:info' %}>Мой профиль</a>
+    </li>
+    {% if not user.is_superuser %}
         <li>
-            <a href={% url 'profile:info' %}>Мой профиль</a>
+            <a href={% url 'message:messages' %}>Мои сообщения <span class="badge badge-inverse" id="newmsg"></span></a>
         </li>
-        {% if not user.is_superuser %}
-            <li >
-                <a href={% url 'message:messages' %}>Мои сообщения <span class="badge badge-inverse" id="newmsg"></span></a>
-            </li>
-        {% endif %}
-        <li>
-            <a href={% url 'profile:password' %}>Изменить пароль</a>
-        </li>
-        <li>
-            <a href={% url 'logout' %}>Выйти</a>
-        </li>
-    </ul>
-</li>
+    {% endif %}
+    <li>
+        <a href={% url 'profile:password' %}>Изменить пароль</a>
+    </li>
+    <li>
+        <a href={% url 'logout' %}>Выйти</a>
+    </li>
+{% else %}
+    <li>
+        <form class="form-inline" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <input style="height: inherit; padding: 0px;" class="form-control"
+                   name="username" type="text" placeholder="Email"><br>
+            <input style="height: inherit; padding: 0px;" class="form-control"
+                   name="password" type="password" placeholder="Password"><br>
+            <button style="padding: 0px 8px;" class="btn btn-default" type="submit">Log in
+            </button>
+        </form>
+    </li>
+{% endif %}

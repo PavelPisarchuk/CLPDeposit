@@ -1,12 +1,22 @@
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-        Вклады
-        <span class="caret"></span>
+<li>
+    <a href="#" data-toggle="collapse" data-target="#toggleDemo" data-parent="#sidenav01" class="collapsed">
+        <span class="glyphicon glyphicon-home"></span> Счёт <span class="caret pull-right"></span>
     </a>
-    <ul class="dropdown-menu">
-        <li><a href="{% url 'contract:all' %}">Открыть вклад</a></li>
-        <li><a href="{% url 'contract:list' %}">Мои вклады</a></li>
-    </ul>
+    <div class="collapse" id="toggleDemo" style="height: 0px;">
+        <ul class="nav nav-list">
+            <li><a href={% url 'bill:bills' %}>Мои счета</a></li>
+        </ul>
+    </div>
 </li>
 
-<li><a href={% url 'bill:bills' %}>Мои счета</a></li>
+<li>
+    <a href="#" data-toggle="collapse" data-target="#toggleDemo2" data-parent="#sidenav01" class="collapsed">
+        <span class="glyphicon glyphicon-cloud"></span> Вклады <span class="caret pull-right"></span>
+    </a>
+    <div class="collapse" id="toggleDemo2" style="height: 0px;">
+        <ul class="nav nav-list">
+            <li><a href="{% url 'contract:all' %}">Открыть вклад</a></li>
+            <li><a href="{% url 'contract:list' %}">Мои вклады</a></li>
+        </ul>
+    </div>
+</li>

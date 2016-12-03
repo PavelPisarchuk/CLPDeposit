@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {% load staticfiles %}
-        <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}"/>
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{% static "foundation/foundation.min.css" %}"/>
         <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/sticky-footer.css" %}"/>
         <script type="text/javascript" src="{% static "jquery-3.1.1.min.js" %}"></script>
@@ -13,69 +13,75 @@
         <script type="text/javascript" src="{% static "foundation/foundation.min.js" %}"></script>
         <script type="text/javascript" src="{% static "jquery.inputmask.bundle.min.js" %}"></script>
         <script type="text/javascript" src="{% static "myjs/body_update_message.js" %}"></script>
-
+        <link rel="stylesheet" type="text/css" href="{% static "theme.css" %}"/>
 
         {% block title %} {% endblock %}
     </head>
     <body role="document">
-        <nav class="navbar navbar-inverse navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                            aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="/">CLP Deposit</a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-                    <ul class="nav navbar-nav">
-                        <li><a href={% url 'rate:today' %}>Курсы валют</a></li>
-                        {% if user.is_authenticated %}
-                            {% if user.is_superuser %}
-                                {% include 'menu/admin_actions.html' %}
-                            {% endif %}
-                        {% endif %}
-                    </ul>
+        <div class="row affix-row">
+            <div class="col-sm-3 col-md-2 affix-sidebar">
+                <div class="sidebar-nav">
+                    <div class="navbar navbar-default" role="navigation">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                    data-target=".sidebar-navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <span class="visible-xs navbar-brand">Sidebar menu</span>
+                        </div>
+                        <div class="navbar-collapse collapse sidebar-navbar-collapse">
+                            <ul class="nav navbar-nav" id="sidenav01">
+                                <li class="active">
+                                    <a href="#" data-toggle="collapse" data-target="#toggleDemo0" data-parent="#sidenav01"
+                                       class="collapsed">
+                                        <h4>
+                                            {% if user.is_authenticated %}
+                                                <span class="glyphicon glyphicon-user"></span> {{ user.get_full_name }}<span class="caret"></span>
+                                            {% else %}
+                                                <span class="glyphicon glyphicon-eye-open"></span> Anonymous
+                                            {% endif %}
+                                        </h4>
+                                    </a>
+                                    <div class="collapse" id="toggleDemo0" style="height: 0px;">
+                                        <ul class="nav nav-list">
+                                            {% include 'menu/profile.html' %}
+                                        </ul>
+                                    </div>
+                                </li>
+                                {% if user.is_authenticated %}
 
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            {% if user.is_authenticated %}
-                                {% if not  user.is_superuser %}
-                                    {% include 'menu/client_actions.html' %}
+                                    {% if  user.is_superuser %}
+                                        {% include 'menu/admin_actions.html' %}
+                                    {% else %}
+                                        {% include 'menu/client_actions.html' %}
+                                    {% endif %}
+
                                 {% endif %}
-                                {% include 'menu/profile.html' %}
-                            {% else %}
-                                <a>
-                                    <form class="form-inline" action="{% url 'login' %}" method="post">
-                                        {% csrf_token %}
-                                        <input style="height: inherit; padding: 0px; margin: 0px;" class="form-control"
-                                               name="username" type="text" placeholder="Логин">
-                                        <input style="height: inherit; padding: 0px; margin: 0px;" class="form-control"
-                                               name="password" type="password" placeholder="Пароль">
-                                        <button style="padding: 0px 8px;" class="btn btn-default" type="submit">Log in
-                                        </button>
-                                    </form>
-                                </a>
-                            {% endif %}
-                        </li>
-                    </ul>
-                </div><!--/.nav-collapse -->
+
+                                <li><a href="{% url 'rate:today' %}"><span class="glyphicon glyphicon-euro"></span> Курсы
+                                    валют <span class="badge pull-right">42</span></a></li>
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div>
+                </div>
             </div>
-        </nav>
-        <div class="container">
-            {% include 'alerts.html' %}
-            {% block content %}{% endblock %}
+
+            <div class="col-sm-9 col-md-10 affix-content">
+                <div class="container">
+                    <div class="page-header">
+                        <h3><span class="glyphicon glyphicon-th-list"></span> CLP Deposit</h3>
+                    </div>
+                    {% block alerts %}{% include 'alerts.html' %}{% endblock %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+
         </div>
-        <footer class="footer">
-            <div class="container">
-                <p class="text-muted">
-                    {{ today }}
-                </p>
-            </div>
-        </footer>
+
+        {% load staticfiles %}
         <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
 
     </body>
