@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $('#currencyselect').empty();
-    $('#currencyselect').append('<option disabled selected value="Загрузка...">Загрузка...</option>');
     $.get('/bill/getcurrency/', function (data) {
         currid = data['currency'];
         currname = data['currencyname'];
@@ -39,10 +38,8 @@ $('#myModalFill').on('show.bs.modal', function (event) {
     $('#addonbillForm').find("input[type=submit]").prop("disabled", false);
     $(this).find('#contentname').text(button.data('contentname'));
     $('#billfillselecttocard').empty();
-    $('#billfillselecttocard').append('<option disabled selected value="Загрузка...">Загрузка...</option>');
     $.get('/bill/getuserbills/', {'num': Number(button.data('contentid'))}, function (data) {
         bills = data['bills'];
-        $('#billfillselecttocard').empty();
         for (i in bills)
             $('#billfillselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
     });
@@ -53,10 +50,8 @@ $('#myModalNewCard').on('show.bs.modal', function (event) {
     $('#addcardForm').find("input[type=submit]").prop("disabled", false);
     $(this).find('#contentname').text(button.data('contentname'));
     $('#billselecttocard').empty();
-    $('#billselecttocard').append('<option disabled selected value="Загрузка...">Загрузка...</option>');
     $.get('/bill/getuserbills/', {'num': Number(button.data('contentid'))}, function (data) {
         bills = data['bills'];
-        $('#billselecttocard').empty();
         for (i in bills)
             $('#billselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
     });

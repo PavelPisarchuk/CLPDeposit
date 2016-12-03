@@ -20,23 +20,23 @@ class DateDelta(models.Model):
 
 
 def today():
-    return timezone.now().date() + DateDelta.get_relativedelta()
+    return timezone.now().date()  # + DateDelta.get_relativedelta()
 
 
 def now():
-    return timezone.now() + DateDelta.get_relativedelta()
+    return timezone.now()  # + DateDelta.get_relativedelta()
 
 
 class User(AbstractUser):
-    first_name = models.CharField(max_length=30, verbose_name='Имя')
-    last_name = models.CharField(max_length=30, verbose_name='Фамилия')
+    # first_name = models.CharField(max_length=30, verbose_name='Имя')
+    #last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     father_name = models.CharField(max_length=30, verbose_name='Отчество')
-    passport_date = models.DateField(verbose_name='Дата выдачи')
+    passport_date = models.DateField(verbose_name='Дата выдачи', default=now)
     passport_ser = models.CharField(max_length=9, verbose_name='Серия')
     passport_id = models.CharField(max_length=14, verbose_name='Идентификационный номер')
     phone = models.CharField(max_length=20, verbose_name='Телефон')
     address = models.CharField(max_length=100, verbose_name='Адрес')
-    birthday = models.DateField(verbose_name='Дата рождения')
+    birthday = models.DateField(verbose_name='Дата рождения', default=now)
 
     def get_full_name(self):
         return self.username if self.is_superuser else "{} {} {}".format(self.last_name, self.first_name, self.father_name)
