@@ -9,6 +9,8 @@ def index(request):
 
 
 def login(request):
+    if (request.method == "GET"):
+        return render(request, 'login.html')
     if (request.method == "POST"):
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -17,6 +19,8 @@ def login(request):
 
         if user is not None:
             auth.login(request, user)
+        else:
+            return redirect('login')
 
         return redirect('index')
 
@@ -24,4 +28,4 @@ def login(request):
 @login_required
 def logout(request):
     auth.logout(request)
-    return redirect('index')
+    return redirect('login')

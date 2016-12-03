@@ -1,0 +1,30 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Вход</title>
+{% endblock %}
+
+{% block content %}
+    <div style="display: flex; justify-content: center;">
+        <form class="abide-form" data-abide novalidate action="{% url 'login' %}" method="post" style="width: 300px">
+            {% csrf_token %}
+            <br>
+            <p>
+                <input type="text" name="username" pattern="alpha_numeric" placeholder="Логин" required>
+                <span class="form-error">
+              Обязательное поле. Допустимы только цифры и англ. буквы
+            </span>
+            </p>
+            <p>
+                <input type="password" name="password" pattern="alpha_numeric" placeholder="Пароль" required>
+                <span class="form-error">
+              Обязательное поле. Допустимы только цифры и англ. буквы
+            </span>
+            </p>
+            <input style="width: 100%" class="btn btn-default" type="submit" value="Войти"/><br>
+        </form>
+    </div>
+    <script>
+        $(document).foundation();
+    </script>
+{% endblock %}
