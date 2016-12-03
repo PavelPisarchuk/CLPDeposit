@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand
 
-from app.models import Contract
+from app.models import Contract, Setting
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+        Setting.set_processing(True)
         pay_contracts = [contract for contract in Contract.objects.all() if
                          contract.is_active() and contract.is_needs_pay()]
         for contract in pay_contracts:
@@ -22,3 +23,4 @@ class Command(BaseCommand):
                     contract.deposit.title
                 )
             )
+        Setting.set_processing(False)

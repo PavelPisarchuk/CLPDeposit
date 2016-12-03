@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from app.models import now
+from app.models import now, Setting
 
 
 def unread_messages(request):
@@ -13,9 +13,10 @@ def unread_messages(request):
     }
 
 
-def date(request):
+def settings(request):
     return {
-        'today': now()
+        'today': now(),
+        'processing': Setting.objects.get_or_create(name='processing')[0].value
     }
 
 

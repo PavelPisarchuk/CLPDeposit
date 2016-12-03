@@ -17,6 +17,9 @@
         {% block title %} {% endblock %}
     </head>
     <body role="document">
+    {% if processing %}
+        <h1>В данный момент ведется обработка данных.</h1>
+    {% else %}
         <div class="row affix-row" style="margin: 0px; height: 100%; overflow: auto">
             <div class="col-sm-3 col-md-2 affix-sidebar" style="padding: 0px;">
                 <div class="sidebar-nav">
@@ -34,11 +37,13 @@
                         <div class="navbar-collapse collapse sidebar-navbar-collapse">
                             <ul class="nav navbar-nav" id="sidenav01">
                                 <li class="active">
-                                    <a href="#" data-toggle="collapse" data-target="#toggleDemo0" data-parent="#sidenav01"
+                                    <a href="#" data-toggle="collapse" data-target="#toggleDemo0"
+                                       data-parent="#sidenav01"
                                        class="collapsed">
                                         <h4>
                                             {% if user.is_authenticated %}
-                                                <span class="glyphicon glyphicon-user"></span> {{ user.get_full_name }}<span class="caret"></span>
+                                                <span class="glyphicon glyphicon-user"></span> {{ user.get_full_name }}
+                                                <span class="caret"></span>
                                             {% else %}
                                                 <span class="glyphicon glyphicon-eye-open"></span> Anonymous
                                             {% endif %}
@@ -60,7 +65,8 @@
 
                                 {% endif %}
 
-                                <li><a href="{% url 'rate:today' %}"><span class="glyphicon glyphicon-euro"></span> Курсы
+                                <li><a href="{% url 'rate:today' %}"><span class="glyphicon glyphicon-euro"></span>
+                                    Курсы
                                     валют </a></li>
                             </ul>
                         </div><!--/.nav-collapse -->
@@ -82,6 +88,7 @@
 
         {% load staticfiles %}
         <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
+    {% endif %}
 
     </body>
 </html>

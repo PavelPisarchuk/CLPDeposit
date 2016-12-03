@@ -5,26 +5,32 @@ from django.db import models
 from django.utils import timezone
 
 
-class DateDelta(models.Model):
+class Setting(models.Model):
     name = models.CharField(max_length=10)
     value = models.IntegerField(default=0)
 
     @classmethod
     def get_relativedelta(cls):
         return relativedelta(
-            years=DateDelta.objects.get_or_create(name='years')[0].value,
-            months=DateDelta.objects.get_or_create(name='months')[0].value,
-            days=DateDelta.objects.get_or_create(name='days')[0].value,
-            hours=DateDelta.objects.get_or_create(name='hours')[0].value
+            years=Setting.objects.get_or_create(name='years')[0].value,
+            months=Setting.objects.get_or_create(name='months')[0].value,
+            days=Setting.objects.get_or_create(name='days')[0].value,
+            hours=Setting.objects.get_or_create(name='hours')[0].value
         )
+
+    @classmethod
+    def set_processing(cls, value):
+        param = Setting.objects.get_or_create(name='processing')[0]
+        param.value = value
+        param.save()
 
 
 def today():
-    return timezone.now().date() + DateDelta.get_relativedelta()
+    return timezone.now().date() + Setting.get_relativedelta()
 
 
 def now():
-    return timezone.now() + DateDelta.get_relativedelta()
+    return timezone.now() + Setting.get_relativedelta()
 
 
 class User(AbstractUser):
