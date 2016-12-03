@@ -26,17 +26,6 @@ class EditUserForm(forms.ModelForm):
                   "address", "phone"]
 
 
-class MessageForm(forms.Form):
-    message = forms.CharField(max_length=300, label='Сообщение')
-    header = forms.CharField(max_length=100, label='Заголовок')
-
-
-class SearchForm(forms.Form):
-    first_name = forms.CharField(max_length=30, label='Имя')
-    last_name = forms.CharField(max_length=30, label='Фамилия')
-    passport_id = forms.CharField(max_length=14, label='Идентификационный номер')
-
-
 class DepositForm(forms.ModelForm):
 
     class Meta:

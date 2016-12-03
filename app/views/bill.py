@@ -5,34 +5,7 @@ from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
 
 from app.models import ExchangeRate, today
-from app.models import User, Card, Bill, Currency
-
-
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def addcard(request):
-    if request.method == 'POST':
-        try:
-            bill = Bill.objects.get(id=request.POST["num"])
-            bill.add_card(limit=request.POST['limit'])
-            return JsonResponse({'succes': True,
-                                 'operation': 'Добавление карточки к счёту {0} для {1} выполнено'.format(bill.id,
-                                                                                                         bill.client.get_full_name())})
-        except Exception:
-            return JsonResponse({'succes': False, 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'})
-
-@login_required
-def cardsinbill(request):
-    try:
-        _bill = Bill.objects.get(id=request.GET['num'])
-        _cards = Card.objects.all().filter(bill=_bill)
-        cards, limits = [], []
-        for i in _cards:
-            cards.append(i.id)
-            limits.append(i.limit)
-        return JsonResponse({'limits': limits, 'cards': cards})
-    except Exception:
-        return JsonResponse()
+from app.models import User, Bill, Currency
 
 
 @login_required

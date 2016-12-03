@@ -9,6 +9,7 @@
                 <p id="errors" style="color: red"></p>
             </div>
             <div class="modal-footer">
+
                 <form class="abide-form" data-abide novalidate id="transactForm" class="form-horizontal" action=""
                       method="post">
                     {% csrf_token %}
@@ -17,7 +18,6 @@
                         </select>
                         <span class="form-error">Не выбран счёт, возможно у вас нет счетов</span>
                     </label>
-
                     <label>
                         <select id="billtransactelecttocard2" name="to" form="transactForm" required>
                         </select>
@@ -25,9 +25,9 @@
                     </label>
 
                     <label>
-                        <input placeholder="Сумма" pattern="^[0-9]{1,9}$" form="transactForm" type="number" name="money"
-                               required>
-                        <span class="form-error">Введите сумму, от 0 до 999.999.999</span>
+                        <input required pattern="^[1-9]{1,1}[0-9]{0,8}$" id="addonbillForm_money" placeholder="Сумма"
+                               form="transactForm" type="number" name="money">
+                        <span class="form-error">Введите сумму, от 1 до 999.999.999</span>
                     </label>
 
                     <label>
@@ -37,35 +37,10 @@
                     </label>
 
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                    <input class="btn btn-warning" type="submit" value="Перевести"/>
-
+                    <input class="btn btn-warning" type="submit" value="Добавить"/>
                 </form>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="myModalCards" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                <h4 class="modal-title">Карточки</h4>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <span id="billnum"></span>
-                    <table id="billcards" class="table table-striped">
-                        <tr>
-                            <td>Номер карточки</td>
-                            <td>Лимит</td>
-                        </tr>
-                    </table>
 
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>
@@ -80,7 +55,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <table id="billoperations" class="table table-striped">
+                    <table id="billoperations" class="table">
                         <tr>
                             <td>Тип операции</td>
                             <td>Дата</td>
@@ -96,3 +71,5 @@
         </div>
     </div>
 </div>
+
+

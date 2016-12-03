@@ -5,51 +5,31 @@
 {% endblock %}
 
 {% block content %}
-    {% if errors %}
-        {% for e in errors %}
-            <div>{{ e }}</div>
-        {% endfor %}
-    {% endif %}
-    <form style="display: none" class="form-horizontal" action="{% url 'client:search' %}" method="post">
-            {% csrf_token %}
-                        <div class="fieldWrapper">
-                            {{ form.first_name }}
-                            <label for="first_name">{{ form.first_name.label }}</label>
-                        </div>
-                        <div class="fieldWrapper">
-                            {{ form.last_name }}
-                            <label for="last_name"> {{ form.last_name.label }}</label>
-                        </div>
-                        <div class="fieldWrapper">
-                            {{ form.passport_id }}
-                            <label for="passport_id">{{ form.passport_id.label }}</label>
-                        </div>
+    <table>
+        <tr>
+            <td colspan="3">Поиск</td>
+        <tr>
+            <td><input placeholder="Фамилия" name="last" type="text" id="search_last"></td>
+            <td><input placeholder="Имя" name="first" type="text" id="search_first"></td>
+            <td><input placeholder="Отчество" name="father" type="text" id="search_father"></td>
+        </tr>
+    </table>
 
-            <input class="btn btn-default" type="submit" value="Поиск" />
-        </form>
 
     {% if clients %}
-
-        <div class="table-responsive">
-            <table class="table table-striped">
+        <div id="searchresult" class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse">
                 <tr>
-                    <td>ФИО</td>
-                    <td>Идентификационный номер</td>
-                    <td colspan="4"><span id="lastoperation" class="label label-success"></span></td>
+                    <th>ФИО</th>
+                    <th>Идентификационный номер</th>
+                    <th colspan="3"><span id="lastoperation" class="label label-success"></span></th>
                 </tr>
+                </thead>
                 {% for client in clients %}
                     <tr>
                         <td id="client_{{ client.id }}">{{ client.get_full_name }}</td>
                         <td>{{ client.passport_id }}</td>
-                        <td>
-
-                            <a style="display: none;" href="" id="client_name_{{ client.id }}" data-toggle="modal"
-                               data-target="#myModalChangeUser" data-father="{{ client.father_name }}"
-                               data-last="{{ client.last_name }}" data-first="{{ client.first_name }}"
-                               data-contentname="{{ client.get_full_name }}"
-                               data-contentid="{{ client.id }}">Изменить
-                            </a>
-                        </td>
                         <td>
                             <a href="" data-toggle="modal"
                                data-target="#myModalMessage" data-contentname="{{ client.get_full_name }}"
@@ -68,25 +48,68 @@
                                data-contentid="{{ client.id }}">Пополнить счёт
                             </a>
                         </td>
-                        <td style="display: none">
-                            <a data-toggle="modal"
-                               data-target="#myModalNewCard" data-contentname="{{ client.get_full_name }}"
-                               data-contentid="{{ client.id }}">Новая карточка
-                            </a>
-
-                        </td>
                     </tr>
 
                 {% endfor %}
             </table>
         </div>
 
-
         {% include 'modals/client_list.html' %}
 
         {% load staticfiles %}
         <script type="text/javascript" src="{% static "myjs/admin_client_list.js" %}"></script>
+        <script type="text/javascript">
+            $(document).foundation();
+            jQuery(function ($) {
+            });
+        </script>
+
+        <script type="text/javascript">
+            $(function () {
+                $("#search_first").keyup(function () {
+                    var search_first = $("#search_first").val();
+                    var search_last = $("#search_last").val();
+                    var search_father = $("#search_father").val();
+                    $.post('/client/search/', {
+                        'first': search_first,
+                        'last': search_last,
+                        'father': search_father
+                    }, function (data) {
+                        $('#searchresult').html(data)
+                    });
+                    return false;
+                });
+                $("#search_last").keyup(function () {
+                    var search_first = $("#search_first").val();
+                    var search_last = $("#search_last").val();
+                    var search_father = $("#search_father").val();
+                    $.post('/client/search/', {
+                        'first': search_first,
+                        'last': search_last,
+                        'father': search_father
+                    }, function (data) {
+                        $('#searchresult').html(data)
+                    });
+                    return false;
+                });
+                $("#search_father").keyup(function () {
+                    var search_first = $("#search_first").val();
+                    var search_last = $("#search_last").val();
+                    var search_father = $("#search_father").val();
+                    $.post('/client/search/', {
+                        'first': search_first,
+                        'last': search_last,
+                        'father': search_father
+                    }, function (data) {
+                        $('#searchresult').html(data)
+                    });
+                    return false;
+                });
+            });
+        </script>
+
 
 
     {% endif %}
+
 {% endblock %}

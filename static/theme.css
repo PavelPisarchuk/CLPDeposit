@@ -26,6 +26,8 @@
 	}
 
 	.sidebar-nav {
+		position: fixed;
+		width: 30%;
 	}
 
 	.affix-sidebar {

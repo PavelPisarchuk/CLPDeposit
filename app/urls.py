@@ -30,7 +30,6 @@ urlpatterns = [
         url(r'^new/', client.new, name='new'),
         url(r'^list/', client.list, name='list'),
         url(r'^search/', client.search, name='search'),
-        url(r'^search/(?P<first_name>\w+)/(?P<last_name>\w+)/(?P<passport_id>\w+/$)', client.search, name='search'),
     ], namespace='client')),
     url(r'^actions/', include([
         url(r'^bill/', actions.bill, name='bill'),
@@ -39,9 +38,7 @@ urlpatterns = [
     url(r'^bill/', include([
         url(r'^bills/', bill.bills, name='bills'),
         url(r'^addbill/', bill.addbill, name='addbill'),
-        url(r'^addcard/', bill.addcard, name='addcard'),
         url(r'^addonbill/', bill.addonbill, name='addonbill'),
-        url(r'^cardsinbill/', bill.cardsinbill, name='cardsinbill'),
         url(r'^billtransact/', bill.billtransact, name='billtransact'),
         url(r'^getuserbills/', bill.getuserbills, name='getuserbills'),
         url(r'^getcurrency/', bill.getcurrency, name='getcurrency'),
