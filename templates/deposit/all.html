@@ -1,0 +1,27 @@
+{% extends "body.html" %}
+
+{% block title %}
+    <title>Вклады</title>
+{% endblock %}
+
+{% block content %}
+    {% if depositList %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr>
+                    <td>Название</td>
+                    <td>Описание</td>
+                </tr>
+                {% for deposit in depositList %}
+                    <tr>
+                        <td><a href={% url 'deposit:new' deposit.id %}>{{ deposit.title }}</a></td>
+                        <td>{{ deposit.description }}%</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <h2>Депозитов нет.</h2>
+    {% endif %}
+
+{% endblock %}

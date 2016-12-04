@@ -14,7 +14,8 @@
                     <td>Минимальная сумма</td>
                     <td>Срок хранения</td>
                     <td>Период выплат</td>
-                    <td>Возможность пополнения</td>
+                    <td>Пополнение</td>
+                    <td>Частичное снятие</td>
                     <td>Капитализация</td>
                     <td>Валюта привязки</td>
                     <td></td>
@@ -23,19 +24,21 @@
                 </tr>
                 {% for deposit in depositList %}
                     <tr>
-                        <td>{{ deposit.title }}</td>
+                        <td>{{ deposit.depositType.title }} "{{ deposit.title }}"</td>
                         <td>{{ deposit.percent }}%</td>
                         <td>{{ deposit.format_min_amount }}</td>
                         <td>{{ deposit.format_duration }}</td>
                         <td>{{ deposit.format_pay_period }}</td>
-                        <td>{{ deposit.is_refill }}</td>
-                        {% if deposit.is_capitalization %}
-                            <td>{{ deposit.is_capitalization }}</td>
+                        <td>{{ deposit.format_refill }}</td>
+                        <td>{{ deposit.format_withdrawal }}</td>
+                        <td>{{ deposit.format_capitalization }}</td>
+
+                        {% if deposit.binding_currency %}
                             <td>{{ deposit.binding_currency.title }}</td>
                         {% else %}
                             <td></td>
-                            <td></td>
                         {% endif %}
+
                         {% if not deposit.is_archive %}
                             <td>
                                 <a href="{% url 'deposit:edit' deposit.id %}">редактировать</a>
@@ -52,6 +55,6 @@
         <h2>Вкладов нет.</h2>
     {% endif %}
 
-    <a href="{% url 'deposit:new' %}" class="btn btn-default"> Новый вклад </a>
+    <a href="{% url 'deposit:all' %}" class="btn btn-default"> Новый вклад </a>
 
 {% endblock %}

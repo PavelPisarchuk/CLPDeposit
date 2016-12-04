@@ -7,13 +7,36 @@
 {% block content %}
     {% if deposits %}
         <div class="table-responsive">
-            <table class="table table-striped">
+        <table class="table table-striped">
+        <tr>
+                    <td>Название</td>
+                    <td>Процент</td>
+                    <td>Минимальная сумма</td>
+                    <td>Срок хранения</td>
+                    <td>Период выплат</td>
+                    <td>Пополнение</td>
+                    <td>Частичное снятие</td>
+                    <td>Капитализация</td>
+                    <td>Валюта привязки</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 {% for deposit in deposits %}
                     <tr>
                         <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.title }}</a></td>
                         <td>{{ deposit.percent }}%</td>
                         <td>{{ deposit.format_min_amount }}</td>
                         <td>{{ deposit.format_duration }}</td>
+                        <td>{{ deposit.format_pay_period }}</td>
+                        <td>{{ deposit.format_refill }}</td>
+                        <td>{{ deposit.format_withdrawal }}</td>
+                        <td>{{ deposit.format_capitalization }}</td>
+                        {% if deposit.binding_currency %}
+                            <td>{{ deposit.binding_currency.title }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </table>

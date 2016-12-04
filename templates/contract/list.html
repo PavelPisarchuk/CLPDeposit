@@ -11,23 +11,45 @@
                 <tr>
                     <td>Вклад</td>
                     <td>Сумма</td>
+                    <td>Процент</td>
                     <td>Дата подписания</td>
                     <td>Дата окончания</td>
+                    <td>Счет привязки</td>
+                    <td>Пролонгация</td>
+                    <td></td>
+                    <td></td>
                     <td></td>
                 </tr>
                 {% for contract in contracts %}
                     <tr>
-                        <td><a href={% url 'deposit:info' contract.deposit.id %}>{{ contract.deposit.title }}</a></td>
-                        <td>{{ contract.deposit_bill }}</td>
+{#                        <td><a href={% url 'contract:info' contract.id %}>{{ contract.deposit.title }}</a></td>#}
+                        <td>{{ contract.deposit.title }}</td>
+                        <td>{{ contract.deposit_bill.value_in_currency }}</td>
+                        <td>{{ contract.get_percent }}%</td>
                         <td>{{ contract.sign_date }}</td>
                         <td>{{ contract.end_date }}</td>
+                        <td>{{ contract.bill }}</td>
                         <td>
                             {% if contract.is_prolongation %}
-                                <a>Продлить</a>
+                                Да
+                            {% else %}
+                                Нет
                             {% endif %}
-                            <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">
-                                Завершённые операции
-                            </a>
+                        </td>
+                        <td>
+                            <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">История операций</a>
+                        </td>
+
+                        {% if contract.deposit.is_refill %}
+                            <td>
+                                <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">Пополнить</a>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+
+                        <td>
+                            <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">Снять</a>
                         </td>
                     </tr>
                 {% endfor %}
