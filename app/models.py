@@ -127,7 +127,7 @@ class Currency(models.Model):
         return self.title
 
     def format_value(self, value):
-        return "{}{}".format(self.title, round(value, 2))
+        return "{}{}".format(self.title, round(value, 4))
 
     def from_exchange_rates(self):
         return ExchangeRate.objects.exclude(
@@ -303,46 +303,92 @@ class Contract(models.Model):
     start_amount = models.IntegerField(verbose_name='Сумма')
     bill = models.ForeignKey(Bill, verbose_name='Счет привязки')
     deposit_bill = models.ForeignKey(Bill, verbose_name='Депозитный счет', related_name='deposit_bill', editable=False)
-    sign_date = models.DateTimeField(verbose_name='Дата подписания', default=now, editable=False)
-    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False)
+    sign_date = models.DateField(verbose_name='Дата подписания', default=now().date(), editable=False)
+    end_date = models.DateField(verbose_name='Дата окончания', editable=False, null=True)
     is_use_percent_for_early_withdrawal=models.BooleanField(verbose_name='изменить процентную ставку', default=False,editable=False)
-    is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
     is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
 
-    def refill(self,amount):
-        if self.deposit.is_refill and self.bill.currency==self.deposit.currency and amount>=self.deposit.min_refill:
-            if self.bill.pop(amount):
+    def refill(self, amount, bill):
+        min_refill = self.deposit.min_refill
+        if self.deposit.currency != bill.currency:
+            to_currency_amount = ExchangeRate.objects.get(
+                to_currency=self.deposit.currency,
+                from_currency=bill.currency,
+                date=today()
+            )
+            to_currency_min_refill = ExchangeRate.objects.get(
+                to_currency=bill.currency,
+                from_currency=self.deposit.currency,
+                date=today()
+            )
+            min_refill = to_currency_min_refill.calc(self.deposit.min_refill)
+            amount = to_currency_amount.calc(amount)
+        if self.deposit.is_refill and amount >= self.deposit.min_refill:
+            if bill.pop(amount):
                 self.deposit_bill.push(amount)
-                return True
+                return (True)
             else:
-                return False
+                return (False, 'Недостаточно средств')
         else:
-            return False
-
+            return (False, 'Минимальное пополнение: ' + str(min_refill) + str(bill.currency.title))
+        return (True)
 
     def withdraw(self, amount, necessarily=False):
         if self.deposit.is_early_withdrawal and self.deposit_bill.money-amount>=self.deposit.minimum_balance:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
-            return True
+            return (True)
         elif necessarily and self.deposit_bill-amount>=0:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
             self.is_use_percent_for_early_withdrawal=True
-            return True
+            return (True)
         return False
-
-    def close(self):
-        self.is_act=False
-        if self.deposit.binding_currency!=None:
-            self.pay(self.calculate_bonuce())
-        return
-
 
     def calculate_payment(self):
         last_pay_date = self.get_last_pay_date()
-        tz_info = last_pay_date.tzinfo
-        return self.deposit_bill * self.deposit.percent * (now() - last_pay_date).days / 365
+        print(self.deposit_bill.money * (self.get_percent() / 100) * (now().date() - last_pay_date).days / 365,
+              now().date(), last_pay_date)
+        return self.deposit_bill.money * (self.get_percent() / 100) * (now().date() - last_pay_date).days / 365
+
+    def get_percent(self):
+        if self.is_use_percent_for_early_withdrawal:
+            return self.deposit.percent_for_early_withdrawal
+        return self.deposit.percent
+
+    def pay(self, value, action='PAY', to_itself=False):
+        Action.add(
+            action=action,
+            contract=self,
+            money=value,
+        )
+        if to_itself:
+            self.deposit_bill.push(value, action)
+        else:
+            self.bill.push(value, action)
+
+    def super_pay(self):
+        # print(self.is_active(),self.is_needs_pay())
+        if self.is_active():
+            sum = self.calculate_payment()
+            if self.is_needs_pay() and sum > 0:
+                self.pay(sum, to_itself=self.deposit.is_capitalization)
+            if (self.end_date and (today() - self.end_date).days >= 0) or self.deposit_bill.money == 0:
+                print("Close")
+                self.close()
+
+    def close(self):
+        self.is_act = False
+        if self.end_date == None:
+            self.end_date = now().date()
+        self.save()
+        print(self.calculate_bonuce())
+        if self.deposit.binding_currency != None and self.calculate_bonuce() > 0:
+            self.pay(self.calculate_bonuce(), to_itself=False, action='PAY BONUCE')
+        self.pay(self.deposit_bill.money, to_itself=False, action='CLOSE DEPOSIT')
+        self.deposit_bill.pop(self.deposit_bill.money)
+        return
+
 
 
     def calculate_end_date(self):
@@ -362,7 +408,7 @@ class Contract(models.Model):
         return (self.end_date - self.sign_date).days
 
     def get_storing_term(self):
-        return (now() - self.sign_date).days
+        return (today() - self.sign_date).days
 
     def calculate_bonuce(self):
         sign_rate = ExchangeRate.objects.get(
@@ -375,62 +421,45 @@ class Contract(models.Model):
             from_currency=self.deposit.currency,
             to_currency=self.deposit.binding_currency
         )
-        return ((today_rate / sign_rate) * 100 - 100) * 365 / self.get_storing_term()
+        return self.deposit_bill.money * (
+        (today_rate.index / sign_rate.index) * 100 - 100) * self.get_storing_term() / 365
 
     def prolongation_to_string(self):
         if self.is_prolongation:
             return "Yes"
         return "No"
 
+    def get_actions(self):
+        return Action.objects.filter(
+            contract=self
+        )
+
     def is_needs_pay(self):
         last_pay_date = self.get_last_pay_date()
-        tz_info = last_pay_date.tzinfo
-        if self.deposit.is_pay_period_month:
-            timedelta = relativedelta(now(), last_pay_date).months
+        if self.deposit.is_month:
+            timedelta = relativedelta(now().date(), last_pay_date).months
         else:
-            timedelta = relativedelta(now(), last_pay_date).days
+            timedelta = relativedelta(now().date(), last_pay_date).days
 
         if timedelta >= self.deposit.pay_period:
             return True
         else:
             return False
 
-    def get_actions(self):
-        return Action.objects.filter(
-            contract=self
-        )
-
     def get_last_pay_date(self):
         try:
             return self.get_actions().filter(
                 actionType=ActionType.objects.get(description='PAY')
-            ).last().datetime
+            ).last().datetime.date()
         except:
             return self.sign_date
 
-
-    def pay(self, value, action='PAY', datetime=now()):
-        Action.add(
-            action=action,
-            contract=self,
-            money=value,
-            datetime=datetime
-        )
-        if self.deposit.is_capitalization:
-            self.deposit_bill.push(value, action)
-        else:
-            self.bill.push(value, action)
-
     def get_relative_pay_period(self):
-        if self.deposit.is_pay_period_month:
+        if self.deposit.is_month:
             return relativedelta(months=self.deposit.pay_period)
         else:
             return relativedelta(days=self.deposit.pay_period)
 
-    def get_percent(self):
-        if self.is_use_percent_for_early_withdrawal:
-            return self.deposit.percent_for_early_withdrawal
-        return self.deposit.percent
 
 class ActionType(models.Model):
     description = models.CharField(max_length=300, verbose_name='Описание')
@@ -443,7 +472,7 @@ class Action(models.Model):
     actionType = models.ForeignKey(ActionType, verbose_name='Тип действия')
     contract = models.ForeignKey(Contract, verbose_name='Договор', default=None, editable=False, null=True)
     bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя', default=None, editable=False, null=True)
-    datetime = models.DateTimeField(verbose_name='Дата', default=now)
+    datetime = models.DateTimeField(verbose_name='Дата', default=now())
     money = models.FloatField(verbose_name='Денежная сумма')
 
     @classmethod

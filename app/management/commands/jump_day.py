@@ -10,9 +10,10 @@ class Command(BaseCommand):
         try:
             Setting.set_processing(True)
             days = Setting.objects.get_or_create(name='days')[0]
+            pay.Command().handle()
             days.value += 1
             days.save()
             rates.Command().handle()
-            pay.Command().handle()
+
         finally:
             Setting.set_processing(False)
