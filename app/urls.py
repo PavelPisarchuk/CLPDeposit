@@ -13,6 +13,7 @@ urlpatterns = [
     ], namespace='profile')),
     url(r'^rate/', include([
         url(r'^today/', rate.today, name='today'),
+        url(r'^api/', rate.api, name='api'),
     ], namespace='rate')),
     url(r'^message/', include([
         url(r'^send/', messages.send_message, name='send'),

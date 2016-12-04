@@ -5,6 +5,46 @@
 {% endblock %}
 
 {% block content %}
+    <table>
+        <tr>
+            <td>
+                <input min="0" autofocus class="react" id="money_input" type="number" value="100">
+            <td>
+                <select id="from" class="currency_select react"></select></td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="res" type="number" disabled>
+            </td>
+            <td>
+                <select id="to" class="currency_select react"></select>
+            </td>
+        </tr>
+    </table>
+    <script>
+        $.get('/rate/api/', function (data) {
+            console.log(data);
+            console.log(data.cur);
+            for (i in data.cur) {
+                $('.currency_select').append('<option>' + data.cur[i] + '</option>')
+            }
+            var money_input = $('#money_input')[0],
+                output = $('#res')[0];;;;;
+
+            var render = function () {
+                var value = money_input.value;
+                var res = value * data.rates[$('#from')[0].value][$('#to')[0].value];
+                res = res.toFixed(2);
+                if (res)
+                    output.value = res;
+                else
+                    output.value = value;
+            };;;;;
+            $('.currency_select').change(render);;;;;
+            $('#money_input').on('input', render)
+        });
+    </script>
     <h2>
         {{ today }}
     </h2>
