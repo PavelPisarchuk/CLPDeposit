@@ -59,14 +59,26 @@
                                         {% include 'menu/client_actions.html' %}
                                     {% endif %}
                                 {% else %}
-                                    <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-user"></span>
-                                        Войти
-                                    </a></li>
+                                    <li class="active">
+                                        <a href="{% url 'login' %}" data-toggle="collapse" data-target="#toggleDemo0"
+                                           data-parent="#sidenav01"
+                                           class="collapsed">
+                                            <h4>
+                                                <span class="glyphicon glyphicon-eye-open"></span>
+                                                Войти
+                                            </h4>
+                                        </a>
+                                        <div class="collapse" id="toggleDemo0" style="height: 0px;">
+                                            <ul class="nav nav-list">
+                                            </ul>
+                                        </div>
+                                    </li>
                                 {% endif %}
 
                                 <li>
                                     <a href="{% url 'rate:today' %}"><span class="glyphicon glyphicon-euro"></span>
-                                        Курсы валют
+                                        Курсы валют<br>
+                                        {{ today }}
                                     </a>
                                 </li>
                                 <li>

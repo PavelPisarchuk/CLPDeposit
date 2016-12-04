@@ -22,20 +22,6 @@ $('#myModalTransact').on('show.bs.modal', function (event) {
         }
     });
 });
-$('#myModalCards').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    $('#billcards').empty();
-    $('#billcards').append('<tr><td>Номер карточки</td><td>Лимит</td></tr>');
-    $('#billnum').text('Счёт №' + button.data('billid'));
-    $.get('/bill/cardsinbill/', {'num': button.data('billid')}, function (data) {
-        operations = data['operations'];
-        cards = data['cards'];
-        limits = data['limits'];
-        for (i in cards)
-            $('#billcards').append('<tr> <td>' + cards[i] + '</td>' +
-                '  <td>' + limits[i] + ' </td></tr>')
-    });
-});
 $('#myModalOperations').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     $(this).find('#messageinMessage').text(button.data('message'));

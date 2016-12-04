@@ -22,35 +22,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModalNewCard" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                <h4 class="modal-title">Новая карточка</h4>
-            </div>
-            <div class="modal-body">
-                <p>Добавить карточку для : </p>
-                <p id="contentname" style="font-weight: bold;"></p>
-                <p id="errors" style="color: red"></p>
-                <div>
-                    <p><select id="billselecttocard" name="num" form="addcardForm">
-                        <option disabled>Загрузка...</option>
-                    </select></p>
-                    <p><input placeholder="Лимит" form="addcardForm" type="number" name="limit"></p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <form id="addcardForm" class="form-horizontal" action="" method="post">
-                    {% csrf_token %}
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                    <input class="btn btn-warning" type="submit" value="Добавить"/>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="myModalFill" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -78,9 +49,9 @@
                         <span class="form-error">Не выбрана валюта</span>
                     </label>
                     <label>
-                        <input required pattern="^[0-9]{1,9}$" id="addonbillForm_money" placeholder="Сумма"
+                        <input required pattern="^[1-9]{1,1}[0-9]{0,8}$" id="addonbillForm_money" placeholder="Сумма"
                                form="addonbillForm" type="number" name="money">
-                        <span class="form-error">Введите сумму, от 0 до 999.999.999</span>
+                        <span class="form-error">Введите сумму, от 1 до 999.999.999</span>
                     </label>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                     <input class="btn btn-warning" type="submit" value="Добавить"/>
@@ -127,43 +98,3 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="myModalChangeUser" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                <h4 class="modal-title">Изменение</h4>
-            </div>
-            <div class="modal-body">
-                <p>Изменить данные для : </p>
-                <p id="contentname" style="font-weight: bold;"></p>
-                <p id="errors" style="color: red"></p>
-                <div>
-                    <p><input name="num" style="display: none" form="changeuserForm" id="userid"></p>
-                    <p><input type="text" name="firstname" placeholder="Имя" form="changeuserForm"
-                              id="userfirstname"></p>
-                    <p><input type="text" name="lastname" placeholder="Фамилия" form="changeuserForm"
-                              id="userlastname"></p>
-                    <p><input type="text" name="fathername" placeholder="Отчество" form="changeuserForm"
-                              id="userfathername"></p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <form id="changeuserForm" class="form-horizontal" action=""
-                      method="post">
-                    {% csrf_token %}
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                    <input class="btn btn-warning" type="submit" value="Изменить"/>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    $(document).foundation();
-    jQuery(function ($) {
-//            $('addonbillForm_money').
-    });
-</script>

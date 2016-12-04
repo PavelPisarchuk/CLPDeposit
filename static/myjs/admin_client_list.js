@@ -8,16 +8,7 @@ $(document).ready(function () {
             $('#currencyselect').append('<option selected value=' + currid[i] + '>' + currname[i] + '</option>');
     })
 });
-$('#myModalChangeUser').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    $('#myModalChangeUser').find('#errors').text('');
-    $(this).find('#contentname').text(button.data('contentname'));
-    $(this).find('#userfirstname').val(button.data('first'));
-    $(this).find('#userlastname').val(button.data('last'));
-    $(this).find('#userfathername').val(button.data('father'));
-    $(this).find('#userid').val(button.data('contentid'));
-    $('#changeuserForm').find("input[type=submit]").prop("disabled", false)
-});
+
 $('#myModalNewBill').on('show.bs.modal', function (event) {
     $('#myModalNewBill').find('#errors').text('');
     var button = $(event.relatedTarget);
@@ -44,43 +35,9 @@ $('#myModalFill').on('show.bs.modal', function (event) {
             $('#billfillselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
     });
 });
-$('#myModalNewCard').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    $('#myModalNewCard').find('#errors').text('');
-    $('#addcardForm').find("input[type=submit]").prop("disabled", false);
-    $(this).find('#contentname').text(button.data('contentname'));
-    $('#billselecttocard').empty();
-    $.get('/bill/getuserbills/', {'num': Number(button.data('contentid'))}, function (data) {
-        bills = data['bills'];
-        for (i in bills)
-            $('#billselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
-    });
-});
 
 //==================================================================
 
-
-$('#myModalChangeUser').submit(function (event) {
-    event.preventDefault();
-    $('#changeuserForm').find("input[type=submit]").prop("disabled", true);
-    $.post('/employee/edituser/', $('#changeuserForm').serializeArray(), function (data) {
-        if (data['succes'] == false) {
-            $('#changeuserForm').find("input[type=submit]").prop("disabled", false);
-            $('#myModalChangeUser').find('#errors').text(data['errors']);
-        }
-        else {
-            $('#myModalChangeUser').modal('hide');
-            fullname = '#client_' + data['id'];
-            $(fullname).text(data['newfull']);
-            partname = '#client_name_' + data['id'];
-            $(partname).data("first", data["newfirst"]);
-            $(partname).data("last", data["newlast"]);
-            $(partname).data("father", data["newfather"]);
-            disolve(data);
-            $('#changeuserForm')[0].reset();
-        }
-    });
-});
 $('#myModalFill').submit(function (event) {
     event.preventDefault();
     $('#addonbillForm').find("input[type=submit]").prop("disabled", true);
@@ -91,7 +48,6 @@ $('#myModalFill').submit(function (event) {
         }
         else {
             $('#myModalFill').modal('hide');
-            $('#lastoperation').text(data['operation']);
             disolve(data);
             $('#addonbillForm')[0].reset();
         }
@@ -109,21 +65,6 @@ $('#myModalNewBill').submit(function (event) {
             $('#myModalNewBill').modal('hide');
             disolve(data);
             $('#addbillForm')[0].reset();
-        }
-    });
-});
-$('#myModalNewCard').submit(function (event) {
-    event.preventDefault();
-    $('#addcardForm').find("input[type=submit]").prop("disabled", true);
-    $.post('/bill/addcard/', $('#addcardForm').serializeArray(), function (data) {
-        if (data['succes'] == false) {
-            $('#myModalNewCard').find('#errors').text(data['errors']);
-            $('#addcardForm').find("input[type=submit]").prop("disabled", false)
-        }
-        else {
-            $('#myModalNewCard').modal('hide');
-            disolve(data);
-            $('#addcardForm')[0].reset();
         }
     });
 });
