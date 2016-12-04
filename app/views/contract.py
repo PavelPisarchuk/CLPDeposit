@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required,user_passes_test
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from app.forms import *
@@ -79,3 +80,27 @@ def info(request, deposit_id):
     return render(request, 'contract/info.html', {
         'contract': Contract.objects.get(pk=deposit_id)
     })
+
+
+@login_required
+def addmoney(request):
+    try:
+        _contracctid, _money = request.POST['contractid'], request.POST['money']
+        if False:
+            return JsonResponse({'succes': True, 'operation': 'Пополнение успешно'})
+        else:
+            return JsonResponse({'succes': False, 'errors': 'Не хватает средств'})
+    except:
+        return JsonResponse({'succes': False})
+
+
+@login_required
+def addmoney(request):
+    try:
+        _contracctid, _money = request.POST['contractid'], request.POST['money']
+        if False:
+            return JsonResponse({'succes': True, 'operation': 'Пополнение успешно'})
+        else:
+            return JsonResponse({'succes': False, 'errors': 'Не хватает средств'})
+    except:
+        return JsonResponse({'succes': False})

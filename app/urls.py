@@ -56,6 +56,7 @@ urlpatterns = [
         url(r'^all/', contract.all, name='all'),
         url(r'^new/(?P<deposit_id>[0-9]+)', contract.new, name='new'),
         url(r'^list/', contract.list, name='list'),
+        url(r'^addmoney/', contract.addmoney, name='addmoney'),
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
     url(r'errors/', include([

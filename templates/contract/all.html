@@ -7,8 +7,9 @@
 {% block content %}
     {% if deposits %}
         <div class="table-responsive">
-        <table class="table table-striped">
-        <tr>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse">
+                <tr>
                     <td>Название</td>
                     <td>Процент</td>
                     <td>Минимальная сумма</td>
@@ -19,6 +20,7 @@
                     <td>Капитализация</td>
                     <td>Валюта привязки</td>
                 </tr>
+                </thead>
                 {% for deposit in deposits %}
                     <tr>
                         <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.depositType.title }}

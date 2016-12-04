@@ -13,6 +13,7 @@ $('#myModalTransact').on('show.bs.modal', function (event) {
     $('#transactForm')[0].reset();
     $('#billtransactelecttocard').empty();
     $('#billtransactelecttocard2').empty();
+    $('#transactForm').find("input[type=submit]").prop("disabled", true);
     $.get('/bill/getuserbillsfromuser/', function (data) {
         $('#transactForm').find("input[type=submit]").prop("disabled", false);
         bills = data['bills'];

@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    getcurrencies()
+});
+
+function getcurrencies() {
     $('#currencyselect').empty();
     $.get('/bill/getcurrency/', function (data) {
         currid = data['currency'];
@@ -10,7 +14,7 @@ $(document).ready(function () {
             $('#currencyselect2').append('<option selected value=' + currid[i] + '>' + currname[i] + '</option>');
         }
     })
-});
+}
 
 $('#myModalNewBill').on('show.bs.modal', function (event) {
     $('#myModalNewBill').find('#errors').text('');
@@ -87,6 +91,19 @@ $('#myModalMessage').submit(function (event) {
         }
     });
 });
+
+$(function () {
+    $("#search_full").keyup(function () {
+        var search_full = $("#search_full").val();
+        $.post('/client/search/', {
+            'full': search_full
+        }, function (data) {
+            $('#searchresult').html(data)
+        });
+        return false;
+    });
+});
+
 
 function disolve(data) {
     $('#lastoperation').text(data['operation']).fadeIn(1);

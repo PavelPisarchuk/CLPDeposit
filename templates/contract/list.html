@@ -7,7 +7,8 @@
 {% block content %}
     {% if contracts %}
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse">
                 <tr>
                     <td>Вклад</td>
                     <td>Сумма</td>
@@ -16,15 +17,14 @@
                     <td>Дата окончания</td>
                     <td>Счет привязки</td>
                     <td>Пролонгация</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td colspan="3"><span id="lastoperation" class="label label-success"></span></td>
                 </tr>
+                </thead>
                 {% for contract in contracts %}
                     <tr>
 {#                        <td><a href={% url 'contract:info' contract.id %}>{{ contract.deposit.title }}</a></td>#}
                         <td>{{ contract.deposit.title }}</td>
-                        <td>{{ contract.deposit_bill.value_in_currency }}</td>
+                        <td id="summa_{{ contract.id }}">{{ contract.deposit_bill.value_in_currency }}</td>
                         <td>{{ contract.get_percent }}%</td>
                         <td>{{ contract.sign_date }}</td>
                         <td>{{ contract.end_date }}</td>
@@ -42,65 +42,25 @@
 
                         {% if contract.deposit.is_refill %}
                             <td>
-                                <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">Пополнить</a>
+                                <a data-toggle="modal" data-target="#myModalFill" data-contractid="{{ contract.id }}">Пополнить</a>
                             </td>
                         {% else %}
                             <td></td>
                         {% endif %}
 
                         <td>
-                            <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">Снять</a>
+                            <a data-toggle="modal" data-target="#myModalTake"
+                               data-contractid="{{ contract.id }}">Снять</a>
                         </td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
 
-        <div class="modal fade" id="myModalOperations" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                        <h4 class="modal-title">Операции</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <table id="billoperations" class="table table-striped">
-                                <tr>
-                                    <td>Тип операции</td>
-                                    <td>Дата</td>
-                                    <td>Сумма</td>
-                                </tr>
-                            </table>
+        {% include 'modals/contract_list.html' %}
 
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            $('#myModalOperations').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                $(this).find('#messageinMessage').text(button.data('message'));
-                $(this).find('#headerinMessage').val(button.data('header'));
-                $(this).find('#messageid').val(button.data('messageid'));
-                $.post('/actions/contract/', {'num': button.data('contractid')}, function (data) {
-                    operations = data['operations'];
-                    money = data['money'];
-                    dates = data['dates'];
-                    $('#billoperations').empty();
-                    $('#billoperations').append('<tr><td>Тип операции</td><td>Дата</td><td>Сумма</td></tr>');
-                    for (i in operations)
-                        $('#billoperations').append('<tr> <td>' + operations[i] + '</td>' +
-                            '  <td>' + dates[i] + ' </td>  <td>' + money[i] + '</td> </tr>')
-                });
-            });
-        </script>
-
+        {% load staticfiles %}
+        <script type="text/javascript" src="{% static "myjs/contract_list.js" %}"></script>
     {% else %}
         <h2>Вкладов нет</h2>
     {% endif %}
