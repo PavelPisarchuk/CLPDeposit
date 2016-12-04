@@ -4,8 +4,11 @@ $(document).ready(function () {
         currid = data['currency'];
         currname = data['currencyname'];
         $('#currencyselect').empty();
-        for (i in currid)
+        $('#currencyselect2').empty();
+        for (i in currid) {
             $('#currencyselect').append('<option selected value=' + currid[i] + '>' + currname[i] + '</option>');
+            $('#currencyselect2').append('<option selected value=' + currid[i] + '>' + currname[i] + '</option>');
+        }
     })
 });
 

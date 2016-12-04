@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Q
 from django.shortcuts import render, redirect
 
 from app.forms import UserForm
@@ -36,10 +35,16 @@ def list(request):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def search(request):
-    first = request.POST['first']
-    last = request.POST['last']
-    father = request.POST['father']
-    return render(request, 'client/list_search.html', {
-        'clients': User.objects.all().filter(Q(first_name__icontains=first) & Q(last_name__icontains=last) &
-                                             Q(father_name__icontains=father)).filter(is_superuser=False)
-    })
+    try:
+        name = request.POST['full']
+        users = []
+        for user in User.objects.all():
+            if name in user.get_full_name() and not user.is_superuser:
+                users.append(user)
+        return render(request, 'client/list_search.html', {
+            'clients': users
+        })
+    except:
+        return render(request, 'client/list.html', {
+            'clients': User.objects.all().filter(is_superuser=False)
+        })
