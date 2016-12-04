@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect
-from django.forms import modelform_factory
-from django.db import models
 
 from app.forms import *
 from app.models import *
+
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -40,6 +39,14 @@ def new(request, deposit_id):
 
     if depositType.title=='Вклад до востребования':
         F = DoVostredDepositForm
+    elif depositType.title == 'Cберегательный вклад':
+        F = SberegDepositForm
+    elif depositType.title == 'Накопительный вклад':
+        F = NakopDepositForm
+    elif depositType.title == 'Расчетный вклад':
+        F = RaschDepositForm
+    elif depositType.title == 'Индексируемый вклад':
+        F = IndexDepositForm
 
 
     if request.method == 'POST':
@@ -47,30 +54,26 @@ def new(request, deposit_id):
         if depositForm.is_valid():
             d = depositForm.save(commit=False)
             good=True
-            if d.duration<=0 and depositType.title!='Вклад до востребования':
-                errors.append('Срок хранения должен быть положительным')
-                good = False
+
             if d.duration<d.pay_period and depositType.title!='Вклад до востребования':
                 errors.append('Период выплат не должен привышать срок хранения')
                 good = False
-
-
-
-
-            if d.minimum_balance<=0 and d.is_early_withdrawal and depositType.title!='Вклад до востребования':
-                errors.append('Неснижаемый остаток должен быть положительным')
+            if d.min_amount <= d.minimum_balance and (
+                            depositType.title == 'Расчетный вклад' or depositType.title == 'Индексируемый вклад'):
+                errors.append('Неснижаемый остаток должен быть меньше минимальной начальной суммы')
                 good = False
-            if d.min_amount<=d.minimum_balance:
-                errors.append('Неснижаемый остаток должен быть меньше минимальной суммы')
-            good = False
-
-            # elif d.depositType.title != 'Вклад до востребования' and (d.percent_for_early_withdrawal == None or d.percent_for_early_withdrawal <= 0):
-            #     errors.append('percent for early withdrawal must be bigger then 0')
-            # elif d.depositType.title == 'Индексируемый вклад' and d.binding_currency == None:
-            #     errors.append('add binding currency')
-
+            if depositType.title == 'Индексируемый вклад' and d.binding_currency == d.currency:
+                errors.append('Валюта привязки должна отличаться от основной валюты')
+                good = False
             if good:
-                #if depositType == 'Вклад до востребования':
+                if depositType.title == 'Вклад до востребования':
+                    d.is_early_withdrawal = True
+                    d.is_refill = True
+                elif depositType.title == 'Накопительный вклад':
+                    d.is_refill = True
+                elif depositType.title == 'Расчетный вклад':
+                    d.is_early_withdrawal = True
+                    d.is_refill = True
 
                 d.depositType =depositType
                 d.save()
@@ -90,24 +93,55 @@ def new(request, deposit_id):
 def edit(request, deposit_id):
     errors = []
     oldDeposit = Deposit.objects.get(pk=deposit_id)
+    depositType = oldDeposit.depositType
+
+    if depositType.title == 'Вклад до востребования':
+        F = DoVostredDepositForm
+    elif depositType.title == 'Cберегательный вклад':
+        F = SberegDepositForm
+    elif depositType.title == 'Накопительный вклад':
+        F = NakopDepositForm
+    elif depositType.title == 'Расчетный вклад':
+        F = RaschDepositForm
+    elif depositType.title == 'Индексируемый вклад':
+        F = IndexDepositForm
+
 
     if request.method == 'POST':
-        depositForm = DepositForm(request.POST)
+        depositForm = F(request.POST)
         if depositForm.is_valid():
             d = depositForm.save(commit=False)
-            if d.percent <= 0:
-                errors.append('Percent must be bigger then 0')
-            elif d.depositType.title != 'Вклад до востребования' and (d.percent_for_early_withdrawal == None or d.percent_for_early_withdrawal <= 0):
-                errors.append('percent for early withdrawal must be bigger then 0')
-            elif d.depositType.title == 'Индексируемый вклад' and d.binding_currency == None:
-                errors.append('add binding currency')
-            else:
+            good = True
+
+            if d.duration < d.pay_period and depositType.title != 'Вклад до востребования':
+                errors.append('Период выплат не должен привышать срок хранения')
+                good = False
+            if d.min_amount <= d.minimum_balance and (
+                            depositType.title == 'Расчетный вклад' or depositType.title == 'Индексируемый вклад'):
+                errors.append('Неснижаемый остаток должен быть меньше минимальной начальной суммы')
+                good = False
+            if depositType.title == 'Индексируемый вклад' and d.binding_currency == d.currency:
+                errors.append('Валюта привязки должна отличаться от основной валюты')
+                good = False
+            if good:
+                if depositType.title == 'Вклад до востребования':
+                    d.is_early_withdrawal = True
+                    d.is_refill = True
+                elif depositType.title == 'Накопительный вклад':
+                    d.is_refill = True
+                elif depositType.title == 'Расчетный вклад':
+                    d.is_early_withdrawal = True
+                    d.is_refill = True
+
                 oldDeposit.is_archive = True
                 oldDeposit.save()
+
+                d.depositType = depositType
                 d.save()
                 return redirect('deposit:list')
     else:
-        depositForm = DepositForm(instance=oldDeposit)
+        depositForm = F(instance=oldDeposit)
+
 
     return render(request, 'deposit/edit.html', {
         'depositForm': depositForm,

@@ -6,16 +6,16 @@
 
 {% block content %}
 
-    <br> {{ deposit.title }}
+    <br> {{ deposit.depositType.title }} "{{ deposit.title }}"
     <br>
     <br>Описание: {{ deposit.depositType.description }}
 
-
+    <br>
+    <br>
     {% for error in errors %}
-        <br> {{ error }}
+        <p class="bg-danger">{{ error }}</p>
     {% endfor %}
 
-    <br>
     <br>
 
     <form action="{% url 'contract:new' ID %}" method="post">

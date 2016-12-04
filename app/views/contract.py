@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required,user_passes_test
-from django.forms import modelform_factory
 from django.shortcuts import render, redirect
 
-from app.models import Deposit, Bill, Contract
+from app.forms import *
+from app.models import Bill
 
 
 @login_required
@@ -22,30 +22,32 @@ def all(request):
 def new(request, deposit_id):
 
     errors = []
-    d = Deposit.objects.filter(id=deposit_id)[0]
-    dt = d.depositType
-    querySet=Bill.objects.filter(client=request.user, currency=d.currency)
+    d = Deposit.objects.get(pk=deposit_id)
+    dt = d.depositType.title
+    querySet = Bill.objects.filter(client=request.user, currency=d.currency, is_private=True)
 
-    if dt == 'Сберегательный вклад':
-        F = modelform_factory(Contract, exclude=("is_prolongation",), )
+    if dt == 'Вклад до востребования':
+        F = ContractForm
     else:
-        F = modelform_factory(Contract, exclude=(),)
+        F = ContractFormWithProlongation
+
 
     if request.method == 'POST':
         form = F(request.POST)
         form.fields["bill"].queryset =querySet
         if form.is_valid():
             contract = form.save(commit=False)
-            deposit = Deposit.objects.get(pk=deposit_id)
-            minAmount = deposit.min_amount
-            currency = deposit.currency
+            good = True
 
-            if contract.start_amount < minAmount:
-                errors.append('Сумма должна быть не меньше ' + str(minAmount) + " " + str(currency))
+            if contract.start_amount < d.min_amount:
+                errors.append('Сумма должна быть не меньше ' + str(d.min_amount) + " " + str(d.currency))
+                good = False
             elif not contract.bill.pop(contract.start_amount):
-                errors.append('Недостаточно средств на счету')
-            else:
-                bill = request.user.add_bill(d.currency,contract.start_amount,True)
+                errors.append('На счету (' + str(contract.bill.value_in_currency()) + ') недостаточно средств. ')
+                good = False
+
+            if good:
+                bill = request.user.add_bill(d.currency, contract.start_amount, False)
                 contract.deposit_bill=bill
                 contract.deposit = d
                 contract.calculate_end_date()

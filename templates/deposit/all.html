@@ -15,7 +15,7 @@
                 {% for deposit in depositList %}
                     <tr>
                         <td><a href={% url 'deposit:new' deposit.id %}>{{ deposit.title }}</a></td>
-                        <td>{{ deposit.description }}%</td>
+                        <td>{{ deposit.description }}</td>
                     </tr>
                 {% endfor %}
             </table>

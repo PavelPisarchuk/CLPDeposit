@@ -245,13 +245,15 @@ class Deposit(models.Model):
     title = models.CharField(max_length=50, verbose_name='Название')
     currency = models.ForeignKey(Currency, verbose_name='Валюта')
     min_amount = models.IntegerField(verbose_name='Минимальная сумма')
-    duration = models.IntegerField(verbose_name='Срок хранения (в месяцах)', default=0)
-    is_pay_period_month = models.BooleanField(verbose_name='Период выплат в месяцах', default=False)
+    is_month = models.BooleanField(verbose_name='Счет времени в месяцах', default=True)
+    duration = models.IntegerField(verbose_name='Срок хранения', default=0)
     pay_period = models.IntegerField(verbose_name='Период выплат')
     percent = models.FloatField(verbose_name='Ставка')
-    is_refill = models.BooleanField(verbose_name='Возможность пополнения', default=False)
+
+    is_refill = models.BooleanField(verbose_name='Возможность пополнения', default=False, editable=False)
     min_refill = models.IntegerField(verbose_name='Минимальное пополнение', default=0)
-    is_early_withdrawal = models.BooleanField(verbose_name='Возможность частичного снятия', default=True)
+    is_early_withdrawal = models.BooleanField(verbose_name='Возможность частичного снятия', default=False,
+                                              editable=False)
     minimum_balance = models.IntegerField(verbose_name='Неснижаемый остаток', default=0)
     percent_for_early_withdrawal = models.FloatField(verbose_name='ставка при нарушении неснижаемого остатка', default=0)
     is_capitalization = models.BooleanField(verbose_name='Капитализация')
@@ -264,10 +266,11 @@ class Deposit(models.Model):
     def format_duration(self):
         if self.duration==0:
             return "нет ограничений"
-        return "{} месяцев".format(self.duration)
+        interval = "месяцев" if self.is_month else "дней"
+        return "{} {}".format(self.duration, interval)
 
     def format_pay_period(self):
-        interval = "месяцев" if self.is_pay_period_month else "дней"
+        interval = "месяцев" if self.is_month else "дней"
         return "{} {}".format(self.pay_period, interval)
 
     def format_min_amount(self):
@@ -296,12 +299,12 @@ class Deposit(models.Model):
 
 
 class Contract(models.Model):
-    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False, blank=True, null=True)
-    start_amount=models.PositiveIntegerField(verbose_name='Сумма')
+    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False)
+    start_amount = models.IntegerField(verbose_name='Сумма')
     bill = models.ForeignKey(Bill, verbose_name='Счет привязки')
-    deposit_bill = models.ForeignKey(Bill,verbose_name='Депозитный счет',related_name='deposit_bill',editable=False, blank=True, null=True)
+    deposit_bill = models.ForeignKey(Bill, verbose_name='Депозитный счет', related_name='deposit_bill', editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=now, editable=False)
-    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
+    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False)
     is_use_percent_for_early_withdrawal=models.BooleanField(verbose_name='изменить процентную ставку', default=False,editable=False)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
     is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
@@ -347,7 +350,7 @@ class Contract(models.Model):
             self.end_date = None
             return
 
-        if self.deposit.is_pay_period_month:
+        if self.deposit.is_month:
             self.end_date = self.sign_date + relativedelta(months=self.deposit.duration)
         else:
             self.end_date = self.sign_date + relativedelta(days=self.deposit.duration)
