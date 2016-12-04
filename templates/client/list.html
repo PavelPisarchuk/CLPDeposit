@@ -9,9 +9,7 @@
         <tr>
             <td colspan="3">Поиск</td>
         <tr>
-            <td><input placeholder="Фамилия" name="last" type="text" id="search_last"></td>
-            <td><input placeholder="Имя" name="first" type="text" id="search_first"></td>
-            <td><input placeholder="Отчество" name="father" type="text" id="search_father"></td>
+            <td><input placeholder="ФИО" name="full" type="text" id="search_full"></td>
         </tr>
     </table>
 
@@ -66,40 +64,10 @@
 
         <script type="text/javascript">
             $(function () {
-                $("#search_first").keyup(function () {
-                    var search_first = $("#search_first").val();
-                    var search_last = $("#search_last").val();
-                    var search_father = $("#search_father").val();
+                $("#search_full").keyup(function () {
+                    var search_full = $("#search_full").val();
                     $.post('/client/search/', {
-                        'first': search_first,
-                        'last': search_last,
-                        'father': search_father
-                    }, function (data) {
-                        $('#searchresult').html(data)
-                    });
-                    return false;
-                });
-                $("#search_last").keyup(function () {
-                    var search_first = $("#search_first").val();
-                    var search_last = $("#search_last").val();
-                    var search_father = $("#search_father").val();
-                    $.post('/client/search/', {
-                        'first': search_first,
-                        'last': search_last,
-                        'father': search_father
-                    }, function (data) {
-                        $('#searchresult').html(data)
-                    });
-                    return false;
-                });
-                $("#search_father").keyup(function () {
-                    var search_first = $("#search_first").val();
-                    var search_last = $("#search_last").val();
-                    var search_father = $("#search_father").val();
-                    $.post('/client/search/', {
-                        'first': search_first,
-                        'last': search_last,
-                        'father': search_father
+                        'full': search_full
                     }, function (data) {
                         $('#searchresult').html(data)
                     });

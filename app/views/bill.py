@@ -52,8 +52,8 @@ def addbill(request):
     if request.method == 'POST':
         try:
             _user = User.objects.get(id=request.POST["num"])
-            currency = Currency.objects.get_or_create(title='BYN')[0]
-            _bill = _user.add_bill(currency=currency, money=0, is_private=True)
+            _currency = Currency.objects.get_or_create(id=request.POST["currency"])[0]
+            _bill = _user.add_bill(currency=_currency, money=0, is_private=True)
             return JsonResponse({'succes': True, 'operation': 'Добавление счёта {0} для {1} выполнено'.format(_bill.id,
                                                                                                               _bill.client.get_full_name())})
         except Exception:
