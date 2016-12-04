@@ -41,12 +41,57 @@ class DoVostredDepositForm(forms.ModelForm):
     min_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
     pay_period=forms.IntegerField(min_value=1,max_value=100,label='Период выплат')
     percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
-    #percent_for_early_withdrawal=forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка при нарушении неснижаемого остатка')
     min_refill=forms.IntegerField(min_value=0,max_value=1000000,label='Минимальное пополнение',initial=0)
     class Meta:
         model = Deposit
-        exclude = ["duration","is_early_withdrawal","minimum_balance",\
-                                                "percent_for_early_withdrawal","binding_currency"]
+        exclude = ["duration","minimum_balance", "percent_for_early_withdrawal","binding_currency"]
+
+
+class SberegDepositForm(forms.ModelForm):
+    min_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    pay_period=forms.IntegerField(min_value=1,max_value=100,label='Период выплат')
+    percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
+    percent_for_early_withdrawal=forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка при преждевременном снятии')
+    duration=forms.IntegerField(min_value=1,max_value=100,label='Срок хранения')
+    class Meta:
+        model = Deposit
+        exclude = ["minimum_balance", "binding_currency","min_refill"]
+
+
+class NakopDepositForm(forms.ModelForm):
+    min_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    pay_period=forms.IntegerField(min_value=1,max_value=100,label='Период выплат')
+    percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
+    percent_for_early_withdrawal=forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка при преждевременном снятии')
+    duration=forms.IntegerField(min_value=1,max_value=100,label='Срок хранения')
+    min_refill=forms.IntegerField(min_value=0,max_value=1000000,label='Сумма минимального пополнения', initial=0)
+    class Meta:
+        model = Deposit
+        exclude = ["minimum_balance", "binding_currency"]
+
+
+class RaschDepositForm(forms.ModelForm):
+    min_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    pay_period=forms.IntegerField(min_value=1,max_value=100,label='Период выплат')
+    percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
+    percent_for_early_withdrawal=forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка при преждевременном снятии')
+    duration=forms.IntegerField(min_value=1,max_value=100,label='Срок хранения')
+    min_refill=forms.IntegerField(min_value=0,max_value=1000000,label='Сумма минимального пополнения', initial=0)
+    minimum_balance=forms.IntegerField(min_value=1,max_value=1000000,label='Неснижаемый остаток')
+    class Meta:
+        model = Deposit
+        exclude = ["binding_currency"]
+
+
+class IndexDepositForm(forms.ModelForm):
+    min_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    pay_period=forms.IntegerField(min_value=1,max_value=100,label='Период выплат')
+    percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
+    percent_for_early_withdrawal=forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка при преждевременном снятии')
+    duration=forms.IntegerField(min_value=1,max_value=100,label='Срок хранения')
+    class Meta:
+        model = Deposit
+        exclude = ["minimum_balance","min_refill"]
 
 
 class CurrencyForm(forms.ModelForm):
