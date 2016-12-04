@@ -18,13 +18,10 @@
                     <td>Частичное снятие</td>
                     <td>Капитализация</td>
                     <td>Валюта привязки</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                 </tr>
                 {% for deposit in deposits %}
                     <tr>
-                        <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.title }}</a></td>
+                        <td><a href="{% url 'contract:new' deposit.id %}">{{ deposit.depositType.title }} "{{ deposit.title }}"</a></td>
                         <td>{{ deposit.percent }}%</td>
                         <td>{{ deposit.format_min_amount }}</td>
                         <td>{{ deposit.format_duration }}</td>

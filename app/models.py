@@ -292,12 +292,12 @@ class Deposit(models.Model):
 
 
 class Contract(models.Model):
-    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False, blank=True, null=True)
-    start_amount=models.PositiveIntegerField(verbose_name='Сумма')
+    deposit = models.ForeignKey(Deposit, verbose_name='Вид дипозита', editable=False)
+    start_amount=models.IntegerField(verbose_name='Сумма')
     bill = models.ForeignKey(Bill, verbose_name='Счет привязки')
-    deposit_bill = models.ForeignKey(Bill,verbose_name='Депозитный счет',related_name='deposit_bill',editable=False, blank=True, null=True)
+    deposit_bill = models.ForeignKey(Bill,verbose_name='Депозитный счет',related_name='deposit_bill',editable=False)
     sign_date = models.DateTimeField(verbose_name='Дата подписания', default=now, editable=False)
-    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False, default=None, null=True)
+    end_date = models.DateTimeField(verbose_name='Дата окончания', editable=False)
     is_use_percent_for_early_withdrawal=models.BooleanField(verbose_name='изменить процентную ставку', default=False,editable=False)
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
     is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
@@ -343,7 +343,7 @@ class Contract(models.Model):
             self.end_date = None
             return
 
-        if self.deposit.is_pay_period_month:
+        if self.deposit.is_month:
             self.end_date = self.sign_date + relativedelta(months=self.deposit.duration)
         else:
             self.end_date = self.sign_date + relativedelta(days=self.deposit.duration)

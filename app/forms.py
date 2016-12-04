@@ -94,6 +94,21 @@ class IndexDepositForm(forms.ModelForm):
         exclude = ["minimum_balance","min_refill"]
 
 
+class ContractFormWithProlongation(forms.ModelForm):
+
+    start_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    class Meta:
+        model = Contract
+        exclude = [""]
+
+class ContractForm(forms.ModelForm):
+
+    start_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    class Meta:
+        model = Contract
+        exclude = ["is_prolongation"]
+
+
 class CurrencyForm(forms.ModelForm):
 
     class Meta:
