@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^client/', include([
         url(r'^new/', client.new, name='new'),
         url(r'^list/', client.list, name='list'),
+        url(r'^partiallist/', client.partiallist, name='partiallist'),
         url(r'^search/', client.search, name='search'),
     ], namespace='client')),
     url(r'^actions/', include([

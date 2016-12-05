@@ -34,14 +34,35 @@ $(document).ready(function () {
     $(function () {
         $("#search_full").keyup(function () {
             var search_full = $("#search_full").val();
-            $.post('/client/search/', {
+            $.get('/client/search/', {
                 'full': search_full
             }, function (data) {
                 $('#searchresult').html(data)
             });
             return false;
         });
+
+
     });
+
+    /*
+     var inProgress = false;
+     var loadcount=25;
+     $(window).scroll(function() {
+     if($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
+     var search_full = $("#search_full").val();
+     $.ajax({
+     url: '/client/partiallist/',method: 'GET',
+     data: {'loadcount' : loadcount,'full':search_full},
+     beforeSend: function() {inProgress = true;}
+     }).done(function(data) {
+     loadcount+=25;
+     inProgress=false;
+     })
+
+     }
+
+     })*/
 
     $(document).foundation();
     jQuery(function ($) {
