@@ -309,6 +309,7 @@ class Contract(models.Model):
     is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
 
     def refill(self, amount, bill):
+        _amount = amount
         min_refill = self.deposit.min_refill
         if self.deposit.currency != bill.currency:
             to_currency_amount = ExchangeRate.objects.get(
@@ -324,26 +325,25 @@ class Contract(models.Model):
             min_refill = to_currency_min_refill.calc(self.deposit.min_refill)
             amount = to_currency_amount.calc(amount)
         if self.deposit.is_refill and amount >= self.deposit.min_refill:
-            if bill.pop(amount):
+            if bill.pop(_amount):
                 self.deposit_bill.push(amount)
                 return (True)
             else:
                 return (False, 'Недостаточно средств')
         else:
             return (False, 'Минимальное пополнение: ' + str(min_refill) + str(bill.currency.title))
-        return (True)
 
     def withdraw(self, amount, necessarily=False):
         if self.deposit.is_early_withdrawal and self.deposit_bill.money-amount>=self.deposit.minimum_balance:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
             return (True)
-        elif necessarily and self.deposit_bill-amount>=0:
+        elif necessarily and self.deposit_bill.money - amount >= 0:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
             self.is_use_percent_for_early_withdrawal=True
             return (True)
-        return False
+        return (False, 'На счету недостаточно средств')
 
     def calculate_payment(self):
         last_pay_date = self.get_last_pay_date()
@@ -383,7 +383,7 @@ class Contract(models.Model):
             self.end_date = now().date()
         self.save()
         print(self.calculate_bonuce())
-        if self.deposit.binding_currency != None and self.calculate_bonuce() > 0:
+        if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
             self.pay(self.calculate_bonuce(), to_itself=False, action='PAY BONUCE')
         self.pay(self.deposit_bill.money, to_itself=False, action='CLOSE DEPOSIT')
         self.deposit_bill.pop(self.deposit_bill.money)
