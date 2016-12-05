@@ -5,52 +5,47 @@
 {% endblock %}
 
 {% block content %}
-    <table>
-        <tr>
-            <td colspan="3">Поиск</td>
-        <tr>
-            <td><input placeholder="ФИО" name="full" type="text" id="search_full"></td>
-        </tr>
-    </table>
-
-
-    {% if clients %}
-        <div id="searchresult" class="table-responsive">
-            <table class="table table-bordered table-hover">
+    Поиск<input placeholder="ФИО" name="full" type="text" id="search_full">
+    <table class="table table-bordered table-hover">
                 <thead class="thead-inverse">
-                <tr>
-                    <th>ФИО</th>
-                    <th>Идентификационный номер</th>
-                    <th colspan="3"><span id="lastoperation" class="label label-success"></span></th>
-                </tr>
-                </thead>
-                {% for client in clients %}
                     <tr>
-                        <td id="client_{{ client.id }}">{{ client.get_full_name }}</td>
-                        <td>{{ client.passport_id }}</td>
-                        <td>
-                            <a href="" data-toggle="modal"
-                               data-target="#myModalMessage" data-contentname="{{ client.get_full_name }}"
-                               data-contentid="{{ client.id }}">Отправить сообщение
-                            </a>
-                        </td>
-                        <td>
-                            <a href="" data-toggle="modal"
-                               data-target="#myModalNewBill" data-contentname="{{ client.get_full_name }}"
-                               data-contentid="{{ client.id }}">Новый счёт
-                            </a>
-                        </td>
-                        <td>
-                            <a href="" type="button" data-toggle="modal"
-                               data-target="#myModalFill" data-contentname="{{ client.get_full_name }}"
-                               data-contentid="{{ client.id }}">Пополнить счёт
-                            </a>
-                        </td>
+                        <th>ФИО</th>
+                        <th>Идентификационный номер</th>
+                        <th colspan="3"><span id="lastoperation" class="label label-success"></span></th>
                     </tr>
+                </thead>
 
-                {% endfor %}
-            </table>
-        </div>
+        <tbody id="searchresult">
+        {% if clients %}
+            {% for client in clients %}
+                <tr>
+                    <td id="client_{{ client.id }}">{{ client.get_full_name }}</td>
+                    <td>{{ client.passport_id }}</td>
+                    <td>
+                        <a href="" data-toggle="modal"
+                           data-target="#myModalMessage" data-contentname="{{ client.get_full_name }}"
+                           data-contentid="{{ client.id }}">Отправить сообщение
+                        </a>
+                    </td>
+                    <td>
+                        <a href="" data-toggle="modal"
+                           data-target="#myModalNewBill" data-contentname="{{ client.get_full_name }}"
+                           data-contentid="{{ client.id }}">Новый счёт
+                        </a>
+                    </td>
+                    <td>
+                        <a href="" type="button" data-toggle="modal"
+                           data-target="#myModalFill" data-contentname="{{ client.get_full_name }}"
+                           data-contentid="{{ client.id }}">Пополнить счёт
+                        </a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+    <div><a id="loadnextclient" href="#">Загрузить ещё</a></div>
 
         {% include 'modals/client_list.html' %}
 
@@ -61,7 +56,5 @@
             jQuery(function ($) {
             });
         </script>
-
-    {% endif %}
 
 {% endblock %}

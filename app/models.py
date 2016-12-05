@@ -45,10 +45,12 @@ class User(AbstractUser):
     birthday = models.DateField(verbose_name='Дата рождения')
 
     def get_full_name(self):
-        return self.username if self.is_superuser else "{} {} {}".format(self.last_name, self.first_name, self.father_name)
+        return self.username if self.is_superuser else u"{} {} {}".format(self.last_name, self.first_name,
+                                                                          self.father_name)
 
     def get_short_name(self):
-        return self.username if self.is_superuser else "{} {}. {}.".format(self.last_name, self.first_name[:1], self.father_name[:1])
+        return self.username if self.is_superuser else u"{} {}. {}.".format(self.last_name, self.first_name[:1],
+                                                                            self.father_name[:1])
 
     def get_age(self):
         return (today() - self.birthday).days // 365
