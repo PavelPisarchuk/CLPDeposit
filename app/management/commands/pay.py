@@ -11,6 +11,6 @@ class Command(BaseCommand):
             Setting.set_processing(True)
             pay_contracts = Contract.objects.all()
             for contract in pay_contracts:
-                pass
+                contract.super_pay()
         finally:
             Setting.set_processing(False)

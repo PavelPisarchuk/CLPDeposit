@@ -28,11 +28,7 @@ def new(request, deposit_id):
     dt = d.depositType.title
     querySet = Bill.objects.filter(client=request.user, currency=d.currency, is_private=True)
 
-    if dt == 'Вклад до востребования':
-        F = ContractForm
-    else:
-        F = ContractFormWithProlongation
-
+    F = ContractForm
 
     if request.method == 'POST':
         form = F(request.POST)
