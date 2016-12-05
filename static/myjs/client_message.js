@@ -7,7 +7,7 @@ $(document).ready(function () {
         $(this).find('#messageinMessage').text(button.data('message'));
         $(this).find('#headerinMessage').val(button.data('header'));
         $(this).find('#messageid').val(button.data('messageid'));
-        $.post('/message/readmsg/', {'num': button.data('messageid')}, function (data) {
+        $.post('/message/readmsg/', {'message_id': button.data('messageid')}, function (data) {
             $(messagetag).css({"font-weight": "normal"})
         });
     });
