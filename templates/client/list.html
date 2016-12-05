@@ -15,7 +15,7 @@
                     </tr>
                 </thead>
 
-        <thead id="searchresult">
+        <tbody id="searchresult">
         {% if clients %}
             {% for client in clients %}
                 <tr>
@@ -43,7 +43,7 @@
 
             {% endfor %}
         {% endif %}
-        </thead>
+        </tbody>
     </table>
     <div><a id="loadnextclient" href="#">Загрузить ещё</a></div>
 
