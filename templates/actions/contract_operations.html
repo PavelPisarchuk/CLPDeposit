@@ -1,0 +1,14 @@
+<tr>
+    <td>Тип операции</td>
+    <td>Дата</td>
+    <td>Сумма</td>
+</tr>
+{% if contracts %}
+    {% for c in contracts %}
+        <tr>
+            <td>{{ c.actionType.description }}</td>
+            <td>{{ c.datetime }}</td>
+            <td>{{ c.format_money }}</td>
+        </tr>
+    {% endfor %}
+{% endif %}

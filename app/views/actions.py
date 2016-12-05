@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import render
 
 from app.models import Bill, Contract
 
@@ -9,26 +8,16 @@ from app.models import Bill, Contract
 @login_required
 def bill(request):
     try:
-        bill = Bill.objects.get(id=request.POST['num'], client=request.user)
-        opers, date, money = [], [], []
-        for i in bill.get_actions().order_by('-id'):
-            opers.append(i.actionType.description)
-            date.append(i.datetime.strftime("%A, %d. %B %Y %I:%M%p"))
-            money.append(i.format_money())
-        return JsonResponse({'info': bill.toString(), 'operations': opers, 'dates': date, 'money': money})
+        bill_actions = Bill.objects.get(id=request.POST['num'], client=request.user).get_actions().order_by('-id')
+        return render(request, 'bill/bill_operations.html', {'bills': bill_actions})
     except:
-        return redirect('bill:bills')
-
+        return render(request, 'bill/bill_operations.html', {'bills': {}})
 
 @login_required
 def contract(request):
     try:
-        contract = Contract.objects.get(id=request.POST['num'], bill__client=request.user)
-        opers, date, money = [], [], []
-        for i in contract.get_actions().order_by('-id'):
-            opers.append(i.actionType.description)
-            date.append(i.datetime.strftime("%A, %d. %B %Y %I:%M%p"))
-            money.append(i.format_money())
-        return JsonResponse({'info': contract.id, 'operations': opers, 'dates': date, 'money': money})
+        contracts = Contract.objects.get(id=request.POST['num'], bill__client=request.user).get_actions().order_by(
+            '-id')
+        return render(request, 'actions/contract_operations.html', {'contracts': contracts})
     except:
-        return redirect('contract:list')
+        return render(request, 'actions/contract_operations.html', {'contracts': {}})

@@ -1,0 +1,14 @@
+<tr>
+    <td>Тип операции</td>
+    <td>Дата</td>
+    <td>Сумма</td>
+</tr>
+{% if bills %}
+    {% for b in bills %}
+        <tr>
+            <td>{{ b.actionType.description }}</td>
+            <td>{{ b.datetime }}</td>
+            <td>{{ b.format_money }}</td>
+        </tr>
+    {% endfor %}
+{% endif %}

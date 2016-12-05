@@ -7,11 +7,13 @@
 {% block content %}
     {% if depositList %}
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse">
                 <tr>
                     <td>Название</td>
                     <td>Описание</td>
                 </tr>
+                </thead>
                 {% for deposit in depositList %}
                     <tr>
                         <td><a href={% url 'deposit:new' deposit.id %}>{{ deposit.title }}</a></td>

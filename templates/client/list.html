@@ -62,22 +62,6 @@
             });
         </script>
 
-        <script type="text/javascript">
-            $(function () {
-                $("#search_full").keyup(function () {
-                    var search_full = $("#search_full").val();
-                    $.post('/client/search/', {
-                        'full': search_full
-                    }, function (data) {
-                        $('#searchresult').html(data)
-                    });
-                    return false;
-                });
-            });
-        </script>
-
-
-
     {% endif %}
 
 {% endblock %}

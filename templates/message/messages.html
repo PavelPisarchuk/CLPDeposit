@@ -8,11 +8,13 @@
 {% block content %}
     {% if messages %}
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse">
                 <tr>
                     <td>Дата</td>
                     <td>Заголовок</td>
                 </tr>
+                </thead>
                 {% for message in messages %}
                     <tr id="message_{{ message.id }}" {% if not message.readed %}style="font-weight: bold;"{% endif %}>
                         <td>{{ message.date }}</td>

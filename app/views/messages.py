@@ -28,26 +28,11 @@ def send_message(request):
 def readmessage(request):
     try:
         if request.method == 'POST':
-            msg = Message.objects.get(id=request.POST["num"])
-            if request.user != msg.user:
-                return JsonResponse({})
+            msg = Message.objects.get(id=request.POST["message_id"], user=request.user)
             msg.read()
             return JsonResponse({})
     except:
         return JsonResponse({})
-
-
-@login_required
-def updatemsg(request):
-    try:
-        count = request.user.get_unread_messages_count()
-        if count:
-            return JsonResponse({'data': count, 'count': count})
-        else:
-            raise
-    except Exception:
-        return JsonResponse({'data': False})
-
 
 @login_required
 def messages(request):
@@ -64,9 +49,9 @@ def delete(request):
     try:
         if request.POST:
             Message.objects.get(
-                id=request.POST['num'],
+                id=request.POST['message_id'],
                 user=request.user
             ).delete()
-            return JsonResponse({'succes': True, 'msgid': request.POST['num']})
+            return JsonResponse({'succes': True, 'msgid': request.POST['message_id']})
     except:
         return JsonResponse({'succes': False, 'errors': 'Недостаточно прав !'})

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
 
-from app.views import actions, bill, client, contract, deposit, employee, errors, general, messages, profile, rate
+from app.views import actions, bill, client, contract, deposit, employee, general, messages, profile, rate
 
 urlpatterns = [
     url(r'^login/', general.login, name='login'),
@@ -17,7 +17,6 @@ urlpatterns = [
     ], namespace='rate')),
     url(r'^message/', include([
         url(r'^send/', messages.send_message, name='send'),
-        url(r'^updatemsg/', messages.updatemsg, name='updatemsg'),
         url(r'^messages/', messages.messages, name='messages'),
         url(r'^readmsg/', messages.readmessage, name='readmsg'),
         url(r'^delete/', messages.delete, name='delete'),
@@ -57,10 +56,9 @@ urlpatterns = [
         url(r'^all/', contract.all, name='all'),
         url(r'^new/(?P<deposit_id>[0-9]+)', contract.new, name='new'),
         url(r'^list/', contract.list, name='list'),
+        url(r'^addmoney/', contract.addmoney, name='addmoney'),
+        url(r'^submoney/', contract.submoney, name='submoney'),
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
-    url(r'errors/', include([
-        url('r^error/', errors.error, name='error')
-    ], namespace='errors')),
     url(r'', general.index, name='index'),
 ]

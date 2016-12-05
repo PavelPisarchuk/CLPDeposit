@@ -11,8 +11,8 @@
         <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
         <script type="text/javascript" src="{% static "foundation/foundation.min.js" %}"></script>
         <script type="text/javascript" src="{% static "jquery.inputmask.bundle.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "myjs/body_update_message.js" %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static "theme.css" %}"/>
+        <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
 
         {% block title %} {% endblock %}
     </head>
@@ -42,7 +42,6 @@
                                            data-parent="#sidenav01"
                                            class="collapsed">
                                             <h4>
-                                                <span class="glyphicon glyphicon-user"></span>
                                                 {{ user.get_short_name }}
                                                 <span class="caret"></span>
                                             </h4>
@@ -64,7 +63,6 @@
                                            data-parent="#sidenav01"
                                            class="collapsed">
                                             <h4>
-                                                <span class="glyphicon glyphicon-eye-open"></span>
                                                 Войти
                                             </h4>
                                         </a>
@@ -76,14 +74,13 @@
                                 {% endif %}
 
                                 <li>
-                                    <a href="{% url 'rate:today' %}"><span class="glyphicon glyphicon-euro"></span>
+                                    <a href="{% url 'rate:today' %}">
                                         Курсы валют<br>
                                         {{ today }}
                                     </a>
                                 </li>
                                 <li>
-                                    <a target="_blank" href="https://github.com/arthurchumak/tofi_backend"><span
-                                            class="glyphicon glyphicon-qrcode"></span>
+                                    <a target="_blank" href="https://github.com/arthurchumak/tofi_backend">
                                         GitHub
                                     </a>
                                 </li>
@@ -96,7 +93,7 @@
             <div id="body_content" class="col-sm-9 col-md-10 affix-content">
                 <div class="container">
                     <div class="page-header">
-                        <h3><span class="glyphicon glyphicon-th-list"></span> CLP Deposit</h3>
+                        <h3>CLP Deposit</h3>
                     </div>
                     {% block alerts %}{% include 'alerts.html' %}{% endblock %}
                     {% block content %}{% endblock %}
@@ -105,8 +102,7 @@
 
         </div>
 
-        {% load staticfiles %}
-        <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
+
     {% endif %}
 
     </body>
