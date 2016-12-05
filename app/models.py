@@ -128,7 +128,8 @@ class Currency(models.Model):
         return self.title
 
     def format_value(self, value):
-        return "{}{}".format(self.title, round(value, 4))
+        if self.title in ["RUB", "BYN"]:
+            return "{} {}".format(round(value, 2), self.title)
 
     def from_exchange_rates(self):
         return ExchangeRate.objects.exclude(
@@ -372,7 +373,6 @@ class Contract(models.Model):
         if self.end_date == None:
             self.end_date = today()
         self.save()
-        print(self.calculate_bonuce())
         if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
             self.pay(self.calculate_bonuce(), to_itself=False, action='PAY BONUCE')
         self.pay(self.deposit_bill.money, to_itself=False, action='CLOSE DEPOSIT')
@@ -382,12 +382,11 @@ class Contract(models.Model):
     def calculate_end_date(self):
         if self.deposit.duration == 0:
             self.end_date = None
-            return
-
-        if self.deposit.is_month:
+        elif self.deposit.is_month:
             self.end_date = self.sign_date + relativedelta(months=self.deposit.duration)
         else:
             self.end_date = self.sign_date + relativedelta(days=self.deposit.duration)
+        self.save()
 
     def is_active(self):
         return self.is_act
