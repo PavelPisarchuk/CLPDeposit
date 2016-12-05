@@ -2,7 +2,7 @@
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from app.models import User, Setting
+from app.models import Setting
 
 
 class Command(BaseCommand):
@@ -10,8 +10,9 @@ class Command(BaseCommand):
         try:
             Setting.set_processing(True)
             call_command('loaddata', '1000/users', app_label='app')
-            for user in User.objects.all():
-                user.set_password(user.username)
-                user.save()
+            call_command('loaddata', '1000/bill', app_label='app')
+            # for user in User.objects.all():
+            #     user.set_password(user.username)
+            #     user.save()
         finally:
             Setting.set_processing(False)
