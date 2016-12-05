@@ -338,13 +338,13 @@ class Contract(models.Model):
         if self.deposit.is_early_withdrawal and self.deposit_bill.money-amount>=self.deposit.minimum_balance:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
-            return (True)
+            return True
         elif necessarily and self.deposit_bill.money - amount >= 0:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
             self.is_use_percent_for_early_withdrawal=True
-            return (True)
-        return (False, 'На счету недостаточно средств')
+            return True
+        return False
 
     def calculate_payment(self):
         last_pay_date = self.get_last_pay_date()
