@@ -146,6 +146,19 @@ class Currency(models.Model):
             date=today()
         )
 
+    def calc(self, other, value):
+        try:
+            if self == other:
+                return value
+            else:
+                return ExchangeRate.objects.get(
+                    from_currency=self,
+                    to_currency=other,
+                    date=today()
+                ).calc(value)
+        except:
+            return None
+
 
 class Bill(models.Model):
     client = models.ForeignKey(User, verbose_name='Клиент')
@@ -202,13 +215,7 @@ class Bill(models.Model):
 
     def transfer(self, other, value):
         if self.pop(value):
-            if self.currency != other.currency:
-                to_currency = ExchangeRate.objects.get(
-                    to_currency=other.currency,
-                    from_currency=self.currency,
-                    date=today()
-                )
-                value = to_currency.calc(value)
+            value = self.currency.calc(other.currency, value)
             other.push(value)
             return True
         else:
@@ -310,21 +317,10 @@ class Contract(models.Model):
     is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
 
     def refill(self, amount, bill):
-        min_refill = self.deposit.min_refill
+        min_refill = self.deposit.currency.calc(bill.currency, self.deposit.min_refill)
         _sub_bill_amount = amount
-        if self.deposit.currency != bill.currency:
-            to_currency_amount = ExchangeRate.objects.get(
-                to_currency=self.deposit.currency,
-                from_currency=bill.currency,
-                date=today()
-            )
-            to_currency_min_refill = ExchangeRate.objects.get(
-                to_currency=bill.currency,
-                from_currency=self.deposit.currency,
-                date=today()
-            )
-            min_refill = to_currency_min_refill.calc(self.deposit.min_refill)
-            amount = to_currency_amount.calc(amount)
+        amount = bill.currency.calc(self.deposit.currency, amount)
+
         if self.deposit.is_refill and amount >= self.deposit.min_refill:
             if bill.pop(_sub_bill_amount):
                 self.deposit_bill.push(amount)
@@ -360,11 +356,6 @@ class Contract(models.Model):
     def pay(self, value, action='PAY', to_itself=False):
         target_bill = self.deposit_bill if to_itself else self.bill
         target_bill.push(value, action)
-        Action.add(
-            action=action,
-            bill=target_bill,
-            money=value,
-        )
 
     def super_pay(self):
         # print(self.is_active(),self.is_needs_pay())
@@ -408,16 +399,13 @@ class Contract(models.Model):
         return (today() - self.sign_date).days
 
     def calculate_bonuce(self):
-        sign_rate = ExchangeRate.objects.get(
-            date=self.sign_date,
+        exchange_rates = ExchangeRate.objects.filter(
             from_currency=self.deposit.currency,
             to_currency=self.deposit.binding_currency
         )
-        today_rate = ExchangeRate.objects.get(
-            date=today(),
-            from_currency=self.deposit.currency,
-            to_currency=self.deposit.binding_currency
-        )
+        sign_rate = exchange_rates.get(date=self.sign_date)
+        today_rate = exchange_rates.get(date=today())
+
         return self.deposit_bill.money * (
         (today_rate.index / sign_rate.index) * 100 - 100) * self.get_storing_term() / 365
 

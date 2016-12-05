@@ -2,8 +2,8 @@
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect
 
-from app.forms import *
-from app.models import *
+from app.forms import DoVostredDepositForm, NakopDepositForm, RaschDepositForm, IndexDepositForm, SberegDepositForm
+from app.models import Deposit, DepositType
 
 
 @login_required
@@ -35,8 +35,6 @@ def new(request, deposit_id):
 
     depositType=DepositType.objects.get(pk=deposit_id)
 
-
-
     if depositType.title=='Вклад до востребования':
         F = DoVostredDepositForm
     elif depositType.title == 'Cберегательный вклад':
@@ -47,7 +45,6 @@ def new(request, deposit_id):
         F = RaschDepositForm
     elif depositType.title == 'Индексируемый вклад':
         F = IndexDepositForm
-
 
     if request.method == 'POST':
         depositForm = F(request.POST)
@@ -106,7 +103,6 @@ def edit(request, deposit_id):
     elif depositType.title == 'Индексируемый вклад':
         F = IndexDepositForm
 
-
     if request.method == 'POST':
         depositForm = F(request.POST)
         if depositForm.is_valid():
@@ -155,4 +151,3 @@ def info(request, deposit_id):
     return render(request, 'deposit/info.html', {
         'deposit': Deposit.objects.get(id=deposit_id)
     })
-

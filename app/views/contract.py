@@ -4,8 +4,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
 
-from app.forms import *
-from app.models import Bill
+from app.forms import ContractForm
+from app.models import Bill, Deposit, Contract
 
 
 @login_required
@@ -87,12 +87,22 @@ def addmoney(request):
         _money = int(request.POST['money'])
         refill_response = _contract.refill(_money, _bill)
         if refill_response[0]:
-            return JsonResponse({'succes': True, 'operation': 'Пополнение выполнено успешно', 'id': _contract.id,
-                                 'newvalue': _contract.deposit_bill.value_in_currency()})
+            return JsonResponse({
+                'succes': True,
+                'operation': 'Пополнение выполнено успешно',
+                'id': _contract.id,
+                'newvalue': _contract.deposit_bill.value_in_currency()
+            })
         else:
-            return JsonResponse({'succes': False, 'errors': refill_response[1]})
+            return JsonResponse({
+                'succes': False,
+                'errors': refill_response[1]
+            })
     except:
-        return JsonResponse({'succes': False, 'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'})
+        return JsonResponse({
+            'succes': False,
+            'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'
+        })
 
 
 @login_required
@@ -105,10 +115,19 @@ def submoney(request):
         except MultiValueDictKeyError:
             necessarily = False
         if _contract.withdraw(_money, necessarily):
-            return JsonResponse({'succes': True, 'operation': 'Снятие успешно завершено', 'id': _contract.id,
-                                 'newvalue': _contract.deposit_bill.value_in_currency()})
+            return JsonResponse({
+                'succes': True,
+                'operation': 'Снятие успешно завершено',
+                'id': _contract.id,
+                'newvalue': _contract.deposit_bill.value_in_currency()
+            })
         else:
-            return JsonResponse(
-                {'succes': False, 'errors': 'У депозита отсутствует частичное снятие или остаток ниже минимального'})
+            return JsonResponse({
+                'succes': False,
+                'errors': 'У депозита отсутствует частичное снятие или остаток ниже минимального'
+            })
     except:
-        return JsonResponse({'succes': False, 'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'})
+        return JsonResponse({
+            'succes': False,
+            'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'
+        })
