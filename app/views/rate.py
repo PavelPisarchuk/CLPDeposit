@@ -1,7 +1,8 @@
+from dateutil.relativedelta import relativedelta
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from app.models import Currency
+from app.models import Currency, ExchangeRate, today as date_today
 
 
 def today(request):
@@ -21,4 +22,32 @@ def api(request):
                 rate.to_currency.title: rate.index for rate in currency.from_exchange_rates()
                 }
             for currency in Currency.objects.all()}
+    })
+
+
+def api_history(request):
+    pk1 = int(request.GET["pk1"])
+    pk2 = int(request.GET["pk2"])
+    month_ago = date_today() + relativedelta(months=-1)
+    dataPoints = []
+    from_currency = Currency.objects.get(id=pk1)
+    to_currency = Currency.objects.get(id=pk2)
+    for rate in ExchangeRate.objects.filter(
+            from_currency=from_currency,
+            to_currency=to_currency,
+            date__gte=month_ago
+    ).order_by('date'):
+        dataPoints.append({
+            'label': "{}/{}".format(
+                rate.date.day,
+                rate.date.month
+            ),
+            'y': round(rate.index, 3)
+        })
+    return JsonResponse({
+        'title': "{}/{}".format(
+            from_currency,
+            to_currency
+        ),
+        'dataPoints': dataPoints
     })

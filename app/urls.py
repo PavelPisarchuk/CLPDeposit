@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^rate/', include([
         url(r'^today/', rate.today, name='today'),
         url(r'^api/', rate.api, name='api'),
+        url(r'^history/', rate.api_history, name='history'),
     ], namespace='rate')),
     url(r'^message/', include([
         url(r'^send/', messages.send_message, name='send'),
