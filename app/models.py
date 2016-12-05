@@ -309,23 +309,37 @@ class Contract(models.Model):
     is_prolongation = models.BooleanField(verbose_name='Пролонгация', default=False)
     is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
 
-    def refill(self,amount):
-        if self.deposit.is_refill and self.bill.currency==self.deposit.currency and amount>=self.deposit.min_refill:
-            if self.bill.pop(amount):
+    def refill(self, amount, bill):
+        min_refill = self.deposit.min_refill
+        _sub_bill_amount = amount
+        if self.deposit.currency != bill.currency:
+            to_currency_amount = ExchangeRate.objects.get(
+                to_currency=self.deposit.currency,
+                from_currency=bill.currency,
+                date=today()
+            )
+            to_currency_min_refill = ExchangeRate.objects.get(
+                to_currency=bill.currency,
+                from_currency=self.deposit.currency,
+                date=today()
+            )
+            min_refill = to_currency_min_refill.calc(self.deposit.min_refill)
+            amount = to_currency_amount.calc(amount)
+        if self.deposit.is_refill and amount >= self.deposit.min_refill:
+            if bill.pop(_sub_bill_amount):
                 self.deposit_bill.push(amount)
-                return True
+                return [True]
             else:
-                return False
+                return [False, 'Недостаточно средств ({0} {1})'.format(bill.money, bill.currency.title)]
         else:
-            return False
-
+            return [False, 'Минимальное пополнение: ' + str(min_refill) + str(bill.currency.title)]
 
     def withdraw(self, amount, necessarily=False):
         if self.deposit.is_early_withdrawal and self.deposit_bill.money-amount>=self.deposit.minimum_balance:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
             return True
-        elif necessarily and self.deposit_bill-amount>=0:
+        elif necessarily and self.deposit_bill.money - amount >= 0:
             self.bill.push(amount)
             self.deposit_bill.pop(amount)
             self.is_use_percent_for_early_withdrawal=True

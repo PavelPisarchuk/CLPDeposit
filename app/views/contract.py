@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.datastructures import MultiValueDictKeyError
 
 from app.forms import *
 from app.models import Bill
@@ -85,22 +86,33 @@ def info(request, deposit_id):
 @login_required
 def addmoney(request):
     try:
-        _contracctid, _money = request.POST['contractid'], request.POST['money']
-        if False:
-            return JsonResponse({'succes': True, 'operation': 'Пополнение успешно'})
+        _contract = Contract.objects.get(id=int(request.POST["contid"]))
+        _bill = Bill.objects.get(id=int(request.POST['billid']))
+        _money = int(request.POST['money'])
+        refill_response = _contract.refill(_money, _bill)
+        if refill_response[0]:
+            return JsonResponse({'succes': True, 'operation': 'Пополнение выполнено успешно', 'id': _contract.id,
+                                 'newvalue': _contract.deposit_bill.value_in_currency()})
         else:
-            return JsonResponse({'succes': False, 'errors': 'Не хватает средств'})
+            return JsonResponse({'succes': False, 'errors': refill_response[1]})
     except:
-        return JsonResponse({'succes': False})
+        return JsonResponse({'succes': False, 'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'})
 
 
 @login_required
-def addmoney(request):
+def submoney(request):
     try:
-        _contracctid, _money = request.POST['contractid'], request.POST['money']
-        if False:
-            return JsonResponse({'succes': True, 'operation': 'Пополнение успешно'})
+        _contract = Contract.objects.get(id=int(request.POST["contid"]))
+        _money = int(request.POST['money'])
+        try:
+            necessarily = True if request.POST['necessarily'] == 'on' else False
+        except MultiValueDictKeyError:
+            necessarily = False
+        if _contract.withdraw(_money, necessarily):
+            return JsonResponse({'succes': True, 'operation': 'Снятие успешно завершено', 'id': _contract.id,
+                                 'newvalue': _contract.deposit_bill.value_in_currency()})
         else:
-            return JsonResponse({'succes': False, 'errors': 'Не хватает средств'})
+            return JsonResponse(
+                {'succes': False, 'errors': 'У депозита отсутствует частичное снятие или остаток ниже минимального'})
     except:
-        return JsonResponse({'succes': False})
+        return JsonResponse({'succes': False, 'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'})

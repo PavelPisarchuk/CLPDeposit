@@ -125,14 +125,13 @@ def getuserbills(request):
 def getuserbillsfromuser(request):
     try:
         _user = User.objects.get(id=request.user.id)
-        _bills = _user.get_bills()  # Bill.objects.all().filter(client=_user)
-        _bills_id = []
+        _bills = _user.get_bills()
+        _bills_id, _bills_money = [], []
         for a in _bills:
             _bills_id.append(a.id)
-        for i in _bills:
-            print i
+            _bills_money.append(' (  {0} {1}  )'.format(a.money, a.currency.title))
         if _bills and _user == request.user:
-            return JsonResponse({'bills': _bills_id})
+            return JsonResponse({'bills': _bills_id, 'money': _bills_money})
         else:
             return JsonResponse({'bills': []})
     except Exception:

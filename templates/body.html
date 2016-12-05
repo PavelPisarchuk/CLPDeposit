@@ -11,8 +11,8 @@
         <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
         <script type="text/javascript" src="{% static "foundation/foundation.min.js" %}"></script>
         <script type="text/javascript" src="{% static "jquery.inputmask.bundle.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "myjs/body_update_message.js" %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static "theme.css" %}"/>
+        <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
 
         {% block title %} {% endblock %}
     </head>
@@ -105,8 +105,7 @@
 
         </div>
 
-        {% load staticfiles %}
-        <script type="text/javascript" src="{% static "myjs/body_csrf.js" %}"></script>
+
     {% endif %}
 
     </body>
