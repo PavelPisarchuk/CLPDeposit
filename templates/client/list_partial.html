@@ -1,11 +1,3 @@
-<table class="table table-bordered table-hover">
-    <thead class="thead-inverse">
-    <tr>
-        <th>ФИО</th>
-        <th>Идентификационный номер</th>
-        <th colspan="3"><span id="lastoperation" class="label label-success"></span></th>
-    </tr>
-    </thead>
     {% for client in clients %}
         <tr>
             <td id="client_{{ client.id }}">{{ client.get_full_name }}</td>
@@ -31,4 +23,3 @@
         </tr>
 
     {% endfor %}
-</table>

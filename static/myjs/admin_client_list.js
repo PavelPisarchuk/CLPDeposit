@@ -31,38 +31,54 @@ $(document).ready(function () {
         postman('#messageForm', '#myModalMessage', '/message/send/', event)
     });
 
-    $(function () {
-        $("#search_full").keyup(function () {
-            var search_full = $("#search_full").val();
-            $.get('/client/search/', {
-                'full': search_full
-            }, function (data) {
-                $('#searchresult').html(data)
-            });
-            return false;
-        });
+    var inProgress = false;
+    var loadcount = 15;
 
+    $("#search_full").keyup(function () {
+            var search_full = $("#search_full").val();
+        loadcount = 15;
+        $.get('/client/partiallistsearch/', {
+            'full': search_full, 'loadcount': 0
+        }, function (data) {
+            $('#searchresult').empty();
+            $('#searchresult').append(data)
+        });
+            return false;
+    });
+
+
+    $('#loadnextclient').click(function () {
+        var search_full = $("#search_full").val();
+        if (search_full != '') {
+            $.ajax({
+                url: '/client/partiallistsearch/', method: 'GET',
+                data: {'loadcount': loadcount, 'full': search_full},
+                beforeSend: function () {
+                    inProgress = true;
+                }
+            }).done(function (data) {
+                $('#searchresult').append(data);
+                loadcount += 15;
+                inProgress = false;
+            })
+        }
+        else {
+            $.ajax({
+                url: '/client/partiallist/', method: 'GET',
+                data: {'loadcount': loadcount, 'full': search_full},
+                beforeSend: function () {
+                    inProgress = true;
+                }
+            }).done(function (data) {
+                $('#searchresult').append(data);
+                loadcount += 15;
+                inProgress = false;
+            })
+        }
 
     });
 
-    /*
-     var inProgress = false;
-     var loadcount=25;
-     $(window).scroll(function() {
-     if($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
-     var search_full = $("#search_full").val();
-     $.ajax({
-     url: '/client/partiallist/',method: 'GET',
-     data: {'loadcount' : loadcount,'full':search_full},
-     beforeSend: function() {inProgress = true;}
-     }).done(function(data) {
-     loadcount+=25;
-     inProgress=false;
-     })
 
-     }
-
-     })*/
 
     $(document).foundation();
     jQuery(function ($) {

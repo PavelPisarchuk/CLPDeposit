@@ -29,7 +29,7 @@ def new(request):
 @user_passes_test(lambda u: u.is_superuser)
 def list(request):
     return render(request, 'client/list.html', {
-        'clients': User.objects.all().filter(is_superuser=False)[0:25]
+        'clients': User.objects.all().filter(is_superuser=False)[0:15]
     })
 
 @login_required
@@ -41,33 +41,44 @@ def search(request):
         for user in User.objects.all():
             if name.lower() in user.get_full_name().lower() and not user.is_superuser:
                 users.append(user)
-        return render(request, 'client/list_search.html', {
-            'clients': users
+        return render(request, 'client/list_partial.html', {
+            'clients': users[0:15]
         })
     except:
         return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False)
+            'clients': User.objects.all().filter(is_superuser=False)[0:15]
         })
 
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def partiallist(request):
+def partiallistsearch(request):
     try:
+        loadcount = int(request.GET['loadcount'])
         name = request.GET['full']
         users = []
-        loadcount = int(request.GET['loadcount'])
-        if name:
-            for user in User.objects.all():
-                if name.lower() in user.get_full_name().lower() and not user.is_superuser:
-                    users.append(user)
-            user = user[loadcount:loadcount + 25]
-        else:
-            user = User.objects.all().filter(is_superuser=False)[loadcount:loadcount + 25]
-        return render(request, 'client/list_search.html', {
+        for user in User.objects.all():
+            if name.lower() in user.get_full_name().lower() and not user.is_superuser:
+                users.append(user)
+        users = users[loadcount:loadcount + 15]
+        return render(request, 'client/list_partial.html', {
             'clients': users
         })
     except:
-        return render(request, 'client/list.html', {
-            'clients': User.objects.all().filter(is_superuser=False)
+        return render(request, 'client/list_partial.html', {
+            'clients': User.objects.all().filter(is_superuser=False)[0:15]
+        })
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def partiallist(request):
+    try:
+        loadcount = int(request.GET['loadcount'])
+        users = User.objects.all().filter(is_superuser=False)[loadcount:loadcount + 15]
+        return render(request, 'client/list_partial.html', {
+            'clients': users
+        })
+    except:
+        return render(request, 'client/list_partial.html', {
+            'clients': User.objects.all().filter(is_superuser=False)[0:15]
         })
