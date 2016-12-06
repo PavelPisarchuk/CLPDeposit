@@ -75,8 +75,8 @@
                         {% if contracts %}
                             {% for c in contracts %}
                                 <tr>
-                                    <td>{{ c.id }}</td>
-                                    <td>{{ c.bill.value_in_currency }}</td>
+                                    <td>{{ c.deposit_bill.id }}</td>
+                                    <td>{{ c.deposit_bill.value_in_currency }}</td>
                                     <td>
                                         <a href="#" id="getContractActions" data-target="getBillActions"
                                            data-billid="{{ c.id }}">
