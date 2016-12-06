@@ -201,3 +201,17 @@ def getcurrency(request):
             'currency': [],
             'currencyname': []
         })
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def userbillinfo(request):
+    try:
+        user = User.objects.get(id=request.GET['user_id'])
+        contracts, bills = user.get_contracts(), user.get_bills()
+        return render(request, 'bill/bills_info.html', {
+            'bills': bills,
+            'contracts': contracts
+        })
+    except:
+        return render(request, 'bill/bills_info.html')
