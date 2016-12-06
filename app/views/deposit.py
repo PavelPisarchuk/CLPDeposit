@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from math import *
+
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect
 
@@ -52,8 +54,14 @@ def new(request, deposit_id):
             d = depositForm.save(commit=False)
             good=True
 
+            if Deposit.objects.filter(title=d.title, is_archive=False):
+                errors.append('Вклад с таким названием уже существует')
+                good = False
             if d.duration<d.pay_period and depositType.title!='Вклад до востребования':
                 errors.append('Период выплат не должен привышать срок хранения')
+                good = False
+            if depositType.title != 'Вклад до востребования' and fmod(d.duration, d.pay_period) != 0:
+                errors.append('Период выплат должен быть кратен сроку хранения')
                 good = False
             if d.min_amount <= d.minimum_balance and (
                             depositType.title == 'Расчетный вклад' or depositType.title == 'Индексируемый вклад'):
@@ -81,7 +89,8 @@ def new(request, deposit_id):
     return render(request, 'deposit/new.html', {
         'depositForm': depositForm,
         'errors': errors,
-        'ID':deposit_id
+        'ID': deposit_id,
+        'depositType': depositType
     })
 
 
@@ -109,8 +118,18 @@ def edit(request, deposit_id):
             d = depositForm.save(commit=False)
             good = True
 
-            if d.duration < d.pay_period and depositType.title != 'Вклад до востребования':
+            if Deposit.objects.filter(title=d.title, is_archive=False).exclude(title=oldDeposit.title):
+                errors.append('Вклад с таким названием уже существует')
+                good = False
+            if d.title == oldDeposit.title and Deposit.objects.filter(title=d.title, is_archive=False).exclude(
+                    id=oldDeposit.id):
+                errors.append('Кто-то изменил вклад раньше вас(')
+                good = False
+            if depositType.title != 'Вклад до востребования' and d.duration < d.pay_period:
                 errors.append('Период выплат не должен привышать срок хранения')
+                good = False
+            if depositType.title != 'Вклад до востребования' and fmod(d.duration, d.pay_period) != 0:
+                errors.append('Период выплат должен быть кратен сроку хранения')
                 good = False
             if d.min_amount <= d.minimum_balance and (
                             depositType.title == 'Расчетный вклад' or depositType.title == 'Индексируемый вклад'):
@@ -142,7 +161,8 @@ def edit(request, deposit_id):
     return render(request, 'deposit/edit.html', {
         'depositForm': depositForm,
         'errors': errors,
-        'ID': deposit_id
+        'ID': deposit_id,
+        'depositType': depositType
     })
 
 @login_required

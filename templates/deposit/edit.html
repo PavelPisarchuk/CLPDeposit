@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block content %}
+    {{ depositType }}
+    <br>
+    <br>
     {% for error in errors %}
         <p class="bg-danger">{{ error }}</p>
     {% endfor %}

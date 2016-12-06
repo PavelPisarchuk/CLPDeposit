@@ -362,7 +362,7 @@ class Contract(models.Model):
 
     def super_pay(self):
         # print(self.is_active(),self.is_needs_pay())
-        if self.is_active():
+        if self.sign_date < today() and self.is_active():
             sum = self.calculate_payment()
             if self.is_needs_pay() and sum > 0:
                 self.pay(sum, to_itself=self.deposit.is_capitalization)
