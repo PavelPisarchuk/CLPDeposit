@@ -130,8 +130,7 @@ class Currency(models.Model):
         return self.title
 
     def format_value(self, value):
-        if self.title in ["RUB", "BYN"]:
-            return "{} {}".format(round(value, 2), self.title)
+        return "{} {}".format(round(value, 2), self.title)
 
     def from_exchange_rates(self):
         return ExchangeRate.objects.exclude(
