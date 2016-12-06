@@ -1,0 +1,97 @@
+<div>
+    <div class="panel-group" id="accordion">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Операции</a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <tbody id="_operations">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 1 панель -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Клиентские счета</a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse ">
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <td>Счёт №</td>
+                            <td>Баланс</td>
+                            <td></td>
+                        </tr>
+                        </thead>
+                        {% if bills %}
+                            {% for b in bills %}
+                                <tr>
+                                    <td>{{ b.id }}</td>
+                                    <td>{{ b.value_in_currency }}</td>
+                                    <td>
+                                        <a href="#" id="getBillActions" data-target="getBillActions"
+                                           data-billid="{{ b.id }}">
+                                            История счёта</a>
+                                        <br>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2 панель -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Депозитные счета</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <td>Счёт №</td>
+                            <td>Баланс</td>
+                            <td></td>
+                        </tr>
+                        </thead>
+                        {% if contracts %}
+                            {% for c in contracts %}
+                                <tr>
+                                    <td>{{ c.id }}</td>
+                                    <td>{{ c.bill.value_in_currency }}</td>
+                                    <td>
+                                        <a href="#" id="getContractActions" data-target="getBillActions"
+                                           data-billid="{{ c.id }}">
+                                            История счёта</a>
+                                        <br>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
