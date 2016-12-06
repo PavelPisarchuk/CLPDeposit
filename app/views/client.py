@@ -82,3 +82,13 @@ def partiallist(request):
         return render(request, 'client/list_partial.html', {
             'clients': User.objects.all().filter(is_superuser=False)[0:15]
         })
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def info(request):
+    try:
+        user = User.objects.get(id=request.GET['user_id'])
+        return render(request, 'client/info.html', {'client': user})
+    except:
+        return render(request, 'client/info.html')

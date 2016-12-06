@@ -33,6 +33,7 @@ urlpatterns = [
         url(r'^partiallist/', client.partiallist, name='partiallist'),
         url(r'^partiallistsearch/', client.partiallistsearch, name='partiallistsearch'),
         url(r'^search/', client.search, name='search'),
+        url(r'^info/', client.info, name='info'),
     ], namespace='client')),
     url(r'^actions/', include([
         url(r'^bill/', actions.bill, name='bill'),
@@ -46,6 +47,7 @@ urlpatterns = [
         url(r'^getuserbills/', bill.getuserbills, name='getuserbills'),
         url(r'^getcurrency/', bill.getcurrency, name='getcurrency'),
         url(r'^getuserbillsfromuser/', bill.getuserbillsfromuser, name='getuserbills'),
+        url(r'^userbillinfo/', bill.userbillinfo, name='userbillinfo'),
     ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),

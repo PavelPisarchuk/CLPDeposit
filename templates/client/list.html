@@ -9,9 +9,9 @@
     <table class="table table-bordered table-hover">
                 <thead class="thead-inverse">
                     <tr>
-                        <th>ФИО</th>
-                        <th>Идентификационный номер</th>
-                        <th colspan="3"><span id="lastoperation" class="label label-success"></span></th>
+                        <td width="20%">ФИО</td>
+                        <td width="20%">Идентификационный номер</td>
+                        <td width="40%" colspan="4"><span id="lastoperation" class="label label-success"></span></td>
                     </tr>
                 </thead>
 
@@ -19,28 +19,38 @@
         {% if clients %}
             {% for client in clients %}
                 <tr>
-                    <td id="client_{{ client.id }}">{{ client.get_full_name }}</td>
-                    <td>{{ client.passport_id }}</td>
-                    <td>
+                    <td width="20%" id="client_{{ client.id }}">
+                        <a href="" data-toggle="modal"
+                           data-target="#myModalInfo" data-contentname="{{ client.get_full_name }}"
+                           data-contentid="{{ client.id }}">{{ client.get_full_name }}
+                        </a>
+                    </td>
+                    <td width="20%">{{ client.passport_id }}</td>
+                    <td width="20%">
                         <a href="" data-toggle="modal"
                            data-target="#myModalMessage" data-contentname="{{ client.get_full_name }}"
                            data-contentid="{{ client.id }}">Отправить сообщение
                         </a>
                     </td>
-                    <td>
+                    <td width="10%">
                         <a href="" data-toggle="modal"
                            data-target="#myModalNewBill" data-contentname="{{ client.get_full_name }}"
                            data-contentid="{{ client.id }}">Новый счёт
                         </a>
                     </td>
-                    <td>
+                    <td width="15%">
                         <a href="" type="button" data-toggle="modal"
                            data-target="#myModalFill" data-contentname="{{ client.get_full_name }}"
                            data-contentid="{{ client.id }}">Пополнить счёт
                         </a>
                     </td>
+                    <td width="15%">
+                        <a href="" type="button" data-toggle="modal"
+                           data-target="#myModalUserBills" data-contentname="{{ client.get_full_name }}"
+                           data-contentid="{{ client.id }}">Инфо. о счётах
+                        </a>
+                    </td>
                 </tr>
-
             {% endfor %}
         {% endif %}
         </tbody>
