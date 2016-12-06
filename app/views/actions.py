@@ -17,13 +17,13 @@ def bill(request):
             bill_actions = Bill.objects.get(
                 id=request.POST['num']
             ).get_actions().order_by('-id')
+    except:
+        bill_actions = {}
+    finally:
         return render(request, 'bill/bill_operations.html', {
             'bills': bill_actions
         })
-    except:
-        return render(request, 'bill/bill_operations.html', {
-            'bills': {}
-        })
+
 
 @login_required
 def contract(request):
@@ -37,10 +37,9 @@ def contract(request):
             contracts = Contract.objects.get(
                 id=request.POST['num']
             ).get_actions().order_by('-id')
+    except:
+        contracts = {}
+    finally:
         return render(request, 'actions/contract_operations.html', {
             'contracts': contracts
-        })
-    except:
-        return render(request, 'actions/contract_operations.html', {
-            'contracts': {}
         })
