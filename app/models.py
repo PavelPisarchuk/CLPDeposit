@@ -79,7 +79,7 @@ class User(AbstractUser):
         )
         obj.save()
         Action.add(
-            action='CREATE',
+            action='Создание',
             bill=obj,
             money=money
         )
@@ -174,23 +174,25 @@ class Bill(models.Model):
             limit=limit
         ).save()
 
-    def push(self, value, action='FILL'):
+    def push(self, value, action='Пополнение', contract=None):
         self.money += value
         self.save()
         Action.add(
             action=action,
             bill=self,
+            contract=contract,
             money=value
         )
 
-    def pop(self, value, action='TAKE_PART'):
+    def pop(self, value, action='Перевод', contract=None):
         if self.money >= value:
             self.money -= value
             self.save()
             Action.add(
                 action=action,
                 bill=self,
-                money=value
+                contract=contract,
+                money=-value
             )
             return True
         else:
@@ -324,8 +326,8 @@ class Contract(models.Model):
         amount = bill.currency.calc(self.deposit.currency, amount)
 
         if self.deposit.is_refill and amount >= self.deposit.min_refill:
-            if bill.pop(_sub_bill_amount):
-                self.deposit_bill.push(amount)
+            if bill.pop(_sub_bill_amount, action='Перевод', contract=self):
+                self.deposit_bill.push(amount, action='Пополнение', contract=self)
                 return [True]
             else:
                 return [False, 'Недостаточно средств ({0} {1})'.format(bill.money, bill.currency.title)]
@@ -334,14 +336,14 @@ class Contract(models.Model):
 
     def withdraw(self, amount, necessarily=False):
         if self.deposit.is_early_withdrawal and self.deposit_bill.money-amount>=self.deposit.minimum_balance:
-            self.bill.push(amount)
-            self.deposit_bill.pop(amount)
-            return True
+            if self.deposit_bill.pop(amount, action='Снятие', contract=self):
+                self.bill.push(amount, action='Перевод', contract=self)
+                return True
         elif necessarily and self.deposit_bill.money - amount >= 0:
-            self.bill.push(amount)
-            self.deposit_bill.pop(amount)
-            self.is_use_percent_for_early_withdrawal=True
-            return True
+            if self.deposit_bill.pop(amount, action='Экстра снятие', contract=self):
+                self.bill.push(amount, action='Перевод', contract=self)
+                self.is_use_percent_for_early_withdrawal = True
+                return True
         return False
 
     def calculate_payment(self):
@@ -354,9 +356,9 @@ class Contract(models.Model):
             return self.deposit.percent_for_early_withdrawal
         return self.deposit.percent
 
-    def pay(self, value, action='PAY', to_itself=False):
+    def pay(self, value, action='Выплата', to_itself=False):
         target_bill = self.deposit_bill if to_itself else self.bill
-        target_bill.push(value, action)
+        target_bill.push(value, action, contract=self)
 
     def super_pay(self):
         if self.sign_date < today() and self.is_active():
@@ -373,10 +375,16 @@ class Contract(models.Model):
         if self.end_date == None:
             self.end_date = today()
         self.save()
+        Action.add(
+            action='Закрытие',
+            bill=self.deposit_bill,
+            contract=self,
+            money=0
+        )
         if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
-            self.pay(self.calculate_bonuce(), to_itself=False, action='PAY BONUCE')
-        self.pay(self.deposit_bill.money, to_itself=False, action='CLOSE DEPOSIT')
-        self.deposit_bill.pop(self.deposit_bill.money)
+            self.pay(self.calculate_bonuce(), to_itself=False, action='Выплата индекс. бонуса')
+        if self.deposit_bill.pop(self.deposit_bill.money):
+            self.pay(self.deposit_bill.money, to_itself=False, action='Возврат денег')
         return
 
     def calculate_end_date(self):
@@ -427,7 +435,7 @@ class Contract(models.Model):
 
     def get_actions(self):
         return Action.objects.filter(
-            bill=self.deposit_bill
+            contract=self
         )
 
     def get_last_pay_date(self):
