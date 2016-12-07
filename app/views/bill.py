@@ -47,7 +47,7 @@ def addonbill(request):
                 'succes': False,
                 'errors': 'Такой валюты нет'
             })
-            #   except Exception:
+        except Exception:
             return JsonResponse({
                 'succes': False,
                 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'
@@ -112,7 +112,9 @@ def billtransact(request):
                             _money,
                             _to,
                             _currency.title
-                        )
+                        ),
+                        'from': [frombill.id, frombill.money],
+                        'to': [tobill.id, tobill.money]
                     })
                 else:
                     return JsonResponse({
@@ -171,7 +173,7 @@ def getuserbillsfromuser(request):
         _bills_id, _bills_money = [], []
         for a in _bills:
             _bills_id.append(a.id)
-            _bills_money.append(' (  {0} {1}  )'.format(a.money, a.currency.title))
+            _bills_money.append(' (  {0} {1}  )'.format("%.2f" % a.money, a.currency.title))
         if _bills and _user == request.user:
             return JsonResponse({'bills': _bills_id, 'money': _bills_money})
         else:
@@ -218,3 +220,15 @@ def userbillinfo(request):
         })
     except:
         return render(request, 'bill/bills_info.html')
+
+
+@login_required
+def usercontracts(request):
+    try:
+        return render(request, 'bill/user_contracts.html', {
+            'contracts': User.objects.get(id=request.user.id).get_contracts().filter(bill_id=request.GET['billid'])
+        })
+    except:
+        return render(request, 'bill/user_contracts.html', {
+            'contracts': {}
+        })

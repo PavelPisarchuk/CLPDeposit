@@ -114,7 +114,8 @@ def submoney(request):
             necessarily = True if request.POST['necessarily'] == 'on' else False
         except MultiValueDictKeyError:
             necessarily = False
-        if _contract.withdraw(_money, necessarily):
+        withdraw_response = _contract.withdraw(_money, necessarily)
+        if withdraw_response[0]:
             return JsonResponse({
                 'succes': True,
                 'operation': 'Снятие успешно завершено',
@@ -124,7 +125,7 @@ def submoney(request):
         else:
             return JsonResponse({
                 'succes': False,
-                'errors': 'У депозита отсутствует частичное снятие или остаток ниже минимального'
+                'errors': withdraw_response[1]
             })
     except:
         return JsonResponse({

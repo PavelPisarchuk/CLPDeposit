@@ -218,7 +218,7 @@ class Bill(models.Model):
         )
 
     def transfer(self, other, value, currency):
-        if self.pop(currency.calc(self.currency, value)):
+        if self.pop(currency.calc(self.currency, value) if self.currency != other.currency else value):
             other.push(value)
             return True
         else:

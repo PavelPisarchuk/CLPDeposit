@@ -21,12 +21,12 @@
                 {% for b in bills %}
                     <tr>
                         <td>{{ b.id }}</td>
-                        <td>{{ b.value_in_currency }}</td>
+                        <td id="summa_{{ b.id }}">{{ b.money|floatformat:2 }} {{ b.currency.title }}</td>
                         <td>
                             <a data-toggle="modal" data-target="#myModalOperations" data-billid="{{ b.id }}">
                                 История счёта</a>
                             <br>
-                            <a data-toggle="modal" data-target="" data-billid="{{ b.id }}">
+                            <a data-toggle="modal" data-target="#myModalContracts" data-billid="{{ b.id }}">
                                 Депозиты в текущем счёте</a>
                         </td>
                     </tr>

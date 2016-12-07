@@ -1,0 +1,29 @@
+<thead class="thead-inverse">
+<tr>
+    <td>Вклад</td>
+    <td>Сумма</td>
+    <td>Процент</td>
+    <td>Дата подписания</td>
+    <td>Дата окончания</td>
+    <td>Период выплат</td>
+    <td>Возможность частичного снятия</td>
+    <td>Счет привязки</td>
+    <td>Капитализация</td>
+</tr>
+</thead>
+{% for contract in contracts %}
+    <tr>
+        {#                        <td><a href={% url 'contract:info' contract.id %}>{{ contract.deposit.title }}</a></td>#}
+        <td>{{ contract.deposit.depositType.title }}
+            "{{ contract.deposit.title }}"
+        </td>
+        <td id="summa_{{ contract.id }}">{{ contract.deposit_bill.value_in_currency }}</td>
+        <td>{{ contract.get_percent }}%</td>
+        <td>{{ contract.sign_date }}</td>
+        <td>{{ contract.end_date }}</td>
+        <td>{{ contract.deposit.format_pay_period }}</td>
+        <td>{{ contract.deposit.format_withdrawal }}</td>
+        <td>{{ contract.bill }}</td>
+        <td>{{ contract.deposit.format_capitalization }}</td>
+    </tr>
+{% endfor %}
