@@ -296,6 +296,11 @@ class Deposit(models.Model):
         else:
             return 'Нет'
 
+    def get_min_refill(self):
+        if self.min_refill == 0:
+            return ''
+        return '(Мин. ' + self.currency.format_value(self.min_refill) + ')'
+
     def format_withdrawal(self):
         if self.is_early_withdrawal:
             if self.minimum_balance==0:
@@ -303,6 +308,11 @@ class Deposit(models.Model):
             return  'Неснижаемый остаток: '+self.currency.format_value(self.minimum_balance)
         else:
             return 'Нет'
+
+    # def get_min_balance(self):
+    #     if self.minimum_balance == 0:
+    #         return ''
+    #     return '(Без потери процентов до остатка в ' + self.currency.format_value(self.minimum_balance)+ ')'
 
     def format_capitalization(self):
         if self.is_capitalization:
@@ -335,15 +345,21 @@ class Contract(models.Model):
             return [False, 'Минимальное пополнение: ' + str(min_refill) + str(bill.currency.title)]
 
     def withdraw(self, amount, necessarily=False):
-        if self.deposit.is_early_withdrawal and self.deposit_bill.money-amount>=self.deposit.minimum_balance:
-            if self.deposit_bill.pop(amount, action='Снятие', contract=self):
-                self.bill.push(amount, action='Перевод', contract=self)
-                return True
-        elif necessarily and self.deposit_bill.money - amount >= 0:
-            if self.deposit_bill.pop(amount, action='Экстра снятие', contract=self):
-                self.bill.push(amount, action='Перевод', contract=self)
-                self.is_use_percent_for_early_withdrawal = True
-                return True
+        if not necessarily:
+            if self.deposit.is_early_withdrawal and self.deposit_bill.money - amount >= self.deposit.minimum_balance:
+                if self.deposit_bill.pop(amount, action='Снятие', contract=self):
+                    self.bill.push(amount, action='Перевод', contract=self)
+                    return [True]
+            else:
+                return [False, 'Депозит не предусматривает частичное снятие или нарушен неснижаемый остаток']
+        else:
+            if self.deposit_bill.money - amount >= 0:
+                if self.deposit_bill.pop(amount, action='Экстра снятие', contract=self):
+                    self.bill.push(amount, action='Перевод', contract=self)
+                    self.is_use_percent_for_early_withdrawal = True
+                    return [True]
+            else:
+                return [False, 'Недостаточно средств на счету']
         return False
 
     def calculate_payment(self):
@@ -361,6 +377,7 @@ class Contract(models.Model):
         target_bill.push(value, action, contract=self)
 
     def super_pay(self):
+        print(today(), self.get_last_pay_date(), self.deposit.title, self.is_active(), self.is_needs_pay())
         if self.sign_date < today() and self.is_active():
             sum = self.calculate_payment()
             if self.is_needs_pay() and sum > 0:

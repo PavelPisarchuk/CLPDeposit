@@ -54,6 +54,9 @@ def new(request, deposit_id):
             d = depositForm.save(commit=False)
             good=True
 
+            if depositType.title != 'Вклад до востребования' and d.percent <= d.percent_for_early_withdrawal:
+                errors.append('Процентная ставка при преждевременном снятии должна быть меньше начальной')
+                good = False
             if Deposit.objects.filter(title=d.title, is_archive=False):
                 errors.append('Вклад с таким названием уже существует')
                 good = False
@@ -118,6 +121,9 @@ def edit(request, deposit_id):
             d = depositForm.save(commit=False)
             good = True
 
+            if depositType.title != 'Вклад до востребования' and d.percent <= d.percent_for_early_withdrawal:
+                errors.append('Процентная ставка при преждевременном снятии должна быть меньше начальной')
+                good = False
             if Deposit.objects.filter(title=d.title, is_archive=False).exclude(title=oldDeposit.title):
                 errors.append('Вклад с таким названием уже существует')
                 good = False
