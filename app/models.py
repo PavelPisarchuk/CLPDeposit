@@ -346,8 +346,7 @@ class Contract(models.Model):
 
     def calculate_payment(self):
         last_pay_date = self.get_last_pay_date()
-        print(self.deposit_bill.money * (self.get_percent() / 100) * (today() - last_pay_date).days / 365,
-              today(), last_pay_date)
+
         return self.deposit_bill.money * (self.get_percent() / 100) * (today() - last_pay_date).days / 365
 
     def get_percent(self):
@@ -360,10 +359,10 @@ class Contract(models.Model):
         target_bill.push(value, action)
 
     def super_pay(self):
-        # print(self.is_active(),self.is_needs_pay())
         if self.sign_date < today() and self.is_active():
             sum = self.calculate_payment()
             if self.is_needs_pay() and sum > 0:
+                print(sum, today())
                 self.pay(sum, to_itself=self.deposit.is_capitalization)
             if (self.end_date and (today() - self.end_date).days >= 0) or self.deposit_bill.money == 0:
                 print("Close")
