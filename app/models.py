@@ -34,8 +34,8 @@ def now():
 
 
 class User(AbstractUser):
-    first_name = models.CharField(max_length=30, verbose_name='Имя')
-    last_name = models.CharField(max_length=30, verbose_name='Фамилия')
+    # first_name = models.CharField(max_length=30, verbose_name='Имя')
+    # last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     father_name = models.CharField(max_length=30, verbose_name='Отчество')
     passport_date = models.DateField(verbose_name='Дата выдачи')
     passport_ser = models.CharField(max_length=9, verbose_name='Серия')
@@ -217,9 +217,8 @@ class Bill(models.Model):
             bill=self
         )
 
-    def transfer(self, other, value):
-        if self.pop(value):
-            value = self.currency.calc(other.currency, value)
+    def transfer(self, other, value, currency):
+        if self.pop(currency.calc(self.currency, value)):
             other.push(value)
             return True
         else:

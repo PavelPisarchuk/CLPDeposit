@@ -100,15 +100,17 @@ def billtransact(request):
                 _money = int(request.POST["money"])
                 _currency = Currency.objects.get(id=request.POST["currency"])
 
-                _money = _currency.calc(frombill.currency, _money)
+                if (_currency != tobill.currency):
+                    _money = _currency.calc(tobill.currency, _money)
 
-                if frombill.transfer(tobill, _money):
+                if frombill.transfer(tobill, _money, _currency):
                     return JsonResponse({
                         'succes': True,
-                        'operation': 'Переведено из счёта № {0} {1} на счёт № {2} !'.format(
+                        'operation': 'Переведено из счёта № {0} {1}{3} на счёт № {2} !'.format(
                             _from,
                             _money,
-                            _to
+                            _to,
+                            _currency.title
                         )
                     })
                 else:
