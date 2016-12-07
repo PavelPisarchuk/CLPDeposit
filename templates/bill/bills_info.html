@@ -59,7 +59,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Депозитные счета</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Вклады(депозитные счета)</a>
                 </h4>
             </div>
             <div id="collapseTwo" class="panel-collapse collapse">
@@ -68,15 +68,29 @@
                         <thead class="thead-inverse">
                         <tr>
                             <td>Счёт №</td>
-                            <td>Баланс</td>
+                            <td>Вклад</td>
+                            <td>Сумма</td>
+                            <td>Процент</td>
+                            <td>Дата подписания</td>
+                            <td>Дата окончания</td>
+                            <td>Счет привязки</td>
+                            <td>Активен</td>
                             <td></td>
                         </tr>
                         </thead>
                         {% if contracts %}
                             {% for c in contracts %}
                                 <tr>
-                                    <td>{{ c.deposit_bill.id }}</td>
-                                    <td>{{ c.deposit_bill.value_in_currency }}</td>
+                                    <td>{{ c.id }}</td>
+                                    <td>{{ c.deposit.depositType.title }}
+                                        "{{ c.deposit.title }}"
+                                    </td>
+                                    <td id="summa_{{ c.id }}">{{ c.deposit_bill.value_in_currency }}</td>
+                                    <td>{{ c.get_percent }}%</td>
+                                    <td>{{ c.sign_date }}</td>
+                                    <td>{{ c.end_date }}</td>
+                                    <td>{{ c.bill }}</td>
+                                    <td>{{ c.is_act }}</td>
                                     <td>
                                         <a href="#" id="getContractActions" data-target="getBillActions"
                                            data-billid="{{ c.id }}">

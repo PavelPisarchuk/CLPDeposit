@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+import app.vars as myvars
 from app.forms import UserForm
 from app.models import User
 
@@ -29,7 +31,7 @@ def new(request):
 @user_passes_test(lambda u: u.is_superuser)
 def list(request):
     return render(request, 'client/list.html', {
-        'clients': User.objects.all().filter(is_superuser=False)[0:15]
+        'clients': User.objects.all().filter(is_superuser=False)[0:myvars.start_client_list_load]
     })
 
 @login_required
@@ -42,7 +44,7 @@ def search(request):
             if name.lower() in user.get_full_name().lower() and not user.is_superuser:
                 users.append(user)
         return render(request, 'client/list_partial.html', {
-            'clients': users[0:15]
+            'clients': users[0:myvars.start_client_list_load]
         })
     except:
         return render(request, 'client/list.html', {
@@ -60,13 +62,14 @@ def partiallistsearch(request):
         for user in User.objects.all():
             if name.lower() in user.get_full_name().lower() and not user.is_superuser:
                 users.append(user)
-        users = users[loadcount:loadcount + 15]
+        users = users[loadcount:(
+        loadcount + myvars.next_client_list_load) if loadcount != 0 else myvars.start_client_list_load]
         return render(request, 'client/list_partial.html', {
             'clients': users
         })
     except:
         return render(request, 'client/list_partial.html', {
-            'clients': User.objects.all().filter(is_superuser=False)[0:15]
+            'clients': User.objects.all().filter(is_superuser=False)[0:myvars.start_client_list_load]
         })
 
 @login_required
@@ -74,13 +77,13 @@ def partiallistsearch(request):
 def partiallist(request):
     try:
         loadcount = int(request.GET['loadcount'])
-        users = User.objects.all().filter(is_superuser=False)[loadcount:loadcount + 15]
+        users = User.objects.all().filter(is_superuser=False)[loadcount:loadcount + myvars.next_client_list_load]
         return render(request, 'client/list_partial.html', {
             'clients': users
         })
     except:
         return render(request, 'client/list_partial.html', {
-            'clients': User.objects.all().filter(is_superuser=False)[0:15]
+            'clients': User.objects.all().filter(is_superuser=False)[0:myvars.start_client_list_load]
         })
 
 
@@ -94,3 +97,9 @@ def info(request):
         })
     except:
         return render(request, 'client/info.html')
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def getlistlen(request):
+    return JsonResponse({'start_len': myvars.start_client_list_load, 'next_len': myvars.next_client_list_load})

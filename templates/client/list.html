@@ -6,6 +6,7 @@
 
 {% block content %}
     Поиск<input placeholder="ФИО" name="full" type="text" id="search_full">
+
     <table class="table table-bordered table-hover">
                 <thead class="thead-inverse">
                     <tr>
@@ -55,7 +56,6 @@
         {% endif %}
         </tbody>
     </table>
-    <div><a id="loadnextclient" href="#">Загрузить ещё</a></div>
 
         {% include 'modals/client_list.html' %}
 

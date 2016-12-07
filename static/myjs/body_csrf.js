@@ -34,11 +34,17 @@ function modal_event(form_id, _this, event) {
     $(form_id).find("input[type=submit]").prop("disabled", false)
 }
 
-
+var inProgress = false;
 function postman(form_id, modal_id, url, event) {
+    if (inProgress == true) {
+        $(modal_id).find('#errors').text('Дождитесь оанчания прошлого запроса');
+        return false
+    }
     event.preventDefault();
     $(form_id).find("input[type=submit]").prop("disabled", true);
+    inProgress = true;
     $.post(url, $(form_id).serializeArray(), function (data) {
+        inProgress = false;
         if (data['succes'] == false) {
             $(modal_id).find('#errors').text(data['errors']);
             $(form_id).find("input[type=submit]").prop("disabled", false)
@@ -48,6 +54,7 @@ function postman(form_id, modal_id, url, event) {
             disolve(data);
             $(form_id)[0].reset();
         }
+        inProgress = false
     });
 }
 
