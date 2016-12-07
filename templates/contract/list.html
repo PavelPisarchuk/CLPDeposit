@@ -15,7 +15,10 @@
                     <td>Процент</td>
                     <td>Дата подписания</td>
                     <td>Дата окончания</td>
+                    <td>Период выплат</td>
+                    <td>Возможность частичного снятия</td>
                     <td>Счет привязки</td>
+                    <td>Капитализация</td>
                     <td colspan="3"><span id="lastoperation" class="label label-success"></span></td>
                 </tr>
                 </thead>
@@ -29,7 +32,10 @@
                         <td>{{ contract.get_percent }}%</td>
                         <td>{{ contract.sign_date }}</td>
                         <td>{{ contract.end_date }}</td>
+                        <td>{{ contract.deposit.format_pay_period }}</td>
+                        <td>{{ contract.deposit.format_withdrawal }}</td>
                         <td>{{ contract.bill }}</td>
+                        <td>{{ contract.deposit.format_capitalization }}</td>
                         <td>
                             <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">История операций</a>
                         </td>
@@ -37,6 +43,7 @@
                         {% if contract.deposit.is_refill %}
                             <td>
                                 <a data-toggle="modal" data-target="#myModalFill" data-contractid="{{ contract.id }}">Пополнить</a>
+                                <br>{{ contract.deposit.get_min_refill }}
                             </td>
                         {% else %}
                             <td></td>
