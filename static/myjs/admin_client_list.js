@@ -48,14 +48,22 @@ $(document).ready(function () {
         postman('#messageForm', '#myModalMessage', '/message/send/', event)
     });
 
-    var inProgress = false;
-    var loadcount = 15;
+    var nextloadlen = 0;
+    var startloadlen = 0;
+    var currloadlen = 0;
+    $.get('/client/getlistlen/', function (data) {
+        nextloadlen = Number(data['next_len']);
+        startloadlen = Number(data['start_len']);
+        currloadlen += startloadlen;
+        return false
+    });
 
     $("#search_full").keyup(function (eventObject) {
         var search_full = $("#search_full").val();
         if ((eventObject.which != 13 && search_full != '') || inProgress == true)
             return false;
-        loadcount = 15;
+
+        currloadlen = startloadlen;
         $.get('/client/partiallistsearch/', {
             'full': search_full, 'loadcount': 0
         }, function (data) {
@@ -71,7 +79,6 @@ $(document).ready(function () {
             $('body').find("#collapseThree").collapse('show');
         });
     });
-
     $('body').on('click', '#getContractActions', function (event) {
         $.post('/actions/contract/', {'num': $(this).data('billid')}, function (data) {
             $('body').find('#_operations').html(data);
@@ -80,43 +87,46 @@ $(document).ready(function () {
     });
 
 
-    $('#loadnextclient').click(function () {
-        var search_full = $("#search_full").val();
-        if (inProgress == true)
-            return false;
-        if (search_full != '') {
-            $.ajax({
-                url: '/client/partiallistsearch/', method: 'GET',
-                data: {'loadcount': loadcount, 'full': search_full},
-                beforeSend: function () {
-                    inProgress = true;
-                    $('#loadnextclient').text('Загрузка')
-                }
-            }).done(function (data) {
-                $('#searchresult').append(data);
-                loadcount += 15;
-                inProgress = false;
-                $('#loadnextclient').text('Загрузть ещё')
-            })
-        }
-        else {
-            $.ajax({
-                url: '/client/partiallist/', method: 'GET',
-                data: {'loadcount': loadcount, 'full': search_full},
-                beforeSend: function () {
-                    inProgress = true;
-                    $('#loadnextclient').text('Загрузка')
-                }
-            }).done(function (data) {
-                $('#searchresult').append(data);
-                loadcount += 15;
-                inProgress = false;
-                $('#loadnextclient').text('Загрузть ещё')
-            })
+    $('#data_scroll').scroll(function () {
+        if (this.scrollHeight - this.scrollTop < this.clientHeight + 25 * (this.clientHeight) / 100) {
+
+            var search_full = $("#search_full").val();
+            if (inProgress == true)
+                return false;
+            if (search_full != '') {
+                $.ajax({
+                    url: '/client/partiallistsearch/', method: 'GET',
+                    data: {'loadcount': currloadlen, 'full': search_full},
+                    beforeSend: function () {
+                        inProgress = true;
+                        $('#loadnextclient').text('Загрузка')
+                    }
+                }).done(function (data) {
+                    $('#searchresult').append(data);
+                    currloadlen += nextloadlen;
+                    inProgress = false;
+                    $('#loadnextclient').text('Загрузть ещё')
+                })
+            }
+            else {
+                $.ajax({
+                    url: '/client/partiallist/', method: 'GET',
+                    data: {'loadcount': currloadlen, 'full': search_full},
+                    beforeSend: function () {
+                        inProgress = true;
+                        $('#loadnextclient').text('Загрузка')
+                    }
+                }).done(function (data) {
+                    $('#searchresult').append(data);
+                    currloadlen += nextloadlen;
+                    inProgress = false;
+                    $('#loadnextclient').text('Загрузть ещё')
+                })
+            }
+
         }
 
     });
-
 
     $(document).foundation();
     jQuery(function ($) {
