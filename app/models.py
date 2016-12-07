@@ -375,16 +375,16 @@ class Contract(models.Model):
         if self.end_date == None:
             self.end_date = today()
         self.save()
+        if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
+            self.pay(self.calculate_bonuce(), to_itself=False, action='Выплата индекс. бонуса')
+        self.pay(self.deposit_bill.money, to_itself=False, action='Возврат денег')
+        self.deposit_bill.pop(self.deposit_bill.money)
         Action.add(
             action='Закрытие',
             bill=self.deposit_bill,
             contract=self,
             money=0
         )
-        if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
-            self.pay(self.calculate_bonuce(), to_itself=False, action='Выплата индекс. бонуса')
-        if self.deposit_bill.pop(self.deposit_bill.money):
-            self.pay(self.deposit_bill.money, to_itself=False, action='Возврат денег')
         return
 
     def calculate_end_date(self):
