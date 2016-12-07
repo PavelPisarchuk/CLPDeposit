@@ -30,10 +30,11 @@ def addonbill(request):
             bill.push(pushmoney)
             return JsonResponse({
                 'succes': True,
-                'operation': 'Пополнение счёта {0} для {1} на {2} выполнено'.format(
+                'operation': 'Пополнение счёта {0} для {1} на {2}{3} выполнено'.format(
                     bill.id,
                     bill.client.get_full_name(),
-                    pushmoney
+                    pushmoney,
+                    bill.currency.title
                 )
             })
         except MultiValueDictKeyError:
@@ -46,7 +47,7 @@ def addonbill(request):
                 'succes': False,
                 'errors': 'Такой валюты нет'
             })
-        except Exception:
+            #   except Exception:
             return JsonResponse({
                 'succes': False,
                 'errors': 'Возникли проблемы, проверьте всё и повторите запрос'
