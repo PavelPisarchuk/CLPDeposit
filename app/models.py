@@ -336,7 +336,7 @@ class Contract(models.Model):
         amount = bill.currency.calc(self.deposit.currency, amount)
 
         if self.deposit.is_refill and amount >= self.deposit.min_refill:
-            if bill.pop(_sub_bill_amount, action='Перевод', contract=self):
+            if bill.pop(_sub_bill_amount, action='Перевод'):
                 self.deposit_bill.push(amount, action='Пополнение', contract=self)
                 return [True]
             else:
@@ -348,7 +348,7 @@ class Contract(models.Model):
         if not necessarily:
             if self.deposit.is_early_withdrawal and self.deposit_bill.money - amount >= self.deposit.minimum_balance:
                 if self.deposit_bill.pop(amount, action='Снятие', contract=self):
-                    self.bill.push(amount, action='Перевод', contract=self)
+                    self.bill.push(amount, action='Перевод')
                     return [True]
             else:
                 return [False, 'Депозит не предусматривает частичное снятие или нарушен неснижаемый остаток']
