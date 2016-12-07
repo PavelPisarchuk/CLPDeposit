@@ -33,19 +33,22 @@
                         <td>
                             <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">История операций</a>
                         </td>
-
-                        {% if contract.deposit.is_refill %}
+                        {% if contract.is_act %}
+                            {% if contract.deposit.is_refill %}
+                                <td>
+                                    <a data-toggle="modal" data-target="#myModalFill"
+                                       data-contractid="{{ contract.id }}">Пополнить</a>
+                                </td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
                             <td>
-                                <a data-toggle="modal" data-target="#myModalFill" data-contractid="{{ contract.id }}">Пополнить</a>
+                                <a data-toggle="modal" data-target="#myModalTake"
+                                   data-contractid="{{ contract.id }}">Снять</a>
                             </td>
                         {% else %}
-                            <td></td>
+                            <td colspan="2">Закрыт</td>
                         {% endif %}
-
-                        <td>
-                            <a data-toggle="modal" data-target="#myModalTake"
-                               data-contractid="{{ contract.id }}">Снять</a>
-                        </td>
                     </tr>
                 {% endfor %}
             </table>
