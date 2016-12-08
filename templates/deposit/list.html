@@ -5,56 +5,77 @@
 {% endblock %}
 
 {% block content %}
-    {% if depositList %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="thead-inverse">
-                <tr>
-                    <td>Название</td>
-                    <td>Процент</td>
-                    <td>Минимальная сумма</td>
-                    <td>Срок хранения</td>
-                    <td>Период выплат</td>
-                    <td>Пополнение</td>
-                    <td>Частичное снятие</td>
-                    <td>Капитализация</td>
-                    <td>Валюта привязки</td>
-                    <td></td>
-                </tr>
-                </thead>
+
+    <div class="container" id="tourpackages-carousel">
+        <div class="row">
+            <div class="col-lg-12"><h1>Виды депозитов <a class="btn icon-btn btn-primary pull-right"
+                                                         href="{% url 'deposit:all' %}"><span
+                    class="glyphicon btn-glyphicon glyphicon-plus img-circle"></span> Новый вклад</a></h1></div>
+
+            {% if depositList %}
                 {% for deposit in depositList %}
-                    <tr>
-                        <td>{{ deposit.depositType.title }} "{{ deposit.title }}"</td>
-                        <td>{{ deposit.percent }}%</td>
-                        <td>{{ deposit.format_min_amount }}</td>
-                        <td>{{ deposit.format_duration }}</td>
-                        <td>{{ deposit.format_pay_period }}</td>
-                        <td>{{ deposit.format_refill }}</td>
-                        <td>{{ deposit.format_withdrawal }}</td>
-                        <td>{{ deposit.format_capitalization }}</td>
 
+
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <div class='col-lg-12'>
+                                    {% if not deposit.is_archive %}
+                                        <span class='glyphicon glyphicon-exclamation-sign text-danger pull-right icon-style'>
+                        <a href="{% url 'deposit:listToArch' deposit.id %}">В архив</a>
+                    </span>
+                                    {% endif %}
+                                    <br>
+                                </div>
+                                <div class='col-lg-12 well well-add-card'>
+                                    <h4>{{ deposit.depositType.title }} "{{ deposit.title }}"</h4>
+                                </div>
+                                <div class='col-lg-12'>
+                                    <p>Процент : <span
+                                            style="font-weight: bold;color: green">{{ deposit.percent }}%</span></p>
+                                    <p>Минимальная сумма : <span
+                                            style="font-weight: bold;color: green">{{ deposit.format_min_amount }}</span>
+                                    </p>
+                                    <p>Срок хранения : <span
+                                            style="font-weight: bold;color: green">{{ deposit.format_duration }}</span>
+                                    </p>
+                                    <p>Пополнение : <span
+                                            style="font-weight: bold;color: green">{{ deposit.format_refill }}</span>
+                                    </p>
+                                    <p>Период выплат : <span
+                                            style="font-weight: bold;color: green">{{ deposit.format_pay_period }}</span>
+                                    </p>
+                                    <p>Частичное снятие : <span
+                                            style="font-weight: bold;color: green">{{ deposit.format_withdrawal }}</span>
+                                    </p>
+                                    <p>Капитализация : <span
+                                            style="font-weight: bold;color: green">{{ deposit.format_capitalization }}</span>
+                                    </p>
+                                    <p>Валюта привязки :
+                                        <span style="font-weight: bold;color: green">
                         {% if deposit.binding_currency %}
-                            <td>{{ deposit.binding_currency.title }}</td>
+                            {{ deposit.binding_currency.title }}
                         {% else %}
-                            <td></td>
+                            Нет
                         {% endif %}
+                        </span></p>
+                                </div>
+                                <br>
+                                {% if deposit.is_archive %}
+                                    <span style="font-weight: bold;color: red">ВКЛАД В АРХИВЕ</span>
 
-                        {% if not deposit.is_archive %}
-                            <td>
-                                <a href="{% url 'deposit:edit' deposit.id %}">редактировать</a>
-                                <a href="{% url 'deposit:listToArch' deposit.id %}">добавить в архив</a>
-                            </td>
-                        {% else %}
-                            <td>Архивный</td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
+                                {% else %}
+                                    <a href="{% url 'deposit:edit' deposit.id %}"
+                                       class="btn btn-primary btn-xs btn-update btn-add-card ">Редактировать</a>
+                                {% endif %}
+                            </div>
+                        </div>
         </div>
-    {% else %}
-        <h2>Вкладов нет.</h2>
-    {% endif %}
+                {% endfor %}
+            {% endif %}
 
-    <a href="{% url 'deposit:all' %}" class="btn btn-default"> Новый вклад </a>
+        </div>
+    </div>
+
 
 {% endblock %}

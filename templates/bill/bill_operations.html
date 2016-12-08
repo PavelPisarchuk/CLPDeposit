@@ -1,14 +1,16 @@
+<thead class="thead-inverse">
 <tr>
     <td>Тип операции</td>
     <td>Дата</td>
     <td>Сумма</td>
 </tr>
+</thead>
 {% if bills %}
     {% for b in bills %}
         <tr>
             <td>{{ b.actionType.description }}</td>
             <td>{{ b.datetime }}</td>
-            <td>{{ b.format_money }}</td>
+            <td>{{ b.money|floatformat:2 }} {{ b.bill.currency.title }}</td>
         </tr>
     {% endfor %}
 {% endif %}

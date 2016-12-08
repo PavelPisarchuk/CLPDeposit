@@ -30,10 +30,11 @@ def addonbill(request):
             bill.push(pushmoney)
             return JsonResponse({
                 'succes': True,
-                'operation': 'Пополнение счёта {0} для {1} на {2} выполнено'.format(
+                'operation': 'Пополнение счёта {0} для {1} на {2}{3} выполнено'.format(
                     bill.id,
                     bill.client.get_full_name(),
-                    pushmoney
+                    pushmoney,
+                    bill.currency.title
                 )
             })
         except MultiValueDictKeyError:
@@ -100,16 +101,20 @@ def billtransact(request):
                 _money = int(request.POST["money"])
                 _currency = Currency.objects.get(id=request.POST["currency"])
 
-                _money = _currency.calc(frombill.currency, _money)
+                if (_currency != tobill.currency):
+                    _money = _currency.calc(tobill.currency, _money)
 
-                if frombill.transfer(tobill, _money):
+                if frombill.transfer(tobill, _money, _currency):
                     return JsonResponse({
                         'succes': True,
-                        'operation': 'Переведено из счёта № {0} {1} на счёт № {2} !'.format(
+                        'operation': 'Переведено из счёта № {0} {1}{3} на счёт № {2} !'.format(
                             _from,
                             _money,
-                            _to
-                        )
+                            _to,
+                            _currency.title
+                        ),
+                        'from': [frombill.id, frombill.money],
+                        'to': [tobill.id, tobill.money]
                     })
                 else:
                     return JsonResponse({
@@ -168,7 +173,7 @@ def getuserbillsfromuser(request):
         _bills_id, _bills_money = [], []
         for a in _bills:
             _bills_id.append(a.id)
-            _bills_money.append(' (  {0} {1}  )'.format(a.money, a.currency.title))
+            _bills_money.append(' (  {0} {1}  )'.format("%.2f" % a.money, a.currency.title))
         if _bills and _user == request.user:
             return JsonResponse({'bills': _bills_id, 'money': _bills_money})
         else:
@@ -215,3 +220,15 @@ def userbillinfo(request):
         })
     except:
         return render(request, 'bill/bills_info.html')
+
+
+@login_required
+def usercontracts(request):
+    try:
+        return render(request, 'bill/user_contracts.html', {
+            'contracts': User.objects.get(id=request.user.id).get_contracts().filter(bill_id=request.GET['billid'])
+        })
+    except:
+        return render(request, 'bill/user_contracts.html', {
+            'contracts': {}
+        })
