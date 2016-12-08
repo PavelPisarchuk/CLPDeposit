@@ -132,3 +132,14 @@ def submoney(request):
             'succes': False,
             'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'
         })
+
+
+@login_required
+def close(request):
+    try:
+        rend = render(request, 'contract/partial_list.html', {'contracts': request.user.get_contracts()})
+        Contract.objects.get(bill__client=request.user, id=request.POST['contid']).close()
+        return JsonResponse({'succes': True, 'operation': 'Вклад закрыт', 'id': request.POST['contid'],
+                             'render': str(rend)})
+    except:
+        return JsonResponse({'succes': False, 'errors': 'Что-то пошло не так'})

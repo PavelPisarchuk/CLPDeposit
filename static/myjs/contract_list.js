@@ -1,5 +1,11 @@
 $(document).ready(function () {
 
+    $('#myModalClose').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        $(this).find('#contract_id').val(button.data('contractid'));
+    });
+
+
     $('#myModalOperations').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         $('#billoperations').empty();
@@ -51,20 +57,19 @@ $(document).ready(function () {
         });
     });
 
-    $('#clienttakeForm').submit(function (event) {
+    $('#closeForm').submit(function (event) {
         event.preventDefault();
-        $('#clienttakeForm').find("input[type=submit]").prop("disabled", true);
-        $.post('/contract/submoney/', $('#clienttakeForm').serializeArray(), function (data) {
+        $('#closeForm').find("input[type=submit]").prop("disabled", true);
+        $.post('/contract/close/', $('#closeForm').serializeArray(), function (data) {
             if (data['succes'] == false) {
-                $('#myModalTake').find('#errors').text(data['errors']);
-                $('#clienttakeForm').find("input[type=submit]").prop("disabled", false)
+                $('#myModalClose').find('#errors').text(data['errors']);
+                $('#closeForm').find("input[type=submit]").prop("disabled", false)
             }
             else {
-                newsumma = '#summa_' + data['id'];
-                $(newsumma).text(data['newvalue']);
-                $('#myModalTake').modal('hide');
+                $('#contracts').html(data['render']);
+                $('#myModalClose').modal('hide');
                 disolve(data);
-                $('#clienttakeForm')[0].reset();
+                $('#closeForm')[0].reset();
             }
         });
     });

@@ -64,6 +64,7 @@ urlpatterns = [
         url(r'^new/(?P<deposit_id>[0-9]+)', contract.new, name='new'),
         url(r'^list/', contract.list, name='list'),
         url(r'^addmoney/', contract.addmoney, name='addmoney'),
+        url(r'^close/', contract.close, name='close'),
         url(r'^submoney/', contract.submoney, name='submoney'),
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
