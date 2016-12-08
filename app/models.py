@@ -94,7 +94,7 @@ class User(AbstractUser):
     def get_contracts(self):
         return Contract.objects.filter(
             bill__client=self
-        )
+        ).order_by('-is_act')
 
     def change_password(self, old, new, repeat):
         if self.check_password(old) and new == repeat:

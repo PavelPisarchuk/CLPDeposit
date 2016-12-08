@@ -102,10 +102,11 @@
             </div>
             <div class="modal-body">
                 <p id="errors" style="color: red"></p>
-                <p><input name="contid" style="display: none" form="closecontractForm" id="contract_id"></p>
+                <p><input name="contid" style="display: none" form="closeForm" id="contract_id"></p>
+                <h4>Вы действительно хотите закрыть вклад ?</h4>
             </div>
             <div class="modal-footer">
-                <form class="abide-form" data-abide novalidate id="clienttakeForm" class="form-horizontal" action=""
+                <form class="abide-form" data-abide novalidate id="closeForm" class="form-horizontal" action=""
                       method="post">
                     {% csrf_token %}
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>

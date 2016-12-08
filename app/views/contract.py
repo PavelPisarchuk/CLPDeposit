@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.utils.datastructures import MultiValueDictKeyError
 
 from app.forms import ContractForm
@@ -131,4 +132,24 @@ def submoney(request):
         return JsonResponse({
             'succes': False,
             'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'
+        })
+
+
+@login_required
+def close(request):
+    try:
+        Contract.objects.get(bill__client=request.user, id=request.POST['contid']).close()
+        rend = render_to_string('contract/partial_list.html', context={
+            'contract': Contract.objects.get(id=request.POST['contid'])
+        })
+        return JsonResponse({
+            'succes': True,
+            'operation': 'Вклад закрыт',
+            'id': request.POST['contid'],
+            'render': rend
+        })
+    except:
+        return JsonResponse({
+            'succes': False,
+            'errors': 'Что-то пошло не так'
         })

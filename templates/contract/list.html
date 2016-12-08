@@ -14,18 +14,16 @@
 
             {% if contracts %}
                 {% for contract in contracts %}
-
-
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="thumbnail">
-                            <div class="caption">
-                                <div class='col-lg-12'>
+                            <div id="contract_{{ contract.id }}" class="caption">
+                                <div class='col-lg-12'>{% if contract.is_act %}
                                     <a data-toggle="modal" data-target="#myModalClose"
                                        data-contractid="{{ contract.id }}">
                                         <span class='glyphicon glyphicon-exclamation-sign text-danger pull-right icon-style'></span>
 
                                         <span class="glyphicon glyphicon-trash pull-right text-primary"></span>
-                                    </a>
+                                    </a>{% endif %}
                                     <br>
                                 </div>
                                 <div class='col-lg-12 well well-add-card'>
@@ -72,10 +70,9 @@
                                    data-target="#myModalOperations" data-contractid="{{ contract.id }}">История</a>
                             </div>
                         </div>
-        </div>
+                    </div>
                 {% endfor %}
             {% endif %}
-
         </div>
     </div>
     {% include 'modals/contract_list.html' %}
