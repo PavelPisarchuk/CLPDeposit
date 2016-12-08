@@ -401,6 +401,10 @@ class Contract(models.Model):
             contract=self,
             money=0
         )
+        self.bill.client.send_message(
+            'Ваш вклад "{}" закрыт.'.format(self.deposit.title),
+            'Ваш вклад "{}" закрыт.'.format(self.deposit.title)
+        )
         return
 
     def calculate_end_date(self):
