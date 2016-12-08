@@ -11,7 +11,12 @@
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-hover table-striped">
-                            <h2>Админы</h2>
+                            <h1>Сотрудники
+                                <a class="btn icon-btn btn-primary pull-right" href="{% url 'employee:new' %}">
+                                    <span class="glyphicon btn-glyphicon glyphicon-plus img-circle"></span>
+                                    Зарегестрировать
+                                </a>
+                            </h1>
 
                             <tbody>
                             {% for admin in admins %}

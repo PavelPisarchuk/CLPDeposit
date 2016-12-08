@@ -12,6 +12,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <table class="table table-hover table-striped">
+                        <h1>Клиенты
+                            <a class="btn icon-btn btn-primary pull-right" href="{% url 'client:new' %}">
+                                <span class="glyphicon btn-glyphicon glyphicon-plus img-circle"></span>
+                                Зарегестрировать
+                            </a>
+                        </h1>
                         Поиск<input placeholder="ФИО" name="full" type="text" id="search_full">
                         <tbody id="searchresult">
                         {% for client in clients %}
