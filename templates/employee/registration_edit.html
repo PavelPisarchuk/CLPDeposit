@@ -9,7 +9,7 @@
     <form class="abide-form" data-abide novalidate action="{% url 'employee:new' %}" method="post">
         {% csrf_token %}
 
-        {% include 'profile/registration.html' %}
+        {% include 'profile/registration_edit.html' %}
 
         <input class="btn btn-default" type="submit" value="Зарегестрировать"/>
     </form>

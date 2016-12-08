@@ -1,0 +1,80 @@
+<label>
+    Логин
+    <input type="text" pattern="^[a-z0-9_-]{5,16}$" name={{ form.username.html_name }} value="{{ form.username.value }}"
+           required>
+    <span class="form-error">Обязательное поле. Допустимы англ. буквы, цифры, дефисы и подчёркивания, от 5 до 16 символов.</span>
+</label>
+
+<label>
+    E-mail
+    <input type="text" pattern="email" id="email" name={{ form.email.html_name }} value="{{ form.email.value }}"
+           required>
+    <span class="form-error">Обязательное поле. Необходим валидный e-mail вида username@mail.ru</span>
+</label>
+
+<label>
+    Пароль
+    <input type="password" pattern="^[a-z0-9_-]{8,16}$" name={{ form.password.html_name }} required>
+    <span class="form-error">Обязательное поле. Допустимы англ. буквы, цифры, дефисы и подчёркивания, от 8 до 16 символов.</span>
+</label>
+
+<label>
+    Фамилия
+    <input type="text" pattern={{ alpha_rus }} name={{ form.last_name.html_name }}
+           value="{{ form.last_name.value }}" required>
+    <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+</label>
+
+<label>
+    Имя
+    <input type="text" pattern={{ alpha_rus }} name={{ form.first_name.html_name }}
+           value="{{ form.first_name.value }}" required>
+    <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+</label>
+
+<label>
+    Отчество
+    <input type="text" pattern={{ alpha_rus }} name={{ form.father_name.html_name }}
+           value="{{ form.father_name.value }}" required>
+    <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+</label>
+
+<label>
+    Дата выдачи паспорта
+    <input type="text" id="passport_date"
+           name={{ form.passport_date.html_name }} value="{{ form.passport_date.value }}"
+           required>
+    <span class="form-error">Обязательное поле.</span>
+</label>
+
+<label>
+    Серия паспорта
+    <input type="text" id="passport_ser"
+           name={{ form.passport_ser.html_name }} value="{{ form.passport_ser.value }}" required>
+    <span class="form-error">Обязательное поле.</span>
+</label>
+
+<label>
+    Идентификационный номер
+    <input type="text" id="passport_id"
+           name={{ form.passport_id.html_name }} value="{{ form.passport_id.value }}" required>
+    <span class="form-error">Обязательное поле.</span>
+</label>
+
+<label>
+    Контактный телефон
+    <input type="text" id="phone" name={{ form.phone.html_name }} value="{{ form.phone.value }}" required>
+    <span class="form-error">Обязательное поле.</span>
+</label>
+
+<label>
+    Адрес
+    <input type="text" id="address" name={{ form.address.html_name }} value="{{ form.address.value }}" required>
+    <span class="form-error">Обязательное поле.</span>
+</label>
+
+<label>
+    Дата рождения
+    <input type="text" id="birthday" name={{ form.birthday.html_name }} value="{{ form.birthday.value }}" required>
+    <span class="form-error">Обязательное поле.</span>
+</label>

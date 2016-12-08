@@ -38,9 +38,9 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     father_name = models.CharField(max_length=30, verbose_name='Отчество')
     passport_date = models.DateField(verbose_name='Дата выдачи')
-    passport_ser = models.CharField(max_length=9, verbose_name='Серия')
-    passport_id = models.CharField(max_length=14, verbose_name='Идентификационный номер')
-    phone = models.CharField(max_length=20, verbose_name='Телефон')
+    passport_ser = models.CharField(max_length=9, verbose_name='Серия', unique=True)
+    passport_id = models.CharField(max_length=14, verbose_name='Идентификационный номер', unique=True)
+    phone = models.CharField(max_length=20, verbose_name='Телефон', unique=True)
     address = models.CharField(max_length=100, verbose_name='Адрес')
     birthday = models.DateField(verbose_name='Дата рождения')
 
