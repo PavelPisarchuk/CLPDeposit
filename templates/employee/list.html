@@ -6,20 +6,36 @@
 
 {% block content %}
     {% if admins %}
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <tr>
-                    <td>Логин</td>
-                    <td>Почта</td>
-                </tr>
-                {% for admin in admins %}
-                    <tr>
-                        <td>{{ admin.username }}</td>
-                        <td>{{ admin.email }}</td>
-                    </tr>
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-hover table-striped">
+                            <h2>Админы</h2>
 
-                {% endfor %}
-            </table>
+                            <tbody>
+                            {% for admin in admins %}
+                                <tr>
+                                    <td>
+                                        <!-- <img src="http://pingendo.github.io/pingendo-bootstrap/assets/user_placeholder.png" class="img-circle" width="60">
+                                        --> <img src="https://avatars0.githubusercontent.com/u/8324045?v=3&s=400"
+                                                class="img-circle" width="60">
+                                    </td>
+                                    <td id="client_{{ admin.id }}">
+                                        <h4>
+                                            <b>{{ admin.get_full_name }}</b>
+                                        </h4>
+                                        <a href="mailto:{{ admin.email }}">{{ admin.email }}</a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
+
     {% endif %}
 {% endblock %}
