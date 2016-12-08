@@ -75,6 +75,24 @@ $(document).ready(function () {
         });
     });
 
+    $('#clienttakeForm').submit(function (event) {
+        event.preventDefault();
+        $('#clienttakeForm').find("input[type=submit]").prop("disabled", true);
+        $.post('/contract/submoney/', $('#clienttakeForm').serializeArray(), function (data) {
+            if (data['succes'] == false) {
+                $('#myModalTake').find('#errors').text(data['errors']);
+                $('#clienttakeForm').find("input[type=submit]").prop("disabled", false)
+            }
+            else {
+                newsumma = '#summa_' + data['id'];
+                $(newsumma).text(data['newvalue']);
+                $('#myModalTake').modal('hide');
+                disolve(data);
+                $('#clienttakeForm')[0].reset();
+            }
+        });
+    });
+
     function disolve(data) {
         $('#lastoperation').text(data['operation']).fadeIn(1);
         setTimeout(function () {
