@@ -25,12 +25,12 @@ class Setting(models.Model):
         param.save()
 
 
-def today():
-    return timezone.now().date() + Setting.get_relativedelta()
-
-
 def now():
     return timezone.now() + Setting.get_relativedelta()
+
+
+def today():
+    return now().date()
 
 
 class User(AbstractUser):
