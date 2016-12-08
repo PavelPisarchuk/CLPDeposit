@@ -33,7 +33,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <span class="visible-xs navbar-brand">CLP Deposit</span>
+                            <span class="visible-xs navbar-brand"><a style="color: black" href="{% url 'index' %}">CLP Deposit</a></span>
                         </div>
                         <div class="navbar-collapse collapse sidebar-navbar-collapse">
                             <ul class="nav navbar-nav" id="sidenav01">
@@ -94,7 +94,7 @@
             <div id="body_content" class="col-sm-9 col-md-10 affix-content">
                 <div class="container">
                     <div class="page-header">
-                        <h3>CLP Deposit</h3>
+                        <h3><a style="color: black" href="{% url 'index' %}">CLP Deposit</a></h3>
                     </div>
                     {% block alerts %}{% include 'alerts.html' %}{% endblock %}
                     {% block content %}{% endblock %}
