@@ -30,6 +30,7 @@ $(document).ready(function () {
     });
     $('#myModalOperations').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
+        $('#billoperations').empty();
         $.post('/actions/bill/', {'num': button.data('billid')}, function (data) {
             $('#billoperations').html(data)
         });

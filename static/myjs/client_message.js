@@ -3,12 +3,12 @@ $(document).ready(function () {
     $('#myModalReadMessage').on('show.bs.modal', function (event) {
         $('#deletemessagelForm').find("input[type=submit]").prop("disabled", false);
         var button = $(event.relatedTarget);
-        messagetag = '#message_' + button.data('messageid');
+        messagetag = '#read_message_' + button.data('messageid');
         $(this).find('#messageinMessage').text(button.data('message'));
         $(this).find('#headerinMessage').val(button.data('header'));
         $(this).find('#messageid').val(button.data('messageid'));
         $.post('/message/readmsg/', {'message_id': button.data('messageid')}, function (data) {
-            $(messagetag).css({"font-weight": "normal"})
+            $(messagetag).detach();
         });
     });
 
