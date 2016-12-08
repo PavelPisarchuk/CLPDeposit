@@ -137,9 +137,11 @@ def submoney(request):
 @login_required
 def close(request):
     try:
-        rend = render(request, 'contract/partial_list.html', {'contracts': request.user.get_contracts()})
         Contract.objects.get(bill__client=request.user, id=request.POST['contid']).close()
+        rend = render(request, 'contract/partial_list.html',
+                      {'contract': Contract.objects.get(id=request.POST['contid'])}
+                      )
         return JsonResponse({'succes': True, 'operation': 'Вклад закрыт', 'id': request.POST['contid'],
-                             'render': str(rend)})
+                             'render': str(rend).replace('Content-Type: text/html; charset=utf-8', '')})
     except:
         return JsonResponse({'succes': False, 'errors': 'Что-то пошло не так'})

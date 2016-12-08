@@ -66,7 +66,8 @@ $(document).ready(function () {
                 $('#closeForm').find("input[type=submit]").prop("disabled", false)
             }
             else {
-                $('#contracts').html(data['render']);
+                contrcact_id = '#contract_' + data['id'];
+                $(contrcact_id).html(data['render']);
                 $('#myModalClose').modal('hide');
                 disolve(data);
                 $('#closeForm')[0].reset();
