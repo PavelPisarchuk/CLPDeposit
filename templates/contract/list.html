@@ -30,8 +30,9 @@
                                     <h4>{{ contract.deposit.depositType.title }}"{{ contract.deposit.title }}"</h4>
                                 </div>
                                 <div class='col-lg-12'>
-                                    <p id="summa_{{ contract.id }}">Сумма : <span
-                                            style="font-weight: bold;color: green">{{ contract.deposit_bill.value_in_currency }}</span>
+                                    <p>Сумма : <span
+                                            style="font-weight: bold;color: green"
+                                            id="summa_{{ contract.id }}">{{ contract.deposit_bill.value_in_currency }}</span>
                                     </p>
                                     <p>Процент : <span style="font-weight: bold;color: green">{{ contract.get_percent }}%</span>
                                     </p>

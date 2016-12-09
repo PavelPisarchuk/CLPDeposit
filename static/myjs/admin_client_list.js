@@ -88,7 +88,7 @@ $(document).ready(function () {
 
 
     $('#data_scroll').scroll(function () {
-        if (this.scrollHeight - this.scrollTop < this.clientHeight + 25 * (this.clientHeight) / 100) {
+        if (this.scrollHeight - this.scrollTop < this.clientHeight + (this.scrollTop)) {
 
             var search_full = $("#search_full").val();
             if (inProgress == true)
