@@ -3,7 +3,7 @@
     "model":"app.exchangerate",
     "pk":1,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":1,
       "to_currency":2,
       "index":1.96
@@ -13,7 +13,7 @@
     "model":"app.exchangerate",
     "pk":2,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":1,
       "to_currency":3,
       "index":65.88
@@ -23,7 +23,7 @@
     "model":"app.exchangerate",
     "pk":3,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":1,
       "to_currency":4,
       "index":0.93
@@ -33,7 +33,7 @@
     "model":"app.exchangerate",
     "pk":4,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":2,
       "to_currency":1,
       "index":0.51
@@ -43,7 +43,7 @@
     "model":"app.exchangerate",
     "pk":5,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":2,
       "to_currency":3,
       "index":33.64
@@ -53,7 +53,7 @@
     "model":"app.exchangerate",
     "pk":6,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":2,
       "to_currency":4,
       "index":0.47
@@ -63,7 +63,7 @@
     "model":"app.exchangerate",
     "pk":7,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":3,
       "to_currency":1,
       "index":0.01518
@@ -73,7 +73,7 @@
     "model":"app.exchangerate",
     "pk":8,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":3,
       "to_currency":2,
       "index":0.02973
@@ -83,7 +83,7 @@
     "model":"app.exchangerate",
     "pk":9,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":3,
       "to_currency":4,
       "index":0.01408
@@ -93,7 +93,7 @@
     "model":"app.exchangerate",
     "pk":10,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":4,
       "to_currency":1,
       "index":1.08
@@ -103,7 +103,7 @@
     "model":"app.exchangerate",
     "pk":11,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":4,
       "to_currency":2,
       "index":2.11
@@ -113,7 +113,7 @@
     "model":"app.exchangerate",
     "pk":12,
     "fields":{
-      "date":"2016-11-14",
+      "date":"2016-12-01",
       "from_currency":4,
       "to_currency":3,
       "index":71.04
