@@ -72,19 +72,20 @@ def edit_user(request):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def stats(request):
-    if len([contract for contract in Contract.objects.all() if
+    contract_all = Contract.objects.all()
+    if len([contract for contract in contract_all if
             contract.sign_date + relativedelta(years=1) >= today()]) > 0:
 
-        data = [str(contract.deposit) for contract in Contract.objects.all() if
+        data = [str(contract.deposit) for contract in contract_all if
                 contract.sign_date + relativedelta(years=1) >= today()]
         deposit_popularity = Counter(data)
 
-        data = [contract.deposit.currency.title for contract in Contract.objects.all() if
+        data = [contract.deposit.currency.title for contract in contract_all if
                 contract.sign_date + relativedelta(years=1) >= today()]
         currency_popularity = Counter(data)
 
         data = [int(contract.deposit.currency.calc(Currency.objects.get(title='BYN'), contract.start_amount)) for
-                contract in Contract.objects.all() if contract.sign_date + relativedelta(years=1) >= today()]
+                contract in contract_all if contract.sign_date + relativedelta(years=1) >= today()]
         _min = min(data)
         _max = max(data)
         step = int((_max - _min) / 10)
@@ -103,11 +104,11 @@ def stats(request):
         print(data)
         amount_popularity = Counter(data)
 
-        return JsonResponse({'Статистика': [
-            {'Популярность вкладов': deposit_popularity},
-            {'Популярность валют вкладов': currency_popularity},
-            {'Популярность сумм вкладов': amount_popularity}
-        ]})
+        return JsonResponse({
+            'deposit_popularity': deposit_popularity,
+            'currency_popularity': currency_popularity,
+            'amount_popularity': amount_popularity
+        })
 
     else:
-        return JsonResponse({'Статистика': []})
+        return JsonResponse({})
