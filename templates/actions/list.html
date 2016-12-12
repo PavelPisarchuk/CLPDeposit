@@ -18,7 +18,7 @@
                     <tr>
                         <td>{{ o.actionType.description }}</td>
                         <td>{{ o.datetime }} </td>
-                        <td>{{ o.format_money }} </td>
+                        <td>{{ o.money|floatformat:2 }} {{ o.bill.currency.title }} </td>
                     </tr>
                 {% endfor %}
             </table>

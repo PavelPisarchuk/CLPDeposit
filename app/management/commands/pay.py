@@ -9,7 +9,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             Setting.set_processing(True)
-            pay_contracts = Contract.objects.all()
+            pay_contracts = Contract.objects.filter(
+                is_act=True
+            )
             for contract in pay_contracts:
                 contract.super_pay()
         finally:

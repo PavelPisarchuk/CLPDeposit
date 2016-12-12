@@ -5,67 +5,82 @@
 {% endblock %}
 
 {% block content %}
-    {% if contracts %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="thead-inverse">
-                <tr>
-                    <td>Вклад</td>
-                    <td>Сумма</td>
-                    <td>Процент</td>
-                    <td>Дата подписания</td>
-                    <td>Дата окончания</td>
-                    <td>Период выплат</td>
-                    <td>Возможность частичного снятия</td>
-                    <td>Счет привязки</td>
-                    <td>Капитализация</td>
-                    <td colspan="3"><span id="lastoperation" class="label label-success"></span></td>
-                </tr>
-                </thead>
-                {% for contract in contracts %}
-                    <tr>
-{#                        <td><a href={% url 'contract:info' contract.id %}>{{ contract.deposit.title }}</a></td>#}
-                        <td>{{ contract.deposit.depositType.title }}
-                            "{{ contract.deposit.title }}"
-                        </td>
-                        <td id="summa_{{ contract.id }}">{{ contract.deposit_bill.value_in_currency }}</td>
-                        <td>{{ contract.get_percent }}%</td>
-                        <td>{{ contract.sign_date }}</td>
-                        <td>{{ contract.end_date }}</td>
-                        <td>{{ contract.deposit.format_pay_period }}</td>
-                        <td>{{ contract.deposit.format_withdrawal }}</td>
-                        <td>{{ contract.bill }}</td>
-                        <td>{{ contract.deposit.format_capitalization }}</td>
-                        <td>
-                            <a data-toggle="modal" data-target="#myModalOperations" data-contractid="{{ contract.id }}">История операций</a>
-                        </td>
-                        {% if contract.is_act %}
-                            {% if contract.deposit.is_refill %}
-                                <td>
-                                    <a data-toggle="modal" data-target="#myModalFill"
-                                       data-contractid="{{ contract.id }}">Пополнить</a>
-                                    <br>{{ contract.deposit.get_min_refill }}
-                                </td>
-                            {% else %}
-                                <td></td>
-                            {% endif %}
-                            <td>
-                                <a data-toggle="modal" data-target="#myModalTake"
-                                   data-contractid="{{ contract.id }}">Снять</a>
-                            </td>
-                        {% else %}
-                            <td colspan="2">Закрыт</td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
 
-        {% include 'modals/contract_list.html' %}
+    <div class="container" id="tourpackages-carousel">
+        <div class="row">
+            <div class="col-lg-12"><h1>Мои депозиты <a class="btn icon-btn btn-primary pull-right"
+                                                       href="{% url 'contract:all' %}"><span
+                    class="glyphicon btn-glyphicon glyphicon-plus img-circle"></span> Новый вклад</a></h1></div>
+
+            {% if contracts %}
+                {% for contract in contracts %}
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="thumbnail">
+                            <div id="contract_{{ contract.id }}" class="caption">
+                                <div class='col-lg-12'>{% if contract.is_act %}
+                                    <a data-toggle="modal" data-target="#myModalClose"
+                                       data-contractid="{{ contract.id }}">
+                                        <span class='glyphicon glyphicon-exclamation-sign text-danger pull-right icon-style'></span>
+
+                                        <span class="glyphicon glyphicon-trash pull-right text-primary"></span>
+                                    </a>{% endif %}
+                                    <br>
+                                </div>
+                                <div class='col-lg-12 well well-add-card'>
+                                    <h4>{{ contract.deposit.depositType.title }}"{{ contract.deposit.title }}"</h4>
+                                </div>
+                                <div class='col-lg-12'>
+                                    <p>Сумма : <span
+                                            style="font-weight: bold;color: green"
+                                            id="summa_{{ contract.id }}">{{ contract.deposit_bill.value_in_currency }}</span>
+                                    </p>
+                                    <p>Процент : <span style="font-weight: bold;color: green">{{ contract.get_percent }}%</span>
+                                    </p>
+                                    <p>Дата подписания : <span
+                                            style="font-weight: bold;color: green">{{ contract.sign_date }}</span></p>
+                                    <p>Дата окончания : <span
+                                            style="font-weight: bold;color: green">{{ contract.end_date }}</span></p>
+                                    <p>Период выплат : <span
+                                            style="font-weight: bold;color: green">{{ contract.deposit.format_pay_period }}</span>
+                                    </p>
+                                    <p>Частичное снятие : <span
+                                            style="font-weight: bold;color: green">{{ contract.deposit.format_withdrawal }}</span>
+                                    </p>
+                                    <p>Счёт привязки : <span
+                                            style="font-weight: bold;color: green">{{ contract.bill }}</span></p>
+                                    <p>Капитализация : <span
+                                            style="font-weight: bold;color: green">{{ contract.deposit.format_capitalization }}</span>
+                                    </p>
+                                </div>
+                                <br>
+                                {% if contract.is_act %}
+                            {% if contract.deposit.is_refill %}
+                                <a class="btn btn-primary btn-xs btn-update btn-add-card" data-toggle="modal"
+                                   data-target="#myModalFill"
+                                   data-contractid="{{ contract.id }}">Пополнить {{ contract.deposit.get_min_refill }}</a>
+                            {% else %}
+                                <a class="btn btn-primary btn-xs btn-update btn-add-card " disabled="">Пополнить</a>
+                            {% endif %}
+                                    <a class="btn btn-primary btn-xs btn-update btn-add-card" data-toggle="modal"
+                                       data-target="#myModalTake"
+                                       data-contractid="{{ contract.id }}">Снять</a>
+                                {% else %}
+                                    <span style="font-weight: bold;color: red">ВКЛАД ЗАКРЫТ</span>
+                                {% endif %}
+                                <a class="btn btn-primary btn-xs btn-update btn-add-card " data-toggle="modal"
+                                   data-target="#myModalOperations" data-contractid="{{ contract.id }}">История</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    {% include 'modals/contract_list.html' %}
 
         {% load staticfiles %}
         <script type="text/javascript" src="{% static "myjs/contract_list.js" %}"></script>
-    {% else %}
-        <h2>Вкладов нет</h2>
-    {% endif %}
+    <h1><span style="position: fixed;right: 1%;top: 95%" id="lastoperation" class="label label-success"></span></h1>
+
 {% endblock %}
+

@@ -17,15 +17,30 @@ def new(request):
             'form': UserForm()
         })
     elif request.method == 'POST':
-        try:
-            form = UserForm(request.POST)
-            if form.is_valid():
-                user = User.objects.create_superuser(**form.cleaned_data)
-                user.save()
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_superuser(**form.cleaned_data)
+            user.save()
+            errors = []
+            if user.passport_date > today():
+                errors.append('Неведная дата выдачи пасспорта')
+            if user.get_age() < 18:
+                errors.append('Пользователю не исполнилось 18')
+            if errors:
+                user.delete()
+                for error in errors:
+                    request.user.alert(error)
+                return render(request, 'employee/registration_edit.html', {
+                    'form': UserForm(request.POST)
+                })
             else:
-                request.user.alert(form.errors)
-        finally:
-            return redirect('employee:list')
+                return redirect('employee:list')
+        else:
+            if str(form.errors).find('User with this Серия already exists.'):
+                request.user.alert('Пользователь с такой серией паспорта уже зарегестрирован')
+            return render(request, 'employee/registration_edit.html', {
+                'form': UserForm(request.POST)
+            })
 
 
 @login_required

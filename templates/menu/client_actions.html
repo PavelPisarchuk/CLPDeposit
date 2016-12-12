@@ -1,12 +1,2 @@
 <li><a href={% url 'bill:bills' %}>Мои счета</a></li>
-<li>
-    <a href="#" data-toggle="collapse" data-target="#toggleDemo2" data-parent="#sidenav01" class="collapsed">
-        Вклады <span class="caret" style="margin-top: 0px"></span>
-    </a>
-    <div class="collapse" id="toggleDemo2" style="height: 0px;">
-        <ul class="nav nav-list">
-            <li><a href="{% url 'contract:all' %}">Открыть вклад</a></li>
-            <li><a href="{% url 'contract:list' %}">Мои вклады</a></li>
-        </ul>
-    </div>
-</li>
+<li><a href="{% url 'contract:list' %}">Мои вклады</a></li>

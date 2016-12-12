@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.utils.datastructures import MultiValueDictKeyError
 
 from app.forms import ContractForm
@@ -114,7 +115,8 @@ def submoney(request):
             necessarily = True if request.POST['necessarily'] == 'on' else False
         except MultiValueDictKeyError:
             necessarily = False
-        if _contract.withdraw(_money, necessarily):
+        withdraw_response = _contract.withdraw(_money, necessarily)
+        if withdraw_response[0]:
             return JsonResponse({
                 'succes': True,
                 'operation': 'Снятие успешно завершено',
@@ -124,10 +126,30 @@ def submoney(request):
         else:
             return JsonResponse({
                 'succes': False,
-                'errors': 'У депозита отсутствует частичное снятие или остаток ниже минимального'
+                'errors': withdraw_response[1]
             })
     except:
         return JsonResponse({
             'succes': False,
             'errors': 'Что-то пошло не так , првоерьет всё и повторите запрос'
+        })
+
+
+@login_required
+def close(request):
+    try:
+        Contract.objects.get(bill__client=request.user, id=request.POST['contid']).close()
+        rend = render_to_string('contract/partial_list.html', context={
+            'contract': Contract.objects.get(id=request.POST['contid'])
+        })
+        return JsonResponse({
+            'succes': True,
+            'operation': 'Вклад закрыт',
+            'id': request.POST['contid'],
+            'render': rend
+        })
+    except:
+        return JsonResponse({
+            'succes': False,
+            'errors': 'Что-то пошло не так'
         })

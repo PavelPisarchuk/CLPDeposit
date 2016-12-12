@@ -11,6 +11,7 @@ class Command(BaseCommand):
             Setting.set_processing(True)
             call_command('loaddata', '1000/users', app_label='app')
             call_command('loaddata', '1000/bill', app_label='app')
+            call_command('loaddata', '1000/contract', app_label='app')
             # for user in User.objects.all():
             #     user.set_password(user.username)
             #     user.save()

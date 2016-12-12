@@ -1,5 +1,11 @@
 $(document).ready(function () {
 
+    $('#myModalClose').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        $(this).find('#contract_id').val(button.data('contractid'));
+    });
+
+
     $('#myModalOperations').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         $('#billoperations').empty();
@@ -47,6 +53,24 @@ $(document).ready(function () {
                 $('#myModalFill').modal('hide');
                 disolve(data);
                 $('#clientfillForm')[0].reset();
+            }
+        });
+    });
+
+    $('#closeForm').submit(function (event) {
+        event.preventDefault();
+        $('#closeForm').find("input[type=submit]").prop("disabled", true);
+        $.post('/contract/close/', $('#closeForm').serializeArray(), function (data) {
+            if (data['succes'] == false) {
+                $('#myModalClose').find('#errors').text(data['errors']);
+                $('#closeForm').find("input[type=submit]").prop("disabled", false)
+            }
+            else {
+                contrcact_id = '#contract_' + data['id'];
+                $(contrcact_id).html(data['render']);
+                $('#myModalClose').modal('hide');
+                disolve(data);
+                $('#closeForm')[0].reset();
             }
         });
     });

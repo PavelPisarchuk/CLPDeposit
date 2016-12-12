@@ -15,7 +15,7 @@ def list(request, deposit_id=None):
         d = Deposit.objects.get(pk=deposit_id)
         d.is_archive = True
         d.save()
-    depositList = Deposit.objects.all()
+    depositList = Deposit.objects.all().order_by('is_archive')
     return render(request, 'deposit/list.html', {
         'depositList': depositList
     })

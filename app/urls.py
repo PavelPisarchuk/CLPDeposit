@@ -50,6 +50,7 @@ urlpatterns = [
         url(r'^getcurrency/', bill.getcurrency, name='getcurrency'),
         url(r'^getuserbillsfromuser/', bill.getuserbillsfromuser, name='getuserbills'),
         url(r'^userbillinfo/', bill.userbillinfo, name='userbillinfo'),
+        url(r'^usercontracts/', bill.usercontracts, name='usercontracts'),
     ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),
@@ -64,6 +65,7 @@ urlpatterns = [
         url(r'^new/(?P<deposit_id>[0-9]+)', contract.new, name='new'),
         url(r'^list/', contract.list, name='list'),
         url(r'^addmoney/', contract.addmoney, name='addmoney'),
+        url(r'^close/', contract.close, name='close'),
         url(r'^submoney/', contract.submoney, name='submoney'),
         url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),

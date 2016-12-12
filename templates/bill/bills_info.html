@@ -9,10 +9,7 @@
             </div>
             <div id="collapseThree" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <table class="table table-bordered table-hover">
-                        <tbody id="_operations">
-
-                        </tbody>
+                    <table id="_operations" class="table table-bordered table-hover">
                     </table>
                 </div>
             </div>
@@ -40,7 +37,7 @@
                             {% for b in bills %}
                                 <tr>
                                     <td>{{ b.id }}</td>
-                                    <td>{{ b.value_in_currency }}</td>
+                                    <td>{{ b.money|floatformat:2 }} {{ b.currency.title }}</td>
                                     <td>
                                         <a href="#" id="getBillActions" data-target="getBillActions"
                                            data-billid="{{ b.id }}">
@@ -85,7 +82,7 @@
                                     <td>{{ c.deposit.depositType.title }}
                                         "{{ c.deposit.title }}"
                                     </td>
-                                    <td id="summa_{{ c.id }}">{{ c.deposit_bill.value_in_currency }}</td>
+                                    <td id="summa_{{ c.id }}">{{ c.deposit_bill.money|floatformat:2 }} {{ c.deposit_bill.currency.title }}</td>
                                     <td>{{ c.get_percent }}%</td>
                                     <td>{{ c.sign_date }}</td>
                                     <td>{{ c.end_date }}</td>

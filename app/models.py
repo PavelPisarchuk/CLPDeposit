@@ -25,12 +25,12 @@ class Setting(models.Model):
         param.save()
 
 
-def today():
-    return timezone.now().date() + Setting.get_relativedelta()
-
-
 def now():
     return timezone.now() + Setting.get_relativedelta()
+
+
+def today():
+    return now().date()
 
 
 class User(AbstractUser):
@@ -38,9 +38,9 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     father_name = models.CharField(max_length=30, verbose_name='Отчество')
     passport_date = models.DateField(verbose_name='Дата выдачи')
-    passport_ser = models.CharField(max_length=9, verbose_name='Серия')
-    passport_id = models.CharField(max_length=14, verbose_name='Идентификационный номер')
-    phone = models.CharField(max_length=20, verbose_name='Телефон')
+    passport_ser = models.CharField(max_length=9, verbose_name='Серия', unique=True)
+    passport_id = models.CharField(max_length=14, verbose_name='Идентификационный номер', unique=True)
+    phone = models.CharField(max_length=20, verbose_name='Телефон', unique=True)
     address = models.CharField(max_length=100, verbose_name='Адрес')
     birthday = models.DateField(verbose_name='Дата рождения')
 
@@ -94,7 +94,7 @@ class User(AbstractUser):
     def get_contracts(self):
         return Contract.objects.filter(
             bill__client=self
-        )
+        ).order_by('-is_act')
 
     def change_password(self, old, new, repeat):
         if self.check_password(old) and new == repeat:
@@ -217,9 +217,8 @@ class Bill(models.Model):
             bill=self
         )
 
-    def transfer(self, other, value):
-        if self.pop(value):
-            value = self.currency.calc(other.currency, value)
+    def transfer(self, other, value, currency):
+        if self.pop(currency.calc(self.currency, value) if self.currency != other.currency else value):
             other.push(value)
             return True
         else:
@@ -336,7 +335,7 @@ class Contract(models.Model):
         amount = bill.currency.calc(self.deposit.currency, amount)
 
         if self.deposit.is_refill and amount >= self.deposit.min_refill:
-            if bill.pop(_sub_bill_amount, action='Перевод', contract=self):
+            if bill.pop(_sub_bill_amount, action='Перевод'):
                 self.deposit_bill.push(amount, action='Пополнение', contract=self)
                 return [True]
             else:
@@ -348,7 +347,7 @@ class Contract(models.Model):
         if not necessarily:
             if self.deposit.is_early_withdrawal and self.deposit_bill.money - amount >= self.deposit.minimum_balance:
                 if self.deposit_bill.pop(amount, action='Снятие', contract=self):
-                    self.bill.push(amount, action='Перевод', contract=self)
+                    self.bill.push(amount, action='Перевод')
                     return [True]
             else:
                 return [False, 'Депозит не предусматривает частичное снятие или нарушен неснижаемый остаток']
@@ -401,6 +400,10 @@ class Contract(models.Model):
             bill=self.deposit_bill,
             contract=self,
             money=0
+        )
+        self.bill.client.send_message(
+            'Ваш вклад "{}" закрыт.'.format(self.deposit.title),
+            'Ваш вклад "{}" закрыт.'.format(self.deposit.title)
         )
         return
 

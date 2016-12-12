@@ -6,31 +6,36 @@
 {% block alerts %}{% endblock %}
 
 {% block content %}
+
+    <h1>Мои сообщения</h1>
     {% if messages %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="thead-inverse">
-                <tr>
-                    <td>Дата</td>
-                    <td>Заголовок</td>
-                </tr>
-                </thead>
+
+        <div class="container">
+
+            <div class="list-group">
                 {% for message in messages %}
-                    <tr id="message_{{ message.id }}" {% if not message.readed %}style="font-weight: bold;"{% endif %}>
-                        <td>{{ message.date }}</td>
-                        <td>
-                            <a href="" data-toggle="modal" data-target="#myModalReadMessage"
-                               data-header="{{ message.header }}"
-                               data-message="{{ message.message }}"
-                               data-messageid="{{ message.id }}">{{ message.header }}
-                            </a>
-                        </td>
-                    </tr>
+
+                    <a id="message_{{ message.id }}" href="" data-toggle="modal" data-target="#myModalReadMessage"
+                       data-header="{{ message.header }}"
+                       data-message="{{ message.message }}"
+                       data-messageid="{{ message.id }}" class="list-group-item">
+
+                        <div class="pull-left form-control-inline">
+                            <h4 class="list-group-item-heading">{{ message.header }}</h4>
+                            <p class="list-group-item-text">{{ message.date }}</p>
+                        </div>
+                        {% if not message.readed %}<span id="read_message_{{ message.id }}"
+                                                         class="label label-danger pull-right">Непрочитанное</span>{% endif %}
+                        <div class="clearfix"></div>
+                    </a>
+
                 {% endfor %}
-            </table>
+
+            </div>
+
         </div>
-    {% else %}
-        <h2>У Вас нет сообщений</h2>
+
+
     {% endif %}
 
     {% include "modals/client_message.html" %}
