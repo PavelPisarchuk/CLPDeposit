@@ -1,5 +1,8 @@
 {% if client %}
-    <div>Пасспорт <h5 style="font-weight: bold">{{ client.passport_ser }}{{ client.passport_id }}</h5></div>
+    <div>Пасспорт
+        <h5 style="font-weight: bold">{{ client.passport_ser }}</h5>
+        <h5 style="font-weight: bold">{{ client.passport_id }}</h5>
+    </div>
     <div>Дата выдачи пасспорта: <h5 style="font-weight: bold">{{ client.passport_date }}</h5></div>
     <div>Телефон <h5 style="font-weight: bold">{{ client.phone }}</h5></div>
     <div>Адресс <h5 style="font-weight: bold">{{ client.address }}</h5></div>
