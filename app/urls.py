@@ -26,6 +26,7 @@ urlpatterns = [
         url(r'^new/', employee.new, name='new'),
         url(r'^list/', employee.list, name='list'),
         url(r'^edituser/', employee.edit_user, name='uedit'),
+        url(r'^stats/', employee.stats, name='stats'),
     ], namespace='employee')),
     url(r'^client/', include([
         url(r'^new/', client.new, name='new'),

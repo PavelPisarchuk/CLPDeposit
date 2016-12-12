@@ -27,7 +27,7 @@ class EditUserForm(forms.ModelForm):
 
 
 class DoVostredDepositForm(forms.ModelForm):
-    min_amount=forms.IntegerField(min_value=1,max_value=1000000,label='Минимальная начальная сумма')
+    min_amount = forms.IntegerField(min_value=100, max_value=1000000, label='Минимальная начальная сумма')
     pay_period=forms.IntegerField(min_value=1,max_value=100,label='Период выплат')
     percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
     min_refill=forms.IntegerField(min_value=0,max_value=1000000,label='Минимальное пополнение',initial=0)
@@ -37,7 +37,7 @@ class DoVostredDepositForm(forms.ModelForm):
 
 
 class SberegDepositForm(forms.ModelForm):
-    min_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Минимальная начальная сумма')
+    min_amount = forms.IntegerField(min_value=100, max_value=1000000, label='Минимальная начальная сумма')
     pay_period = forms.IntegerField(min_value=1, max_value=100, label='Период выплат')
     percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
     percent_for_early_withdrawal = forms.FloatField(min_value=0.1, max_value=500,
@@ -50,7 +50,7 @@ class SberegDepositForm(forms.ModelForm):
 
 
 class NakopDepositForm(forms.ModelForm):
-    min_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Минимальная начальная сумма')
+    min_amount = forms.IntegerField(min_value=100, max_value=1000000, label='Минимальная начальная сумма')
     pay_period = forms.IntegerField(min_value=1, max_value=100, label='Период выплат')
     percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
     percent_for_early_withdrawal = forms.FloatField(min_value=0.1, max_value=500,
@@ -64,7 +64,7 @@ class NakopDepositForm(forms.ModelForm):
 
 
 class RaschDepositForm(forms.ModelForm):
-    min_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Минимальная начальная сумма')
+    min_amount = forms.IntegerField(min_value=100, max_value=1000000, label='Минимальная начальная сумма')
     pay_period = forms.IntegerField(min_value=1, max_value=100, label='Период выплат')
     percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
     percent_for_early_withdrawal = forms.FloatField(min_value=0.1, max_value=500,
@@ -79,7 +79,7 @@ class RaschDepositForm(forms.ModelForm):
 
 
 class IndexDepositForm(forms.ModelForm):
-    min_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Минимальная начальная сумма')
+    min_amount = forms.IntegerField(min_value=100, max_value=1000000, label='Минимальная начальная сумма')
     pay_period = forms.IntegerField(min_value=1, max_value=100, label='Период выплат')
     percent = forms.FloatField(min_value=0.1, max_value=500, label='Процентная ставка')
     percent_for_early_withdrawal = forms.FloatField(min_value=0.1, max_value=500,

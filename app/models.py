@@ -458,7 +458,7 @@ class Contract(models.Model):
     def get_last_pay_date(self):
         try:
             return self.get_actions().filter(
-                actionType=ActionType.objects.get(description='PAY')
+                actionType=ActionType.objects.get(description='Выплата')
             ).last().datetime.date()
         except:
             return self.sign_date
