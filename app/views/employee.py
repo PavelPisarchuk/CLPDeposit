@@ -104,11 +104,18 @@ def stats(request):
         print(data)
         amount_popularity = Counter(data)
 
+        formatter = lambda dict: [{'label': key, 'y': value} for key, value in dict.items()]
         return JsonResponse({
-            'deposit_popularity': deposit_popularity,
-            'currency_popularity': currency_popularity,
-            'amount_popularity': amount_popularity
+            'deposit_popularity': formatter(deposit_popularity),
+            'currency_popularity': formatter(currency_popularity),
+            'amount_popularity': formatter(amount_popularity)
         })
 
     else:
         return JsonResponse({})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def statistics(request):
+    return render(request, 'employee/statistics.html')
