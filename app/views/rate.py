@@ -32,22 +32,22 @@ def api_history(request):
     dataPoints = []
     from_currency = Currency.objects.get(id=pk1)
     to_currency = Currency.objects.get(id=pk2)
+    labels, data = [], []
     for rate in ExchangeRate.objects.filter(
             from_currency=from_currency,
             to_currency=to_currency,
             date__gte=month_ago
     ).order_by('date'):
-        dataPoints.append({
-            'label': "{}/{}".format(
-                rate.date.day,
-                rate.date.month
-            ),
-            'y': round(rate.index, 3)
-        })
+        labels.append("{}/{}".format(
+            rate.date.day,
+            rate.date.month
+        ))
+        data.append(round(rate.index, 3))
     return JsonResponse({
         'title': "{}/{}".format(
             from_currency,
             to_currency
         ),
-        'dataPoints': dataPoints
+        'labels': labels,
+        'data': data
     })

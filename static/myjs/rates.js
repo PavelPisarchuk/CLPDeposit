@@ -7,24 +7,31 @@ $(document).ready(function () {
             'pk2': button.data('pk2')
         }, function (responce) {
             console.log(responce);
-            $("#chartContainer").CanvasJSChart({
-                height: 200,
-                axisY: {
-                    title: responce.title,
-                    includeZero: false
+            var options = {
+                legend: {
+                    display: false
                 },
-                axisX: {
-                    labelFontSize: 10,
-                    labelAutoFit: true,
-                    interval: 2
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };;;;;;;
+            $('#target')[0].innerHTML = '<canvas id="chartContainer" width="400" height="200"></canvas>';;;;;;;
+            new Chart($('#chartContainer'), {
+                type: 'line',
+                data: {
+                    labels: responce.labels,
+                    datasets: [{
+                        pointHitRadius: 0,
+                        data: responce.data
+                    }]
                 },
-                data: [{
-                    type: 'stepLine',
-                    toolTipContent: "{x}/{y}",
-                    dataPoints: responce.dataPoints
-                }]
+                options: options
             });
-            $(".canvasjs-chart-canvas")[0].style.width = '100%';
+            $('#title')[0].innerHTML = responce.title;
         })
     });
 

@@ -4,83 +4,115 @@
     <title>Статистика</title>
 {% endblock %}
 
+{% block head %}
+    {% load staticfiles %}
+    <script async type="text/javascript" src="{% static "Chart.bundle.min.js" %}"></script>
+{% endblock %}
+
 {% block content %}
-    <h1 id="loader">Идет загрузка данных...</h1>
     <style>
         @media (max-width: 900px) {
             .chart_container {
                 width: 100%;
             }
         }
+
         @media (min-width: 900px) {
             .chart_container {
                 width: 50%;
             }
         }
+
         .chart {
             height: 200px;
             width: 100%;
         }
     </style>
+
+    <h1 id="loader">Идет загрузка данных...</h1>
+
     <div id="content" style="opacity: 0; display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-around;">
         <div class="chart_container">
             <h1>Популярность вкладов</h1>
-            <div id="deposit_popularity" class="chart"></div>
+            <canvas id="deposit_popularity" width="400" height="200"></canvas>
         </div>
 
         <div class="chart_container">
             <h1>Популярность валют</h1>
-            <div id="currency_popularity" class="chart"></div>
+            <canvas id="currency_popularity" width="400" height="200"></canvas>
         </div>
 
         <div class="chart_container">
             <h1>Сумма стартового пополнения</h1>
-            <div id="amount_popularity" class="chart"></div>
+            <canvas id="amount_popularity" width="400" height="200"></canvas>
         </div>
     </div>
 
     <script>
         $.get('/employee/stats/', function (responce) {
             console.log(responce);
-            var axisX = {
-                labelFontSize: 10,
-                labelAutoFit: true,
-            }
+            var options = {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };;;;;;;;;;;;;;;;;;
 
-            function sort_y(a, b) {
-                return (a.y < b.y) ? true : false;
-            }
-
-            $("#deposit_popularity").CanvasJSChart({
-                axisX: axisX,
-                data: [{
-                    type: 'column',
-                    toolTipContent: "{label}/{y}",
-                    dataPoints: responce.deposit_popularity.sort(sort_y)
-                }]
+            var backgroundColor = [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ];;;;;;;;;;;;;;;;;;
+            new Chart($('#deposit_popularity'), {
+                type: 'bar',
+                data: {
+                    labels: responce.deposit_popularity.labels,
+                    datasets: [{
+                        label: "Количество вкладов",
+                        data: responce.deposit_popularity.data,
+                        backgroundColor: backgroundColor
+                    }]
+                },
+                options: options
             });
 
-            $("#currency_popularity").CanvasJSChart({
-                axisX: axisX,
-                data: [{
-                    type: 'column',
-                    toolTipContent: "{label}/{y}",
-                    dataPoints: responce.currency_popularity.sort(sort_y)
-                }]
+            new Chart($('#currency_popularity'), {
+                type: 'bar',
+                data: {
+                    labels: responce.currency_popularity.labels,
+                    datasets: [{
+                        label: "Количество вкладов",
+                        data: responce.currency_popularity.data,
+                        backgroundColor: backgroundColor
+                    }]
+                },
+                options: options
             });
 
-            $("#amount_popularity").CanvasJSChart({
-                axisX: axisX,
-                data: [{
-                    type: 'column',
-                    toolTipContent: "{label}/{y}",
-                    dataPoints: responce.amount_popularity.sort(sort_y)
-                }]
+
+            new Chart($('#amount_popularity'), {
+                type: 'bar',
+                data: {
+                    labels: responce.amount_popularity.labels,
+                    datasets: [{
+                        label: "Количество вкладов",
+                        data: responce.amount_popularity.data,
+                        backgroundColor: backgroundColor
+                    }]
+                },
+                options: options
             });
 
-            $('#content')[0].style.opacity = '100';
-            $('#loader')[0].style.display = 'none';
             $('.canvasjs-chart-credit').css('display','none');
+            $('#content').css('opacity', '100');
         })
     </script>
 {% endblock %}

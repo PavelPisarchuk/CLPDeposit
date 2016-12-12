@@ -4,6 +4,11 @@
     <title>Курсы валют</title>
 {% endblock %}
 
+{% block head %}
+    {% load staticfiles %}
+    <script async type="text/javascript" src="{% static "Chart.bundle.min.js" %}"></script>
+{% endblock %}
+
 {% block content %}
     <table>
         <tr>

@@ -79,16 +79,10 @@ def stats(request):
         deposit_data, currency_data, amount_data = [], [], []
         for contract in Contract.objects.all():
             if contract.sign_date + relativedelta(years=1) >= today():
-                deposit_data.append(str(contract.deposit))
+                deposit_data.append(str(contract.deposit.title))
                 currency_data.append(contract.deposit.currency.title)
                 amount_data.append(
                     int(contract.deposit.currency.calc(Currency.objects.get(title='BYN'), contract.start_amount)))
-
-        # deposit_data, currency_data, amount_data = [[str(contract.deposit), contract.deposit.currency.title,
-        #                                              int(contract.deposit.currency.calc(
-        #                                                  Currency.objects.get(title='BYN'), contract.start_amount))]
-        #                                             for contract in Contract.objects.all() if
-        #                                             contract.sign_date + relativedelta(years=1) >= today()]
 
         deposit_popularity = Counter(deposit_data)
         currency_popularity = Counter(currency_data)
@@ -110,13 +104,18 @@ def stats(request):
         amount_data = [x for x in (map(calculate_amount, amount_data))]
         amount_popularity = Counter(amount_data)
 
-        return JsonResponse({'Статистика': [
-            {'Популярность вкладов': deposit_popularity},
-            {'Популярность валют вкладов': currency_popularity},
-            {'Популярность сумм вкладов': amount_popularity},
-            # {'Популярность сумм вкладов': bad_deposit}
-        ]})
-        formatter = lambda dict: [{'label': key, 'y': value} for key, value in dict.items()]
+        def formatter(dict):
+            labels, data = [], []
+
+            for key in sorted(dict):
+                labels.append(key)
+                data.append(dict[key])
+            return {
+                'labels': labels,
+                'data': data
+            }
+
+
         return JsonResponse({
             'deposit_popularity': formatter(deposit_popularity),
             'currency_popularity': formatter(currency_popularity),
