@@ -60,38 +60,37 @@ def stats(request):
     if len([contract for contract in Contract.objects.all() if
             contract.sign_date + relativedelta(years=1) >= today()]) > 0:
 
-        data = [str(contract.deposit) for contract in Contract.objects.all() if
-                contract.sign_date + relativedelta(years=1) >= today()]
-        deposit_popularity = Counter(data)
+        deposit_data, currency_data, amount_data = [[str(contract.deposit), contract.deposit.currency.title,
+                                                     int(contract.deposit.currency.calc(
+                                                         Currency.objects.get(title='BYN'), contract.start_amount))]
+                                                    for contract in Contract.objects.all() if
+                                                    contract.sign_date + relativedelta(years=1) >= today()]
 
-        data = [contract.deposit.currency.title for contract in Contract.objects.all() if
-                contract.sign_date + relativedelta(years=1) >= today()]
-        currency_popularity = Counter(data)
+        deposit_popularity = Counter(deposit_data)
+        currency_popularity = Counter(currency_data)
 
-        data = [int(contract.deposit.currency.calc(Currency.objects.get(title='BYN'), contract.start_amount)) for
-                contract in Contract.objects.all() if contract.sign_date + relativedelta(years=1) >= today()]
-        _min = min(data)
-        _max = max(data)
-        step = int((_max - _min) / 10)
+        _min = min(amount_data)
+        _max = max(amount_data)
+        step = int((_max - _min) / 5)
         if step < 1:
             step = 1
 
         def calculate_amount(amount):
             for val in range(_min, _max + step, step):
-                if amount <= val:
-                    prev = val - step
-                    if prev < 0:
-                        prev = 0
+                prev = val - step
+                if prev < 0:
+                    prev = 0
+                if (amount < val) or (amount == _max and amount <= val):
                     return '{0}-{1}'.format(prev, val)
 
-        data = [x for x in (map(calculate_amount, data))]
-        print(data)
-        amount_popularity = Counter(data)
+        amount_data = [x for x in (map(calculate_amount, amount_data))]
+        amount_popularity = Counter(amount_data)
 
         return JsonResponse({'Статистика': [
             {'Популярность вкладов': deposit_popularity},
             {'Популярность валют вкладов': currency_popularity},
-            {'Популярность сумм вкладов': amount_popularity}
+            {'Популярность сумм вкладов': amount_popularity},
+            # {'Популярность сумм вкладов': bad_deposit}
         ]})
 
     else:
