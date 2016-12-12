@@ -76,11 +76,19 @@ def stats(request):
     if len([contract for contract in contract_all if
             contract.sign_date + relativedelta(years=1) >= today()]) > 0:
 
-        deposit_data, currency_data, amount_data = [[str(contract.deposit), contract.deposit.currency.title,
-                                                     int(contract.deposit.currency.calc(
-                                                         Currency.objects.get(title='BYN'), contract.start_amount))]
-                                                    for contract in Contract.objects.all() if
-                                                    contract.sign_date + relativedelta(years=1) >= today()]
+        deposit_data, currency_data, amount_data = [], [], []
+        for contract in Contract.objects.all():
+            if contract.sign_date + relativedelta(years=1) >= today():
+                deposit_data.append(str(contract.deposit))
+                currency_data.append(contract.deposit.currency.title)
+                amount_data.append(
+                    int(contract.deposit.currency.calc(Currency.objects.get(title='BYN'), contract.start_amount)))
+
+        # deposit_data, currency_data, amount_data = [[str(contract.deposit), contract.deposit.currency.title,
+        #                                              int(contract.deposit.currency.calc(
+        #                                                  Currency.objects.get(title='BYN'), contract.start_amount))]
+        #                                             for contract in Contract.objects.all() if
+        #                                             contract.sign_date + relativedelta(years=1) >= today()]
 
         deposit_popularity = Counter(deposit_data)
         currency_popularity = Counter(currency_data)
