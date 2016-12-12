@@ -273,7 +273,7 @@ class Deposit(models.Model):
     is_archive = models.BooleanField(verbose_name='В архиве', default=False, editable=False)
 
     def __str__(self):
-        return self.title
+        return '{} "{}"!'.format(self.depositType.title, self.title)
 
     def format_duration(self):
         if self.duration==0:
