@@ -325,6 +325,7 @@ class Contract(models.Model):
     bill = models.ForeignKey(Bill, verbose_name='Счет привязки')
     deposit_bill = models.ForeignKey(Bill, verbose_name='Депозитный счет', related_name='deposit_bill', editable=False)
     sign_date = models.DateField(verbose_name='Дата подписания', default=today, editable=False)
+    default_end_date = models.DateField(verbose_name='Дата окончания', editable=False, null=True)
     end_date = models.DateField(verbose_name='Дата окончания', editable=False, null=True)
     is_use_percent_for_early_withdrawal=models.BooleanField(verbose_name='изменить процентную ставку', default=False,editable=False)
     is_act=models.BooleanField(verbose_name='Активен', default=True, editable=False)
@@ -414,6 +415,7 @@ class Contract(models.Model):
             self.end_date = self.sign_date + relativedelta(months=self.deposit.duration)
         else:
             self.end_date = self.sign_date + relativedelta(days=self.deposit.duration)
+        self.default_end_date = self.end_date
         self.save()
 
     def is_active(self):
