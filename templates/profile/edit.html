@@ -20,27 +20,27 @@
             Фамилия
             <input type="text" name={{ form.last_name.html_name }}
                    value="{{ form.last_name.value }}" required>
-            <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+            <span class="form-error">Обязательное поле.</span>
         </label>
 
         <label>
             Имя
             <input type="text" name={{ form.first_name.html_name }}
                    value="{{ form.first_name.value }}" required>
-            <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+            <span class="form-error">Обязательное поле.</span>
         </label>
 
         <label>
             Отчество
             <input type="text" name={{ form.father_name.html_name }}
                    value="{{ form.father_name.value }}" required>
-            <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
+            <span class="form-error">Обязательное поле.</span>
         </label>
 
         <label>
             Дата выдачи паспорта
             <input type="text" id="passport_date"
-                   name={{ form.passport_date.html_name }} value="{{ form.passport_date.value.day }}-{{ form.passport_date.value.month }}-{{ form.passport_date.value.year }}"
+                   name={{ form.passport_date.html_name }} value="{{ form.passport_date.value }}"
                    pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}" required>
             <span class="form-error">Обязательное поле.</span>
         </label>

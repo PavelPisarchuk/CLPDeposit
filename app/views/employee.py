@@ -26,6 +26,10 @@ def new(request):
                 errors.append('Неведная дата выдачи пасспорта')
             if user.get_age() < 18:
                 errors.append('Пользователю не исполнилось 18')
+            if user.get_age() > 150:
+                errors.append('Пользователь слишком стар')
+            if user.passport_date < user.birthday:
+                errors.append('Неведная дата выдачи пасспорта')
             if errors:
                 user.delete()
                 for error in errors:
