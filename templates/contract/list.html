@@ -7,7 +7,9 @@
 {% block content %}
     <h1>Мои депозиты <a class="btn icon-btn btn-primary pull-right"
                         href="{% url 'contract:all' %}"><span
-            class="glyphicon btn-glyphicon glyphicon-plus img-circle"></span> Новый вклад</a></h1>
+            class="glyphicon btn-glyphicon glyphicon-plus img-circle"></span> Новый вклад</a>
+    </h1>
+
     <style>
         @media (max-width: 900px) {
             .thumbnail {
@@ -21,6 +23,7 @@
             }
         }
     </style>
+    <div style="clear: both"></div>
     <div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-around;">
         {% if contracts %}
             {% for contract in contracts %}
