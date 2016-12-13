@@ -14,7 +14,8 @@
 
 <label>
     Пароль
-    <input type="password" pattern="^[a-z0-9_-]{8,16}$" name={{ form.password.html_name }} required>
+    <input type="password" pattern="^[a-z0-9_-]{8,16}$"
+           name={{ form.password.html_name }} value="{{ form.password.value }}" required>
     <span class="form-error">Обязательное поле. Допустимы англ. буквы, цифры, дефисы и подчёркивания, от 8 до 16 символов.</span>
 </label>
 
