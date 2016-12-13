@@ -10,7 +10,7 @@
         <tr>
             <td>{{ b.actionType.description }}</td>
             <td>{{ b.datetime }}</td>
-            <td>{{ b.money|floatformat:2 }} {{ b.bill.currency.title }}</td>
+            <td>{{ b.format_money }}</td>
         </tr>
     {% endfor %}
 {% endif %}
