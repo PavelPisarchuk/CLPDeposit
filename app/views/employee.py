@@ -76,16 +76,19 @@ def stats(request):
     if len([contract for contract in contract_all if
             contract.sign_date + relativedelta(years=1) >= today()]) > 0:
 
-        deposit_data, currency_data, amount_data = [], [], []
+        deposit_data, currency_data, amount_data, bad_data = [], [], [], []
         for contract in Contract.objects.all():
             if contract.sign_date + relativedelta(years=1) >= today():
                 deposit_data.append(str(contract.deposit.title))
                 currency_data.append(contract.deposit.currency.title)
                 amount_data.append(
                     int(contract.deposit.currency.calc(Currency.objects.get(title='BYN'), contract.start_amount)))
+                if contract.default_end_date and contract.end_date != contract.default_end_date:
+                    bad_data.append(str(contract.deposit.title))
 
         deposit_popularity = Counter(deposit_data)
         currency_popularity = Counter(currency_data)
+        bad_popularity = Counter(bad_data)
 
         _min = min(amount_data)
         _max = max(amount_data)
@@ -98,7 +101,9 @@ def stats(request):
                 prev = val - step
                 if prev < 0:
                     prev = 0
-                if (amount < val) or (amount == _max and amount <= val):
+                if val >= _max:
+                    return '{0}-{1}'.format(prev, _max)
+                else:
                     return '{0}-{1}'.format(prev, val)
 
         amount_data = [x for x in (map(calculate_amount, amount_data))]
@@ -115,11 +120,11 @@ def stats(request):
                 'data': data
             }
 
-
         return JsonResponse({
             'deposit_popularity': formatter(deposit_popularity),
             'currency_popularity': formatter(currency_popularity),
-            'amount_popularity': formatter(amount_popularity)
+            'amount_popularity': formatter(amount_popularity),
+            'bad_popularity': formatter(bad_popularity)
         })
 
     else:
