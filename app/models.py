@@ -379,19 +379,19 @@ class Contract(models.Model):
 
     def super_pay(self):
         print(today(), self.get_last_pay_date(), self.deposit.title, self.is_active(), self.is_needs_pay())
-        if self.sign_date < today() and self.is_active():
-            sum = self.calculate_payment()
-            if self.is_needs_pay() and sum > 0:
-                print(sum, today())
-                self.pay(sum, to_itself=self.deposit.is_capitalization)
+        if self.is_active():
+            if self.sign_date < today():
+                sum = self.calculate_payment()
+                if self.is_needs_pay() and sum > 0:
+                    print(sum, today())
+                    self.pay(sum, to_itself=self.deposit.is_capitalization)
             if (self.end_date and (today() - self.end_date).days >= 0) or self.deposit_bill.money == 0:
                 print("Close")
                 self.close()
 
     def close(self):
         self.is_act = False
-        if self.end_date == None:
-            self.end_date = today()
+        self.end_date = today()
         self.save()
         if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
             self.pay(self.calculate_bonuce(), to_itself=False, action='Выплата индекс. бонуса')

@@ -54,28 +54,27 @@ def edit_user(request):
         return JsonResponse({'succes': False, 'errors': 'dsa'})
 
 
+
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def stats(request):
-    if len([contract for contract in Contract.objects.all() if
+    contract_all = Contract.objects.all()
+    if len([contract for contract in contract_all if
             contract.sign_date + relativedelta(years=1) >= today()]) > 0:
 
-        deposit_data, currency_data, amount_data = [], [], []
+        deposit_data, currency_data, amount_data, bad_data = [], [], [], []
         for contract in Contract.objects.all():
             if contract.sign_date + relativedelta(years=1) >= today():
-                deposit_data.append(str(contract.deposit))
+                deposit_data.append(str(contract.deposit.title))
                 currency_data.append(contract.deposit.currency.title)
                 amount_data.append(
                     int(contract.deposit.currency.calc(Currency.objects.get(title='BYN'), contract.start_amount)))
-
-        # deposit_data, currency_data, amount_data = [[str(contract.deposit), contract.deposit.currency.title,
-        #                                              int(contract.deposit.currency.calc(
-        #                                                  Currency.objects.get(title='BYN'), contract.start_amount))]
-        #                                             for contract in Contract.objects.all() if
-        #                                             contract.sign_date + relativedelta(years=1) >= today()]
+                if contract.default_end_date and contract.end_date != contract.default_end_date:
+                    bad_data.append(str(contract.deposit.title))
 
         deposit_popularity = Counter(deposit_data)
         currency_popularity = Counter(currency_data)
+        bad_popularity = Counter(bad_data)
 
         _min = min(amount_data)
         _max = max(amount_data)
@@ -88,18 +87,31 @@ def stats(request):
                 prev = val - step
                 if prev < 0:
                     prev = 0
-                if (amount < val) or (amount == _max and amount <= val):
+                if val >= _max:
+                    return '{0}-{1}'.format(prev, _max)
+                else:
                     return '{0}-{1}'.format(prev, val)
 
         amount_data = [x for x in (map(calculate_amount, amount_data))]
         amount_popularity = Counter(amount_data)
 
-        return JsonResponse({'Статистика': [
-            {'Популярность вкладов': deposit_popularity},
-            {'Популярность валют вкладов': currency_popularity},
-            {'Популярность сумм вкладов': amount_popularity},
-            # {'Популярность сумм вкладов': bad_deposit}
-        ]})
+        def formatter(dict):
+            labels, data = [], []
+
+            for key in sorted(dict):
+                labels.append(key)
+                data.append(dict[key])
+            return {
+                'labels': labels,
+                'data': data
+            }
+
+        return JsonResponse({
+            'deposit_popularity': formatter(deposit_popularity),
+            'currency_popularity': formatter(currency_popularity),
+            'amount_popularity': formatter(amount_popularity),
+            'bad_popularity': formatter(bad_popularity)
+        })
 
     else:
-        return JsonResponse({'Статистика': []})
+        return JsonResponse({})
