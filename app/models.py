@@ -500,7 +500,7 @@ class Action(models.Model):
 
     def format_money(self):
         try:
-            if self.money == 0:
+            if self.money != 0:
                 return self.bill.currency.format_value(self.money)
             else:
                 raise
