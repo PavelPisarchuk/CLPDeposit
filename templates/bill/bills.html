@@ -22,7 +22,10 @@
                                 <h4>Счёт номер №{{ b.id }}</h4>
                             </div>
                             <div class='col-lg-12 well well-add-card'>
-                                <h4 id="summa_{{ b.id }}">{{ b.money|floatformat:2 }} {{ b.currency.title }}</h4>
+                                <div style="display: flex">
+                                    <h4 id="summa_{{ b.id }}">{{ b.money|floatformat:2 }}</h4>
+                                    <h4>&nbsp;{{ b.currency.title }}</h4>
+                                </div>
                             </div>
                             <div class='col-lg-12'>
                                 <p>Валюта : <span style="font-weight: bold;color: green">{{ b.currency.title }}</span>

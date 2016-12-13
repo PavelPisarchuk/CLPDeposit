@@ -33,7 +33,7 @@ def addonbill(request):
                 'operation': 'Пополнение счёта {0} для {1} на {2}{3} выполнено'.format(
                     bill.id,
                     bill.client.get_full_name(),
-                    pushmoney,
+                    "%.2f" % pushmoney,
                     bill.currency.title
                 )
             })
@@ -101,20 +101,17 @@ def billtransact(request):
                 _money = int(request.POST["money"])
                 _currency = Currency.objects.get(id=request.POST["currency"])
 
-                if (_currency != tobill.currency):
-                    _money = _currency.calc(tobill.currency, _money)
-
                 if frombill.transfer(tobill, _money, _currency):
                     return JsonResponse({
                         'succes': True,
                         'operation': 'Переведено из счёта № {0} {1}{3} на счёт № {2} !'.format(
                             _from,
-                            _money,
+                            "%.2f" % (_money),
                             _to,
                             _currency.title
                         ),
-                        'from': [frombill.id, frombill.money],
-                        'to': [tobill.id, tobill.money]
+                        'from': [frombill.id, "%.2f" % frombill.money],
+                        'to': [tobill.id, "%.2f" % tobill.money]
                     })
                 else:
                     return JsonResponse({
