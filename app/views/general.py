@@ -3,6 +3,8 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from app.management.commands import jump_day
+
 
 def index(request):
     return render(request, 'index.html')
@@ -29,3 +31,9 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('login')
+
+
+def jump(request, count):
+    for _ in range(int(count)):
+        jump_day.Command().handle()
+    return redirect('index')
