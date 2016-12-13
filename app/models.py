@@ -486,17 +486,16 @@ class Action(models.Model):
     actionType = models.ForeignKey(ActionType, verbose_name='Тип действия')
     contract = models.ForeignKey(Contract, verbose_name='Договор', default=None, editable=False, null=True)
     bill = models.ForeignKey(Bill, verbose_name='Счёт пользователя', default=None, editable=False, null=True)
-    datetime = models.DateTimeField(verbose_name='Дата', default=now())
+    datetime = models.DateTimeField(verbose_name='Дата', default=now)
     money = models.FloatField(verbose_name='Денежная сумма')
 
     @classmethod
-    def add(cls, action=None, contract=None, bill=None, money=0, datetime=now()):
+    def add(cls, action=None, contract=None, bill=None, money=0):
         Action.objects.create(
             actionType=ActionType.objects.get_or_create(description=action)[0],
             contract=contract,
             bill=bill,
-            money=money,
-            datetime=datetime
+            money=money
         ).save()
 
     def format_money(self):
