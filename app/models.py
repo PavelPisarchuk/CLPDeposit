@@ -501,9 +501,12 @@ class Action(models.Model):
 
     def format_money(self):
         try:
-            return self.bill.currency.format_value(self.money)
+            if self.money > 0:
+                return self.bill.currency.format_value(self.money)
+            else:
+                raise
         except:
-            return None
+            return ''
 
     def __str__(self):
         return self.actionType
