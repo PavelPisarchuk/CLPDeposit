@@ -15,11 +15,11 @@ $.get('/employee/stats/', function (responce) {
         };
 
         var backgroundColor = [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)'
+            "#73afeb",
+            "#99e785",
+            "#FFCE56",
+            "#FF6384",
+            "#dfa9d9",
         ];
 
         new Chart($('#deposit_popularity'), {
@@ -60,6 +60,20 @@ $.get('/employee/stats/', function (responce) {
             },
             options: options
         });
+
+        new Chart($('#bad_popularity'), {
+            type: 'bar',
+            data: {
+                labels: responce.bad_popularity.labels,
+                datasets: [{
+                    label: "Количество вкладов",
+                    data: responce.bad_popularity.data,
+                    backgroundColor: backgroundColor
+                }]
+            },
+            options: options
+        });
+
         $('#loader').css('display', 'none');
         $('#content').css('opacity', '100');
     }
@@ -67,4 +81,4 @@ $.get('/employee/stats/', function (responce) {
         $('#loader')[0].innerHTML = 'Нет данных о вкладах'
     }
 
-});;
+});
