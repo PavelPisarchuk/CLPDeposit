@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.utils.datastructures import MultiValueDictKeyError
 
 from app.forms import ContractForm
-from app.models import Bill, Deposit, Contract
+from app.models import Action, Bill, Deposit, Contract
 
 
 @login_required
@@ -51,6 +51,10 @@ def new(request, deposit_id):
                 contract.deposit = d
                 contract.calculate_end_date()
                 contract.save()
+                Action.add(
+                    action='Создание',
+                    contract=contract
+                )
                 return redirect('contract:list')
     else:
         form = F()
