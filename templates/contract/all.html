@@ -15,60 +15,70 @@
     </div>
 
 
+    <style>
+        @media (max-width: 900px) {
+            .well {
+                width: 100%;
+            }
+        }
 
-    <div class="container ">
-        <div class="row">
-            {% if deposits %}
-                {% for deposit in deposits %}
-                    <div class="col-md-6 well pricing-table">
-                        <div class="pricing-table-holder">
-                            <center>
-                                <h3><span>{{ deposit.depositType.title }}</span> <span>"{{ deposit.title }}"</span></h3>
-                                <br>
-                                <h3 title="Процент и срок хранения"><span
-                                        style="font-weight: bold;color: green">{{ deposit.percent }}%</span>
-                                    / {{ deposit.format_duration }}</h3>
-                                <p class="caption">
-                                    Процент и срок хранения
-                                </p>
-                            </center>
+        @media (min-width: 900px) {
+            .well {
+                width: 45%;
+            }
+        }
+    </style>
 
-                        </div>
+    <div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-around;">
+        {% if deposits %}
+            {% for deposit in deposits %}
+                <div class="well pricing-table">
+                    <div class="pricing-table-holder">
+                        <center>
+                            <h3><span>{{ deposit.depositType.title }}</span> <span>"{{ deposit.title }}"</span></h3>
+                            <br>
+                            <h3 title="Процент и срок хранения"><span
+                                    style="font-weight: bold;color: green">{{ deposit.percent }}%</span>
+                                / {{ deposit.format_duration }}</h3>
+                            <p class="caption">
+                                Процент и срок хранения
+                            </p>
+                        </center>
 
-                        <div class="pricing-feature-list">
-                            <ul class="list-group">
-                                <li class="list-group-item">Минимальная сумма : <span
-                                        style="font-weight: bold;color: green;font-size: large">{{ deposit.format_min_amount }}</span>
-                                </li>
-                                <li class="list-group-item">Период выплат : <span
-                                        style="font-weight: bold;color: green;font-size: large">{{ deposit.format_pay_period }}</span>
-                                </li>
-                                <li class="list-group-item">Пополнение : <span
-                                        style="font-weight: bold;color: green;font-size: large">{{ deposit.format_refill }}</span>
-                                </li>
-                                <li class="list-group-item">Частичное снятие : <span
-                                        style="font-weight: bold;color: green;font-size: large"><bdi>{{ deposit.format_withdrawal }}</bdi></span>
-                                </li>
-                                <li class="list-group-item">Капитализация : <span
-                                        style="font-weight: bold;color: green;font-size: large">{{ deposit.format_capitalization }}</span>
-                                </li>
-                                <li class="list-group-item">Валюта привязки : <span
-                                        style="font-weight: bold;color: green;font-size: large">{% if deposit.binding_currency %}
-                                    {{ deposit.binding_currency.title }}{% else %}Нету{% endif %}</span></li>
-
-
-                            </ul>
-                        </div>
-
-                        <div class="price-table-button-holder">
-                            <a href="{% url 'contract:new' deposit.id %}" class="btn btn-success btn-block">Открыть
-                                вклад
-                            </a>
-                        </div>
                     </div>
-                {% endfor %}
 
-            {% endif %}
-        </div>
+                    <div class="pricing-feature-list">
+                        <ul class="list-group">
+                            <li class="list-group-item">Минимальная сумма : <span
+                                    style="font-weight: bold;color: green;font-size: large">{{ deposit.format_min_amount }}</span>
+                            </li>
+                            <li class="list-group-item">Период выплат : <span
+                                    style="font-weight: bold;color: green;font-size: large">{{ deposit.format_pay_period }}</span>
+                            </li>
+                            <li class="list-group-item">Пополнение : <span
+                                    style="font-weight: bold;color: green;font-size: large">{{ deposit.format_refill }}</span>
+                            </li>
+                            <li class="list-group-item">Частичное снятие : <span
+                                    style="font-weight: bold;color: green;font-size: large"><bdi>{{ deposit.format_withdrawal }}</bdi></span>
+                            </li>
+                            <li class="list-group-item">Капитализация : <span
+                                    style="font-weight: bold;color: green;font-size: large">{{ deposit.format_capitalization }}</span>
+                            </li>
+                            <li class="list-group-item">Валюта привязки : <span
+                                    style="font-weight: bold;color: green;font-size: large">{% if deposit.binding_currency %}
+                                {{ deposit.binding_currency.title }}{% else %}Нету{% endif %}</span></li>
+
+
+                        </ul>
+                    </div>
+
+                    <div class="price-table-button-holder">
+                        <a href="{% url 'contract:new' deposit.id %}" class="btn btn-success btn-block">Открыть
+                            вклад
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
