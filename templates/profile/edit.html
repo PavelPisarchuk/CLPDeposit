@@ -18,21 +18,21 @@
 
         <label>
             Фамилия
-            <input type="text" pattern={{ alpha_rus }} name={{ form.last_name.html_name }}
+            <input type="text" name={{ form.last_name.html_name }}
                    value="{{ form.last_name.value }}" required>
             <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
         </label>
 
         <label>
             Имя
-            <input type="text" pattern={{ alpha_rus }} name={{ form.first_name.html_name }}
+            <input type="text" name={{ form.first_name.html_name }}
                    value="{{ form.first_name.value }}" required>
             <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
         </label>
 
         <label>
             Отчество
-            <input type="text" pattern={{ alpha_rus }} name={{ form.father_name.html_name }}
+            <input type="text" name={{ form.father_name.html_name }}
                    value="{{ form.father_name.value }}" required>
             <span class="form-error">Обязательное поле. Допустимы только русские буквы</span>
         </label>
@@ -41,27 +41,30 @@
             Дата выдачи паспорта
             <input type="text" id="passport_date"
                    name={{ form.passport_date.html_name }} value="{{ form.passport_date.value.day }}-{{ form.passport_date.value.month }}-{{ form.passport_date.value.year }}"
-                   required>
+                   pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}" required>
             <span class="form-error">Обязательное поле.</span>
         </label>
 
         <label>
             Серия паспорта
             <input type="text" id="passport_ser"
-                   name={{ form.passport_ser.html_name }} value="{{ form.passport_ser.value }}" required>
-            <span class="form-error">Обязательное поле.</span>
+                   name={{ form.passport_ser.html_name }} value="{{ form.passport_ser.value }}"
+                   pattern="[A-Z]{2}[0-9]{7}" required>
+            <span class="form-error">Обязательное поле. Большие англ. буквы. 9 символов</span>
         </label>
 
         <label>
             Идентификационный номер
-            <input type="text" id="passport_id"
-                   name={{ form.passport_id.html_name }} value="{{ form.passport_id.value }}" required>
-            <span class="form-error">Обязательное поле.</span>
+            <input type="text" id="passport_id" placeholder="1234567A123BC1"
+                   name={{ form.passport_id.html_name }} value="{{ form.passport_id.value }}"
+                   pattern="[0-9]{7}[A-Z]{1}[0-9]{3}[A-Z]{2}[0-9]{1}" required>
+            <span class="form-error">Обязательное поле. Большие англ. буквы. 14 символов</span>
         </label>
 
         <label>
             Контактный телефон
-            <input type="text" id="phone" name={{ form.phone.html_name }} value="{{ form.phone.value }}" required>
+            <input type="text" id="phone" name={{ form.phone.html_name }} value="{{ form.phone.value }}" required
+                   pattern="\+\d\d\d \d\d \d\d\d\-\d\d\-\d\d">
             <span class="form-error">Обязательное поле.</span>
         </label>
 
