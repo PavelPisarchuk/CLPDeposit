@@ -13,28 +13,45 @@
                 <form class="abide-form" data-abide novalidate id="transactForm" class="form-horizontal" action=""
                       method="post">
                     {% csrf_token %}
-                    <label>
-                        <select id="billtransactelecttocard" name="from" form="transactForm" required>
-                        </select>
-                        <span class="form-error">Не выбран счёт, возможно у вас нет счетов</span>
-                    </label>
-                    <label>
-                        <select id="billtransactelecttocard2" name="to" form="transactForm" required>
-                        </select>
-                        <span class="form-error">Не выбран счёт, возможно у вас нет счетов</span>
-                    </label>
+                    <table width="100%">
+                        <tr>
+                            <td colspan="2">
+                                <label>
+                                    <select id="billtransactelecttocard" name="from" form="transactForm" required>
+                                    </select>
+                                    <span class="form-error">Не выбран счёт, возможно у вас нет счетов</span>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label>
+                                    <select id="billtransactelecttocard2" name="to" form="transactForm" required>
+                                    </select>
+                                    <span class="form-error">Не выбран счёт, возможно у вас нет счетов</span>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    <input required pattern="^[1-9]{1,1}[0-9]{0,8}$" id="addonbillForm_money"
+                                           placeholder="Сумма"
+                                           form="transactForm" type="number" name="money">
+                                    <span class="form-error">Введите сумму, от 1 до 999.999.999</span>
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    <select id="currencyselect" name="currency" form="transactForm" required>
+                                    </select>
+                                    <span class="form-error">Не выбрана валюта</span>
+                                </label>
+                            </td>
+                        </tr>
 
-                    <label>
-                        <input required pattern="^[1-9]{1,1}[0-9]{0,8}$" id="addonbillForm_money" placeholder="Сумма"
-                               form="transactForm" type="number" name="money">
-                        <span class="form-error">Введите сумму, от 1 до 999.999.999</span>
-                    </label>
 
-                    <label>
-                        <select id="currencyselect" name="currency" form="transactForm" required>
-                        </select>
-                        <span class="form-error">Не выбрана валюта</span>
-                    </label>
+                    </table>
 
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                     <input class="btn btn-warning" type="submit" value="Добавить"/>
