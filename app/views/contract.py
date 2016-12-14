@@ -53,7 +53,8 @@ def new(request, deposit_id):
                 contract.save()
                 Action.add(
                     action='Создание',
-                    contract=contract
+                    contract=contract,
+                    money=contract.start_amount
                 )
                 return redirect('contract:list')
     else:

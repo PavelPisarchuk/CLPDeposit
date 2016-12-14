@@ -372,9 +372,10 @@ class Contract(models.Model):
             return self.deposit.percent_for_early_withdrawal
         return self.deposit.percent
 
-    def pay(self, value, action='Выплата', to_itself=False):
+    def pay(self, value, action='Выплата', to_itself=False, silent=False):
         target_bill = self.deposit_bill if to_itself else self.bill
-        target_bill.push(value, action, contract=self)
+        contract = None if silent else self
+        target_bill.push(value, action, contract=contract)
 
     def super_pay(self):
         print(today(), self.get_last_pay_date(), self.deposit.title, self.is_active(), self.is_needs_pay())
@@ -394,14 +395,14 @@ class Contract(models.Model):
         self.save()
         if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
             self.pay(self.calculate_bonuce(), to_itself=False, action='Выплата индекс. бонуса')
-        self.pay(self.deposit_bill.money, to_itself=False, action='Возврат денег')
-        self.deposit_bill.pop(self.deposit_bill.money)
+        self.pay(self.deposit_bill.money, to_itself=False, silent=True)
         Action.add(
             action='Закрытие',
             bill=self.deposit_bill,
             contract=self,
-            money=0
+            money=-self.deposit_bill.money
         )
+        self.deposit_bill.pop(self.deposit_bill.money)
         self.bill.client.send_message(
             'Ваш вклад "{}" закрыт.'.format(self.deposit.title),
             'Ваш вклад "{}" закрыт.'.format(self.deposit.title)
