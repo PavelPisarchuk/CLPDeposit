@@ -51,14 +51,13 @@
                                     <p>Капитализация : <span
                                             style="font-weight: bold;color: green">{{ deposit.format_capitalization }}</span>
                                     </p>
+
+                                    {% if deposit.binding_currency %}
                                     <p>Валюта привязки :
-                                        <span style="font-weight: bold;color: green">
-                        {% if deposit.binding_currency %}
-                            {{ deposit.binding_currency.title }}
-                        {% else %}
-                            Нет
-                        {% endif %}
-                        </span></p>
+                                        <span style="font-weight: bold;color: green">{{ deposit.binding_currency.title }}</span>
+                                    </p>
+                                    {% endif %}
+
                                 </div>
                                 <br>
                                 {% if deposit.is_archive %}

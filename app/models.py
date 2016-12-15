@@ -308,11 +308,6 @@ class Deposit(models.Model):
         else:
             return 'Нет'
 
-    # def get_min_balance(self):
-    #     if self.minimum_balance == 0:
-    #         return ''
-    #     return '(Без потери процентов до остатка в ' + self.currency.format_value(self.minimum_balance)+ ')'
-
     def format_capitalization(self):
         if self.is_capitalization:
             return "Да"
@@ -357,6 +352,7 @@ class Contract(models.Model):
                 if self.deposit_bill.pop(amount, action='Экстра снятие', contract=self):
                     self.bill.push(amount, action='Перевод', contract=self)
                     self.is_use_percent_for_early_withdrawal = True
+                    self.save()
                     return [True]
             else:
                 return [False, 'Недостаточно средств на счету']
