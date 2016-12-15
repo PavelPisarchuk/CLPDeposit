@@ -3,6 +3,8 @@ $(document).ready(function () {
     $('#myModalClose').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         $(this).find('#contract_id').val(button.data('contractid'));
+        $('#myModalClose').find("input[type=submit]").prop("disabled", false);
+        // $('#myModalClose').find("input[type=submit]").disabled(false)
     });
 
 
