@@ -1,12 +1,12 @@
 [
   {
     "model": "app.deposit",
-    "pk": 1,
+    "pk": 6,
     "fields": {
       "depositType": 2,
       "title": "\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442",
-      "currency": 2,
-      "min_amount": 10,
+      "currency": 1,
+      "min_amount": 100,
       "is_month": true,
       "duration": 5,
       "pay_period": 1,
@@ -23,12 +23,12 @@
   },
   {
     "model": "app.deposit",
-    "pk": 2,
+    "pk": 7,
     "fields": {
       "depositType": 1,
       "title": "\u041a\u043b\u0430\u0441\u0441\u0438\u043a",
       "currency": 2,
-      "min_amount": 10,
+      "min_amount": 100,
       "is_month": false,
       "duration": 0,
       "pay_period": 1,
@@ -45,40 +45,18 @@
   },
   {
     "model": "app.deposit",
-    "pk": 3,
-    "fields": {
-      "depositType": 4,
-      "title": "\u0421\u0442\u0443\u0434\u0435\u043d\u0442",
-      "currency": 2,
-      "min_amount": 6,
-      "is_month": false,
-      "duration": 5,
-      "pay_period": 1,
-      "percent": 5.0,
-      "is_refill": true,
-      "min_refill": 0,
-      "is_early_withdrawal": true,
-      "minimum_balance": 2,
-      "percent_for_early_withdrawal": 2.0,
-      "is_capitalization": true,
-      "binding_currency": null,
-      "is_archive": false
-    }
-  },
-  {
-    "model": "app.deposit",
-    "pk": 4,
+    "pk": 12,
     "fields": {
       "depositType": 3,
       "title": "\u041d\u0430\u041a\u043e\u043f\u0438\u043b\u043a\u0430",
-      "currency": 2,
-      "min_amount": 10,
+      "currency": 3,
+      "min_amount": 5000,
       "is_month": true,
-      "duration": 10,
+      "duration": 2,
       "pay_period": 2,
       "percent": 10.0,
       "is_refill": true,
-      "min_refill": 1,
+      "min_refill": 1000,
       "is_early_withdrawal": false,
       "minimum_balance": 0,
       "percent_for_early_withdrawal": 2.0,
@@ -89,14 +67,14 @@
   },
   {
     "model": "app.deposit",
-    "pk": 5,
+    "pk": 13,
     "fields": {
       "depositType": 5,
       "title": "\u0414\u043e\u043b\u043b\u0430\u0440",
       "currency": 2,
-      "min_amount": 10,
+      "min_amount": 100,
       "is_month": true,
-      "duration": 5,
+      "duration": 3,
       "pay_period": 1,
       "percent": 10.0,
       "is_refill": false,
@@ -106,6 +84,28 @@
       "percent_for_early_withdrawal": 2.0,
       "is_capitalization": true,
       "binding_currency": 1,
+      "is_archive": false
+    }
+  },
+  {
+    "model": "app.deposit",
+    "pk": 14,
+    "fields": {
+      "depositType": 4,
+      "title": "\u0421\u0442\u0443\u0434\u0435\u043d\u0442",
+      "currency": 4,
+      "min_amount": 200,
+      "is_month": false,
+      "duration": 5,
+      "pay_period": 1,
+      "percent": 5.0,
+      "is_refill": true,
+      "min_refill": 0,
+      "is_early_withdrawal": true,
+      "minimum_balance": 100,
+      "percent_for_early_withdrawal": 2.0,
+      "is_capitalization": true,
+      "binding_currency": null,
       "is_archive": false
     }
   }
