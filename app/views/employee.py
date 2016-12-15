@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import math
 from collections import Counter
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -97,7 +98,7 @@ def stats(request):
 
         _min = min(amount_data)
         _max = max(amount_data)
-        step = int((_max - _min) / 5)
+        step = math.ceil((_max - _min) / 5)
         if step < 1:
             step = 1
 
