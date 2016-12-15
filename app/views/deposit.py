@@ -13,8 +13,9 @@ from app.models import Deposit, DepositType
 def list(request, deposit_id=None):
     if deposit_id != None:
         d = Deposit.objects.get(pk=deposit_id)
-        d.is_archive = True
-        d.save()
+        if d:
+            d.is_archive = True
+            d.save()
     depositList = Deposit.objects.all().order_by('is_archive')
     return render(request, 'deposit/list.html', {
         'depositList': depositList
@@ -45,7 +46,7 @@ def new(request, deposit_id):
         F = NakopDepositForm
     elif depositType.title == 'Расчетный вклад':
         F = RaschDepositForm
-    elif depositType.title == 'Индексируемый вклад':
+    else:  # depositType.title == 'Индексируемый вклад':
         F = IndexDepositForm
 
     if request.method == 'POST':
@@ -112,7 +113,7 @@ def edit(request, deposit_id):
         F = NakopDepositForm
     elif depositType.title == 'Расчетный вклад':
         F = RaschDepositForm
-    elif depositType.title == 'Индексируемый вклад':
+    else:  # depositType.title == 'Индексируемый вклад':
         F = IndexDepositForm
 
     if request.method == 'POST':

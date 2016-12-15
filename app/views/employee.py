@@ -85,8 +85,8 @@ def stats(request):
             if contract.sign_date + relativedelta(years=1) >= today():
                 deposit_data.append(str(contract.deposit.title))
                 currency_data.append(contract.deposit.currency.title)
-                amount_data.append(
-                    int(contract.deposit.currency.calc(Currency.objects.get(title='BYN'), contract.start_amount)))
+                cur = Currency.objects.get(title='BYN')
+                amount_data.append(int(contract.deposit.currency.calc(cur, contract.start_amount)))
                 if contract.default_end_date and contract.end_date != contract.default_end_date:
                     bad_data.append(str(contract.deposit.title))
 
@@ -105,9 +105,9 @@ def stats(request):
                 prev = val - step
                 if prev < 0:
                     prev = 0
-                if val >= _max:
-                    return '{0}-{1}'.format(prev, _max)
-                else:
+                if val > _max:
+                    val = _max
+                if amount < val or (amount == _max and amount == val):
                     return '{0}-{1}'.format(prev, val)
 
         amount_data = [x for x in (map(calculate_amount, amount_data))]
