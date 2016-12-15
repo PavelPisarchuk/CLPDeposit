@@ -1,0 +1,2002 @@
+[
+  {
+    "model": "app.bill",
+    "pk": 1,
+    "fields": {
+      "client": 1,
+      "money": 247.3798,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 2,
+    "fields": {
+      "client": 2,
+      "money": 177.9381,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 3,
+    "fields": {
+      "client": 3,
+      "money": 863.9148,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 4,
+    "fields": {
+      "client": 4,
+      "money": 291.2139,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 5,
+    "fields": {
+      "client": 5,
+      "money": 283.2561,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 6,
+    "fields": {
+      "client": 6,
+      "money": 195.7452,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 7,
+    "fields": {
+      "client": 7,
+      "money": 133.5311,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 8,
+    "fields": {
+      "client": 8,
+      "money": 888.0583,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 9,
+    "fields": {
+      "client": 9,
+      "money": 173.6442,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 10,
+    "fields": {
+      "client": 10,
+      "money": 572.6407,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 11,
+    "fields": {
+      "client": 11,
+      "money": 992.18,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 12,
+    "fields": {
+      "client": 12,
+      "money": 286.6918,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 13,
+    "fields": {
+      "client": 13,
+      "money": 182.102,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 14,
+    "fields": {
+      "client": 14,
+      "money": 48.5505,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 15,
+    "fields": {
+      "client": 15,
+      "money": 260.6254,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 16,
+    "fields": {
+      "client": 16,
+      "money": 95.0909,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 17,
+    "fields": {
+      "client": 17,
+      "money": 255.3545,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 18,
+    "fields": {
+      "client": 18,
+      "money": 124.2245,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 19,
+    "fields": {
+      "client": 19,
+      "money": 697.0769,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 20,
+    "fields": {
+      "client": 20,
+      "money": 836.1295,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 21,
+    "fields": {
+      "client": 21,
+      "money": 223.3206,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 22,
+    "fields": {
+      "client": 22,
+      "money": 277.277,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 23,
+    "fields": {
+      "client": 23,
+      "money": 854.2395,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 24,
+    "fields": {
+      "client": 24,
+      "money": 513.0811,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 25,
+    "fields": {
+      "client": 25,
+      "money": 587.7831,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 26,
+    "fields": {
+      "client": 26,
+      "money": 967.9349,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 27,
+    "fields": {
+      "client": 27,
+      "money": 221.1292,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 28,
+    "fields": {
+      "client": 28,
+      "money": 592.4735,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 29,
+    "fields": {
+      "client": 29,
+      "money": 155.8248,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 30,
+    "fields": {
+      "client": 30,
+      "money": 957.8694,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 31,
+    "fields": {
+      "client": 31,
+      "money": 895.7005,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 32,
+    "fields": {
+      "client": 32,
+      "money": 317.2586,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 33,
+    "fields": {
+      "client": 33,
+      "money": 480.5149,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 34,
+    "fields": {
+      "client": 34,
+      "money": 350.8203,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 35,
+    "fields": {
+      "client": 35,
+      "money": 159.0068,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 36,
+    "fields": {
+      "client": 36,
+      "money": 288.3739,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 37,
+    "fields": {
+      "client": 37,
+      "money": 249.4372,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 38,
+    "fields": {
+      "client": 38,
+      "money": 266.7046,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 39,
+    "fields": {
+      "client": 39,
+      "money": 742.5404,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 40,
+    "fields": {
+      "client": 40,
+      "money": 287.1805,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 41,
+    "fields": {
+      "client": 41,
+      "money": 87.8074,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 42,
+    "fields": {
+      "client": 42,
+      "money": 489.619,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 43,
+    "fields": {
+      "client": 43,
+      "money": 294.3982,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 44,
+    "fields": {
+      "client": 44,
+      "money": 428.4331,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 45,
+    "fields": {
+      "client": 45,
+      "money": 418.1178,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 46,
+    "fields": {
+      "client": 46,
+      "money": 190.8631,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 47,
+    "fields": {
+      "client": 47,
+      "money": 354.4739,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 48,
+    "fields": {
+      "client": 48,
+      "money": 128.9357,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 49,
+    "fields": {
+      "client": 49,
+      "money": 16.0587,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 50,
+    "fields": {
+      "client": 50,
+      "money": 766.424,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 51,
+    "fields": {
+      "client": 51,
+      "money": 320.6795,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 52,
+    "fields": {
+      "client": 52,
+      "money": 969.9618,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 53,
+    "fields": {
+      "client": 53,
+      "money": 551.8413,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 54,
+    "fields": {
+      "client": 54,
+      "money": 669.5032,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 55,
+    "fields": {
+      "client": 55,
+      "money": 113.4842,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 56,
+    "fields": {
+      "client": 56,
+      "money": 617.8842,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 57,
+    "fields": {
+      "client": 57,
+      "money": 111.7437,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 58,
+    "fields": {
+      "client": 58,
+      "money": 585.8864,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 59,
+    "fields": {
+      "client": 59,
+      "money": 756.3755,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 60,
+    "fields": {
+      "client": 60,
+      "money": 624.5336,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 61,
+    "fields": {
+      "client": 61,
+      "money": 758.8499,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 62,
+    "fields": {
+      "client": 62,
+      "money": 908.3421,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 63,
+    "fields": {
+      "client": 63,
+      "money": 419.1404,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 64,
+    "fields": {
+      "client": 64,
+      "money": 716.8455,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 65,
+    "fields": {
+      "client": 65,
+      "money": 971.2983,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 66,
+    "fields": {
+      "client": 66,
+      "money": 535.6932,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 67,
+    "fields": {
+      "client": 67,
+      "money": 496.4836,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 68,
+    "fields": {
+      "client": 68,
+      "money": 186.6514,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 69,
+    "fields": {
+      "client": 69,
+      "money": 377.7548,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 70,
+    "fields": {
+      "client": 70,
+      "money": 327.3004,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 71,
+    "fields": {
+      "client": 71,
+      "money": 77.8249,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 72,
+    "fields": {
+      "client": 72,
+      "money": 797.2594,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 73,
+    "fields": {
+      "client": 73,
+      "money": 524.3963,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 74,
+    "fields": {
+      "client": 74,
+      "money": 901.376,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 75,
+    "fields": {
+      "client": 75,
+      "money": 57.722,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 76,
+    "fields": {
+      "client": 76,
+      "money": 883.1127,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 77,
+    "fields": {
+      "client": 77,
+      "money": 341.8913,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 78,
+    "fields": {
+      "client": 78,
+      "money": 552.5189,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 79,
+    "fields": {
+      "client": 79,
+      "money": 335.6716,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 80,
+    "fields": {
+      "client": 80,
+      "money": 185.0585,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 81,
+    "fields": {
+      "client": 81,
+      "money": 671.9601,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 82,
+    "fields": {
+      "client": 82,
+      "money": 468.3641,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 83,
+    "fields": {
+      "client": 83,
+      "money": 253.9563,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 84,
+    "fields": {
+      "client": 84,
+      "money": 212.2993,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 85,
+    "fields": {
+      "client": 85,
+      "money": 366.56,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 86,
+    "fields": {
+      "client": 86,
+      "money": 762.1884,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 87,
+    "fields": {
+      "client": 87,
+      "money": 546.0504,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 88,
+    "fields": {
+      "client": 88,
+      "money": 937.2105,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 89,
+    "fields": {
+      "client": 89,
+      "money": 391.48,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 90,
+    "fields": {
+      "client": 90,
+      "money": 128.0981,
+      "currency": 1,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 91,
+    "fields": {
+      "client": 91,
+      "money": 207.1607,
+      "currency": 3,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 92,
+    "fields": {
+      "client": 92,
+      "money": 337.9424,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 93,
+    "fields": {
+      "client": 93,
+      "money": 84.1543,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 94,
+    "fields": {
+      "client": 94,
+      "money": 608.7162,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 95,
+    "fields": {
+      "client": 95,
+      "money": 650.3656,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 96,
+    "fields": {
+      "client": 96,
+      "money": 828.7031,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 97,
+    "fields": {
+      "client": 97,
+      "money": 244.5969,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 98,
+    "fields": {
+      "client": 98,
+      "money": 840.7359,
+      "currency": 2,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 99,
+    "fields": {
+      "client": 99,
+      "money": 702.126,
+      "currency": 4,
+      "is_private": true
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 100,
+    "fields": {
+      "client": 100,
+      "money": 837.6553,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 101,
+    "fields": {
+      "client": 1,
+      "money": 5003.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 102,
+    "fields": {
+      "client": 2,
+      "money": 194.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 103,
+    "fields": {
+      "client": 3,
+      "money": 215.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 104,
+    "fields": {
+      "client": 4,
+      "money": 223.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 105,
+    "fields": {
+      "client": 5,
+      "money": 159.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 106,
+    "fields": {
+      "client": 6,
+      "money": 122.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 107,
+    "fields": {
+      "client": 7,
+      "money": 199.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 108,
+    "fields": {
+      "client": 8,
+      "money": 242.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 109,
+    "fields": {
+      "client": 9,
+      "money": 5005.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 110,
+    "fields": {
+      "client": 10,
+      "money": 281.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 111,
+    "fields": {
+      "client": 11,
+      "money": 232.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 112,
+    "fields": {
+      "client": 12,
+      "money": 180.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 113,
+    "fields": {
+      "client": 13,
+      "money": 170.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 114,
+    "fields": {
+      "client": 14,
+      "money": 102.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 115,
+    "fields": {
+      "client": 15,
+      "money": 178.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 116,
+    "fields": {
+      "client": 16,
+      "money": 164.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 117,
+    "fields": {
+      "client": 17,
+      "money": 251.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 118,
+    "fields": {
+      "client": 18,
+      "money": 169.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 119,
+    "fields": {
+      "client": 19,
+      "money": 107.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 120,
+    "fields": {
+      "client": 20,
+      "money": 139.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 121,
+    "fields": {
+      "client": 21,
+      "money": 128.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 122,
+    "fields": {
+      "client": 22,
+      "money": 270.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 123,
+    "fields": {
+      "client": 23,
+      "money": 5048.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 124,
+    "fields": {
+      "client": 24,
+      "money": 5033.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 125,
+    "fields": {
+      "client": 25,
+      "money": 178.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 126,
+    "fields": {
+      "client": 26,
+      "money": 5064.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 127,
+    "fields": {
+      "client": 27,
+      "money": 5023.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 128,
+    "fields": {
+      "client": 28,
+      "money": 123.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 129,
+    "fields": {
+      "client": 29,
+      "money": 242.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 130,
+    "fields": {
+      "client": 30,
+      "money": 280.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 131,
+    "fields": {
+      "client": 31,
+      "money": 152.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 132,
+    "fields": {
+      "client": 32,
+      "money": 294.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 133,
+    "fields": {
+      "client": 33,
+      "money": 252.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 134,
+    "fields": {
+      "client": 34,
+      "money": 235.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 135,
+    "fields": {
+      "client": 35,
+      "money": 133.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 136,
+    "fields": {
+      "client": 36,
+      "money": 149.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 137,
+    "fields": {
+      "client": 37,
+      "money": 129.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 138,
+    "fields": {
+      "client": 38,
+      "money": 130.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 139,
+    "fields": {
+      "client": 39,
+      "money": 129.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 140,
+    "fields": {
+      "client": 40,
+      "money": 5093.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 141,
+    "fields": {
+      "client": 41,
+      "money": 5037.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 142,
+    "fields": {
+      "client": 42,
+      "money": 213.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 143,
+    "fields": {
+      "client": 43,
+      "money": 287.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 144,
+    "fields": {
+      "client": 44,
+      "money": 211.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 145,
+    "fields": {
+      "client": 45,
+      "money": 178.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 146,
+    "fields": {
+      "client": 46,
+      "money": 5073.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 147,
+    "fields": {
+      "client": 47,
+      "money": 162.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 148,
+    "fields": {
+      "client": 48,
+      "money": 130.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 149,
+    "fields": {
+      "client": 49,
+      "money": 175.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 150,
+    "fields": {
+      "client": 50,
+      "money": 129.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 151,
+    "fields": {
+      "client": 51,
+      "money": 271.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 152,
+    "fields": {
+      "client": 52,
+      "money": 127.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 153,
+    "fields": {
+      "client": 53,
+      "money": 159.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 154,
+    "fields": {
+      "client": 54,
+      "money": 5009.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 155,
+    "fields": {
+      "client": 55,
+      "money": 164.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 156,
+    "fields": {
+      "client": 56,
+      "money": 195.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 157,
+    "fields": {
+      "client": 57,
+      "money": 5066.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 158,
+    "fields": {
+      "client": 58,
+      "money": 5006.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 159,
+    "fields": {
+      "client": 59,
+      "money": 165.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 160,
+    "fields": {
+      "client": 60,
+      "money": 5020.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 161,
+    "fields": {
+      "client": 61,
+      "money": 111.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 162,
+    "fields": {
+      "client": 62,
+      "money": 125.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 163,
+    "fields": {
+      "client": 63,
+      "money": 210.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 164,
+    "fields": {
+      "client": 64,
+      "money": 136.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 165,
+    "fields": {
+      "client": 65,
+      "money": 175.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 166,
+    "fields": {
+      "client": 66,
+      "money": 155.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 167,
+    "fields": {
+      "client": 67,
+      "money": 184.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 168,
+    "fields": {
+      "client": 68,
+      "money": 5070.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 169,
+    "fields": {
+      "client": 69,
+      "money": 168.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 170,
+    "fields": {
+      "client": 70,
+      "money": 115.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 171,
+    "fields": {
+      "client": 71,
+      "money": 249.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 172,
+    "fields": {
+      "client": 72,
+      "money": 117.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 173,
+    "fields": {
+      "client": 73,
+      "money": 210.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 174,
+    "fields": {
+      "client": 74,
+      "money": 166.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 175,
+    "fields": {
+      "client": 75,
+      "money": 105.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 176,
+    "fields": {
+      "client": 76,
+      "money": 170.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 177,
+    "fields": {
+      "client": 77,
+      "money": 193.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 178,
+    "fields": {
+      "client": 78,
+      "money": 185.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 179,
+    "fields": {
+      "client": 79,
+      "money": 177.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 180,
+    "fields": {
+      "client": 80,
+      "money": 126.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 181,
+    "fields": {
+      "client": 81,
+      "money": 106.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 182,
+    "fields": {
+      "client": 82,
+      "money": 219.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 183,
+    "fields": {
+      "client": 83,
+      "money": 130.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 184,
+    "fields": {
+      "client": 84,
+      "money": 126.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 185,
+    "fields": {
+      "client": 85,
+      "money": 177.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 186,
+    "fields": {
+      "client": 86,
+      "money": 126.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 187,
+    "fields": {
+      "client": 87,
+      "money": 5061.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 188,
+    "fields": {
+      "client": 88,
+      "money": 148.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 189,
+    "fields": {
+      "client": 89,
+      "money": 239.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 190,
+    "fields": {
+      "client": 90,
+      "money": 179.0,
+      "currency": 1,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 191,
+    "fields": {
+      "client": 91,
+      "money": 5038.0,
+      "currency": 3,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 192,
+    "fields": {
+      "client": 92,
+      "money": 173.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 193,
+    "fields": {
+      "client": 93,
+      "money": 121.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 194,
+    "fields": {
+      "client": 94,
+      "money": 142.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 195,
+    "fields": {
+      "client": 95,
+      "money": 183.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 196,
+    "fields": {
+      "client": 96,
+      "money": 274.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 197,
+    "fields": {
+      "client": 97,
+      "money": 187.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 198,
+    "fields": {
+      "client": 98,
+      "money": 113.0,
+      "currency": 2,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 199,
+    "fields": {
+      "client": 99,
+      "money": 272.0,
+      "currency": 4,
+      "is_private": false
+    }
+  },
+  {
+    "model": "app.bill",
+    "pk": 200,
+    "fields": {
+      "client": 100,
+      "money": 251.0,
+      "currency": 4,
+      "is_private": false
+    }
+  }
+]

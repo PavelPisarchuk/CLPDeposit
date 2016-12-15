@@ -9,11 +9,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             Setting.set_processing(True)
-            call_command('loaddata', '1000/users', app_label='app')
-            call_command('loaddata', '1000/bill', app_label='app')
-            call_command('loaddata', '1000/contract', app_label='app')
-            # for user in User.objects.all():
-            #     user.set_password(user.username)
-            #     user.save()
+            call_command('loaddata', '100/users', app_label='app')
+            call_command('loaddata', '100/bill', app_label='app')
+            call_command('loaddata', '100/contract', app_label='app')
         finally:
             Setting.set_processing(False)
