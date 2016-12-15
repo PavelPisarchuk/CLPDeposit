@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required,user_passes_test
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -23,51 +24,54 @@ def all(request):
 @login_required
 @user_passes_test(lambda u: not u.is_superuser)
 def new(request, deposit_id):
+    try:
+        errors = []
+        d = Deposit.objects.get(pk=deposit_id)
+        if d.is_archive:
+            raise Exception
+        dt = d.depositType.title
+        querySet = Bill.objects.filter(client=request.user, currency=d.currency, is_private=True)
 
-    errors = []
-    d = Deposit.objects.get(pk=deposit_id)
-    dt = d.depositType.title
-    querySet = Bill.objects.filter(client=request.user, currency=d.currency, is_private=True)
+        F = ContractForm
 
-    F = ContractForm
+        if request.method == 'POST':
+            form = F(request.POST)
+            form.fields["bill"].queryset = querySet
+            if form.is_valid():
+                contract = form.save(commit=False)
+                good = True
 
-    if request.method == 'POST':
-        form = F(request.POST)
-        form.fields["bill"].queryset =querySet
-        if form.is_valid():
-            contract = form.save(commit=False)
-            good = True
+                if contract.start_amount < d.min_amount:
+                    errors.append('Сумма должна быть не меньше ' + str(d.min_amount) + " " + str(d.currency))
+                    good = False
+                elif not contract.bill.pop(contract.start_amount):
+                    errors.append('На счету (' + str(contract.bill.value_in_currency()) + ') недостаточно средств. ')
+                    good = False
 
-            if contract.start_amount < d.min_amount:
-                errors.append('Сумма должна быть не меньше ' + str(d.min_amount) + " " + str(d.currency))
-                good = False
-            elif not contract.bill.pop(contract.start_amount):
-                errors.append('На счету (' + str(contract.bill.value_in_currency()) + ') недостаточно средств. ')
-                good = False
+                if good:
+                    bill = request.user.add_bill(d.currency, contract.start_amount, False)
+                    contract.deposit_bill = bill
+                    contract.deposit = d
+                    contract.calculate_end_date()
+                    contract.save()
+                    Action.add(
+                        action='Создание',
+                        contract=contract,
+                        money=contract.start_amount
+                    )
+                    return redirect('contract:list')
+        else:
+            form = F()
+            form.fields["bill"].queryset = querySet
 
-            if good:
-                bill = request.user.add_bill(d.currency, contract.start_amount, False)
-                contract.deposit_bill=bill
-                contract.deposit = d
-                contract.calculate_end_date()
-                contract.save()
-                Action.add(
-                    action='Создание',
-                    contract=contract,
-                    money=contract.start_amount
-                )
-                return redirect('contract:list')
-    else:
-        form = F()
-        form.fields["bill"].queryset =querySet
-
-    return render(request, 'contract/new.html', {
-        'ID': deposit_id,
-        'form': form,
-        'deposit': d,
-        'errors': errors
-    })
-
+        return render(request, 'contract/new.html', {
+            'ID': deposit_id,
+            'form': form,
+            'deposit': d,
+            'errors': errors
+        })
+    except:
+        return HttpResponse(status=404)
 
 @login_required
 @user_passes_test(lambda u: not u.is_superuser)

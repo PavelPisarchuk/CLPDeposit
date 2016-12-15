@@ -58,7 +58,6 @@ urlpatterns = [
         url(r'^list/', deposit.list, name='list'),
         url(r'^new/(?P<deposit_id>[0-9]+)/', deposit.new, name='new'),
         url(r'^edit/(?P<deposit_id>[0-9]+)/', deposit.edit, name='edit'),
-        url(r'^info/(?P<deposit_id>[0-9]+)/', deposit.info, name='info'),
         url(r'^all/', deposit.all, name='all'),
     ], namespace='deposit')),
     url(r'^contract/', include([
@@ -68,7 +67,6 @@ urlpatterns = [
         url(r'^addmoney/', contract.addmoney, name='addmoney'),
         url(r'^close/', contract.close, name='close'),
         url(r'^submoney/', contract.submoney, name='submoney'),
-        url(r'^info/(?P<deposit_id>[0-9]+)', contract.info, name='info'),
     ], namespace='contract')),
     url(r'^jump/(?P<count>[0-9]+)/', general.jump, name='jump'),
     url(r'', general.index, name='index'),

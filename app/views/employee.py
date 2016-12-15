@@ -78,11 +78,12 @@ def edit_user(request):
 def stats(request):
     contract_all = Contract.objects.all()
     if len([contract for contract in contract_all if
-            contract.sign_date + relativedelta(years=1) >= today()]) > 0:
+            (not contract.end_date) or (
+                contract.end_date and contract.end_date + relativedelta(years=1) >= today())]) > 0:
 
         deposit_data, currency_data, amount_data, bad_data = [], [], [], []
         for contract in Contract.objects.all():
-            if contract.sign_date + relativedelta(years=1) >= today():
+            if (not contract.end_date) or (contract.end_date and contract.end_date + relativedelta(years=1) >= today()):
                 deposit_data.append(str(contract.deposit.title))
                 currency_data.append(contract.deposit.currency.title)
                 cur = Currency.objects.get(title='BYN')
