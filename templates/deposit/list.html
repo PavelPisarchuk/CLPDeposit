@@ -77,8 +77,58 @@
                 </div>
             {% endfor %}
         {% endif %}
-
         </div>
+
+
+    {% if depositListArch %}<br><br><br><br>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading1">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion"
+                           href="#collapse1" aria-expanded="true"
+                           aria-controls="collapse1">
+                            <span style="color: red"><h3>Вклады в архиве</h3></span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse " role="tabpanel"
+                     aria-labelledby="heading1}">
+                    <div class="panel-body">
+                        <table class="table table-bordered table-condensed" sty le="margin-bottom: 150px;">
+                            <tr>
+                                <td>Название</td>
+                                <td>Процент</td>
+                                <td>Минимальная сумма</td>
+                                <td>Срок хранения</td>
+                                <td>Пополнение</td>
+                                <td>Период выплат</td>
+                                <td>Частичное снятие</td>
+                                <td>Капитализация</td>
+                                <td>Валюта привязки</td>
+                            </tr>
+                            {% for deposit in depositListArch %}
+                                <tr>
+                                    <td>{{ deposit.depositType.title }} "{{ deposit.title }}"</td>
+                                    <td>{{ deposit.percent }}%</td>
+                                    <td>{{ deposit.format_min_amount }}</td>
+                                    <td>{{ deposit.format_duration }}</td>
+                                    <td>{{ deposit.format_refill }}</td>
+                                    <td>{{ deposit.format_pay_period }}</td>
+                                    <td>{{ deposit.format_withdrawal }}</td>
+                                    <td>{{ deposit.format_capitalization }}</td>
+                                    <td>{{ deposit.binding_currency.title }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
     </div>
 
 

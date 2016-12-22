@@ -77,7 +77,8 @@ def new(request, deposit_id):
 @user_passes_test(lambda u: not u.is_superuser)
 def list(request):
     return render(request, 'contract/list.html', {
-        'contracts': request.user.get_contracts()
+        'contracts': request.user.get_contracts().filter(is_act=True),
+        'contractsCls': request.user.get_contracts().filter(is_act=False)
     })
 
 
