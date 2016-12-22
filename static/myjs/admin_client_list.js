@@ -30,12 +30,26 @@ $(document).ready(function () {
         $('#billfillselecttocard').empty();
         $.get('/bill/getuserbills/', {'num': Number(button.data('contentid'))}, function (data) {
             bills = data['bills'];
+            billsinfo = data['billsinfo'];
             for (i in bills)
-                $('#billfillselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + bills[i] + '</option>')
+                $('#billfillselecttocard').append('<option selected value=' + bills[i] + '>Счёт номер ' + billsinfo[i] + '</option>')
         });
     });
-
+    $('#myModalCloseBill').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        modal_event('#closebillForm', this, event);
+        $('#billfillselecttocard2').empty();
+        $.get('/bill/getuserbills/', {'num': Number(button.data('contentid'))}, function (data) {
+            bills = data['bills'];
+            billsinfo = data['billsinfo'];
+            for (i in bills)
+                $('#billfillselecttocard2').append('<option selected value=' + bills[i] + '>Счёт номер ' + billsinfo[i] + '</option>')
+        });
+    });
     //==================================================================
+    $('#myModalCloseBill').submit(function (event) {
+        postman('#closebillForm', '#myModalCloseBill', '/bill/closebill/', event)
+    });
 
     $('#myModalFill').submit(function (event) {
         postman('#addonbillForm', '#myModalFill', '/bill/addonbill/', event)
