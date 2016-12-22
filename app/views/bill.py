@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
 
-from app.models import User, Bill, Currency
+from app.models import User, Bill, Currency, Contract
 
 
 @login_required
@@ -23,8 +23,8 @@ def bills(request):
 def addonbill(request):
     if request.method == 'POST':
         try:
-            bill = Bill.objects.get(id=request.POST["num"])
-            pushmoney = int(request.POST['money'])
+            bill = Bill.objects.get(id=int(request.POST["num"]))
+            pushmoney = float(request.POST['money'])
             _currency = Currency.objects.get(id=request.POST["currency"])
             pushmoney = _currency.calc(bill.currency, pushmoney)
             bill.push(pushmoney)
@@ -58,8 +58,8 @@ def addonbill(request):
 def addbill(request):
     if request.method == 'POST':
         try:
-            _user = User.objects.get(id=request.POST["num"])
-            _currency = Currency.objects.get_or_create(id=request.POST["currency"])[0]
+            _user = User.objects.get(id=int(request.POST["num"]))
+            _currency = Currency.objects.get_or_create(id=int(request.POST["currency"]))[0]
             _bill = _user.add_bill(currency=_currency, money=0, is_private=True)
             return JsonResponse({
                 'succes': True,
@@ -98,8 +98,8 @@ def billtransact(request):
                 })
 
             else:
-                _money = int(request.POST["money"])
-                _currency = Currency.objects.get(id=request.POST["currency"])
+                _money = float(request.POST["money"])
+                _currency = Currency.objects.get(id=int(request.POST["currency"]))
 
                 if frombill.transfer(tobill, _money, _currency):
                     return JsonResponse({
@@ -145,12 +145,16 @@ def billtransact(request):
 @user_passes_test(lambda u: u.is_superuser)
 def getuserbills(request):
     try:
-        _user = User.objects.get(id=request.GET['num'])
+        _user = User.objects.get(id=int(request.GET['num']))
         _bills = _user.get_bills()
-        _bills_id = [a.id for a in _bills]
+        _bills_id, _bills_info = [], []
+        for a in _bills:
+            _bills_id.append(a.id)
+            _bills_info.append('{2} (  {0} {1}  )'.format("%.2f" % a.money, a.currency.title, a.id))
         if _bills:
             return JsonResponse({
-                'bills': _bills_id
+                'bills': _bills_id,
+                'billsinfo': _bills_info
             })
         else:
             return JsonResponse({
@@ -165,7 +169,7 @@ def getuserbills(request):
 @login_required
 def getuserbillsfromuser(request):
     try:
-        _user = User.objects.get(id=request.user.id)
+        _user = User.objects.get(id=int(request.user.id))
         _bills = _user.get_bills()
         _bills_id, _bills_money = [], []
         for a in _bills:
@@ -209,7 +213,7 @@ def getcurrency(request):
 @user_passes_test(lambda u: u.is_superuser)
 def userbillinfo(request):
     try:
-        user = User.objects.get(id=request.GET['user_id'])
+        user = User.objects.get(id=int(request.GET['user_id']))
         contracts, bills = user.get_contracts(), user.get_bills()
         return render(request, 'bill/bills_info.html', {
             'bills': bills,
@@ -228,4 +232,38 @@ def usercontracts(request):
     except:
         return render(request, 'bill/user_contracts.html', {
             'contracts': {}
+        })
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def closebill(request):
+    try:
+        if request.method == 'POST':
+            _bill = Bill.objects.get(id=int(request.POST['num']))
+            _reason = request.POST['reason']
+            if not Contract.objects.all().filter(bill=_bill, is_act=True):
+                if _bill.money < 0.01:
+                    _client, billinfo = _bill.client, ' №{0} Валюта:{1}'.format(_bill.id, _bill.currency.title)
+                    _bill.delete()
+                    _client.send_message('Удаление счёта',
+                                         'Ваш счёт ' + billinfo + '  был удалён. Причина:' + _reason + ' .')
+                    return JsonResponse({
+                        'succes': True,
+                        'operation': 'Удаление счёта выполнено успешно'
+                    })
+                else:
+                    return JsonResponse({
+                        'succes': False,
+                        'errors': 'Невозможно удалить счёт, баланс больше или равен 0.01'
+                    })
+            else:
+                return JsonResponse({
+                    'succes': False,
+                    'errors': 'Невозможно удалить счёт, имеются депозиты привязанные к данному счёту'
+                })
+    except:
+        return JsonResponse({
+            'succes': False,
+            'errors': 'Возникли проблемы, проверьте всё и повторите запрос'
         })
