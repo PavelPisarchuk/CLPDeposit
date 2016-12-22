@@ -32,10 +32,18 @@
                            data-target="#myModalUserBills" data-contentname="{{ client.get_full_name }}"
                            data-contentid="{{ client.id }}">Инфо. о счётах
                     </a></li>
+                    <li><a href="" data-toggle="modal"
+                           data-target="#myModalCloseBill"
+                           data-contentname="{{ client.get_full_name }}"
+                           data-contentid="{{ client.id }}">Удалить счёт
+                    </a></li>
                     <li class="divider"></li>
                     <li><a href="" data-toggle="modal"
                            data-target="#myModalMessage" data-contentname="{{ client.get_full_name }}"
                            data-contentid="{{ client.id }}">Отправить сообщение
+                    </a></li>
+                    <li class="divider"></li>
+                    <li><a href={% url 'profile:setpassword' client.id %}>Сменить пароль
                     </a></li>
                 </ul>
             </div>

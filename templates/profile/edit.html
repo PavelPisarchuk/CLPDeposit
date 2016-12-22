@@ -80,7 +80,7 @@
         $(document).foundation();
         jQuery(function ($) {
             $('#passport_date').inputmask("dd-mm-yyyy");
-            $('#passport_ser').inputmask('Regex', {regex: "[A-Z]{2}[0-9]{7}"});
+            $('#passport_ser').inputmask('Regex', {regex: "(AB|BM|HB|KH|MP|MC|KB|PP|MH)[0-9]{7}"});
             $('#passport_id').inputmask('Regex', {regex: "[0-9]{7}[A-Z]{1}[0-9]{3}[A-Z]{2}[0-9]{1}"});
             $('#phone').inputmask("+375 99 999-99-99");
         });

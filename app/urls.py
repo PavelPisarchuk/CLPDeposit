@@ -10,6 +10,7 @@ urlpatterns = [
         url(r'^info/', profile.info, name='info'),
         url(r'^edit/', profile.edit, name='edit'),
         url(r'^password/', profile.password, name='password'),
+        url(r'^setpassword/(?P<id>[0-9]+)/', profile.setpassword, name='setpassword'),
     ], namespace='profile')),
     url(r'^rate/', include([
         url(r'^today/', rate.today, name='today'),
@@ -52,6 +53,7 @@ urlpatterns = [
         url(r'^getuserbillsfromuser/', bill.getuserbillsfromuser, name='getuserbills'),
         url(r'^userbillinfo/', bill.userbillinfo, name='userbillinfo'),
         url(r'^usercontracts/', bill.usercontracts, name='usercontracts'),
+        url(r'^closebill/', bill.closebill, name='closebill'),
     ], namespace='bill')),
     url(r'^deposit/', include([
         url(r'^list/(?P<deposit_id>[0-9]+)/', deposit.list, name='listToArch'),

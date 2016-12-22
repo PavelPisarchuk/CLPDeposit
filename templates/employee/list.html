@@ -32,6 +32,8 @@
                                         </h4>
                                         <a href="mailto:{{ admin.email }}">{{ admin.email }}</a>
                                     </td>
+                                    <td><a href={% url 'profile:setpassword' admin.id %}>Сменить пароль
+                                    </a></td>
                                 </tr>
 
                             {% endfor %}
