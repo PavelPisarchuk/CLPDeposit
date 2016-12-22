@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.management import call_command
 from django.shortcuts import render, redirect
 
 from app.management.commands import jump_day
@@ -36,4 +37,11 @@ def logout(request):
 def jump(request, count):
     for _ in range(int(count)):
         jump_day.Command().handle()
+    return redirect('index')
+
+
+def load(request):
+    call_command('loaddata', '100/users', app_label='app')
+    call_command('loaddata', '100/bill', app_label='app')
+    call_command('loaddata', '100/contract', app_label='app')
     return redirect('index')

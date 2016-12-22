@@ -71,5 +71,6 @@ urlpatterns = [
         url(r'^submoney/', contract.submoney, name='submoney'),
     ], namespace='contract')),
     url(r'^jump/(?P<count>[0-9]+)/', general.jump, name='jump'),
+    url(r'^load/', general.load, name='load'),
     url(r'', general.index, name='index'),
 ]
