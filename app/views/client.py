@@ -22,13 +22,13 @@ def new(request):
             user.save()
             errors = []
             if user.passport_date > today():
-                errors.append('Неведная дата выдачи пасспорта')
+                errors.append('Дата выдачи паспорта из будущего')
             if user.get_age() < 18:
                 errors.append('Пользователю не исполнилось 18')
             if user.get_age() > 150:
                 errors.append('Пользователь слишком стар')
             if user.passport_date < user.birthday:
-                errors.append('Неведная дата выдачи пасспорта')
+                errors.append('Паспорт выдан до рождения')
             if errors:
                 user.delete()
                 for error in errors:
@@ -39,8 +39,15 @@ def new(request):
             else:
                 return redirect('client:list')
         else:
-            if str(form.errors).find('User with this Серия already exists.'):
+            err = str(form.errors) + ""
+            if err.find('phone') >= 0:
+                request.user.alert('Пользователь с таким номером телефона уже зарегестрирован')
+            if err.find('passport_id') >= 0:
+                request.user.alert('Пользователь с таким номером паспорта уже зарегестрирован')
+            if err.find('passport_ser') >= 0:
                 request.user.alert('Пользователь с такой серией паспорта уже зарегестрирован')
+            if err.find('username') >= 0:
+                request.user.alert('Пользователь с таким логином уже зарегестрирован')
             return render(request, 'client/registration_edit.html', {
                 'form': UserForm(request.POST)
             })
