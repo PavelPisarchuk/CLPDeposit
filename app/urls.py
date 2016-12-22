@@ -10,6 +10,7 @@ urlpatterns = [
         url(r'^info/', profile.info, name='info'),
         url(r'^edit/', profile.edit, name='edit'),
         url(r'^password/', profile.password, name='password'),
+        url(r'^setpassword/(?P<id>[0-9]+)/', profile.setpassword, name='setpassword'),
     ], namespace='profile')),
     url(r'^rate/', include([
         url(r'^today/', rate.today, name='today'),
@@ -37,7 +38,6 @@ urlpatterns = [
         url(r'^search/', client.search, name='search'),
         url(r'^info/', client.info, name='info'),
         url(r'^getlistlen/', client.getlistlen, name='getlistlen'),
-        url(r'^password/(?P<id>[0-9]+)/', client.password, name='password'),
     ], namespace='client')),
     url(r'^actions/', include([
         url(r'^bill/', actions.bill, name='bill'),

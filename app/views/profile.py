@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 
 from app.forms import EditUserForm
-from app.models import today
+from app.models import today, User
 
 
 @login_required
@@ -60,6 +60,21 @@ def password(request):
             return redirect('profile:password')
     else:
         return render(request, 'profile/password.html')
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def setpassword(request, id):
+    if request.method == "POST":
+        user = User.objects.get(id=id)
+        user.set_password(request.POST.get("password_new"))
+        user.save()
+        request.user.alert('Пароль сменен успешно')
+        return redirect('client:list')
+    else:
+        return render(request, 'client/../../templates/profile/set_password.html', {
+            "id": id
+        })
 
 
 @login_required
