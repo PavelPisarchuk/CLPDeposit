@@ -37,6 +37,7 @@ urlpatterns = [
         url(r'^search/', client.search, name='search'),
         url(r'^info/', client.info, name='info'),
         url(r'^getlistlen/', client.getlistlen, name='getlistlen'),
+        url(r'^password/(?P<id>[0-9]+)/', client.password, name='password'),
     ], namespace='client')),
     url(r'^actions/', include([
         url(r'^bill/', actions.bill, name='bill'),

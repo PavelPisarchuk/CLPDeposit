@@ -65,6 +65,9 @@
                                                    data-contentname="{{ client.get_full_name }}"
                                                    data-contentid="{{ client.id }}">Отправить сообщение
                                             </a></li>
+                                            <li class="divider"></li>
+                                            <li><a href={% url 'client:password' client.id %}>Сменить пароль
+                                            </a></li>
                                         </ul>
                                     </div>
                                 </td>

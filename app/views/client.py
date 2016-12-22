@@ -122,3 +122,18 @@ def info(request):
 @user_passes_test(lambda u: u.is_superuser)
 def getlistlen(request):
     return JsonResponse({'start_len': myvars.start_client_list_load, 'next_len': myvars.next_client_list_load})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def password(request, id):
+    if request.method == "POST":
+        user = User.objects.get(id=id)
+        user.set_password(request.POST.get("password_new"))
+        user.save()
+        request.user.alert('Пароль сменен успешно')
+        return redirect('client:list')
+    else:
+        return render(request, 'client/password.html', {
+            "id": id
+        })
