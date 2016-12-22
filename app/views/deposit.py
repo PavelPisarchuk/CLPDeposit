@@ -22,7 +22,8 @@ def list(request, deposit_id=None):
             pass
     depositList = Deposit.objects.all().order_by('is_archive')
     return render(request, 'deposit/list.html', {
-        'depositList': depositList
+        'depositList': depositList.filter(is_archive=False),
+        'depositListArch': depositList.filter(is_archive=True),
     })
 
 
