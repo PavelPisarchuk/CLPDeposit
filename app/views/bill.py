@@ -147,7 +147,9 @@ def getuserbills(request):
     try:
         _user = User.objects.get(id=request.GET['num'])
         _bills = _user.get_bills()
-        _bills_id = [a.id for a in _bills]
+        _bills_id = []
+        for a in _bills:
+            _bills_id.append('{2} (  {0} {1}  )'.format("%.2f" % a.money, a.currency.title, a.id))
         if _bills:
             return JsonResponse({
                 'bills': _bills_id
