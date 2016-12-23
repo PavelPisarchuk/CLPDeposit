@@ -205,7 +205,8 @@ class Bill(models.Model):
         return "Счет #{}".format(self.id)
 
     def __str__(self):
-        return "Счет #{}".format(self.id)
+        return "Счет #{} ( {} )".format(self.id, self.value_in_currency())
+
 
     def get_cards(self):
         return Card.objects.filter(
@@ -389,7 +390,7 @@ class Contract(models.Model):
         self.is_act = False
         self.end_date = today()
         self.save()
-        if self.deposit.binding_currency and today() >= self.end_date and self.calculate_bonuce() > 0:
+        if self.deposit.binding_currency and today() >= self.end_date:
             self.pay(self.calculate_bonuce(), to_itself=False, action='Выплата индекс. бонуса')
         self.pay(self.deposit_bill.money, to_itself=False, silent=True)
         Action.add(
@@ -432,8 +433,13 @@ class Contract(models.Model):
         sign_rate = exchange_rates.get(date=self.sign_date)
         today_rate = exchange_rates.get(date=today())
 
-        return self.deposit_bill.money * (
+        bonuce = self.deposit_bill.money * (
         (today_rate.index / sign_rate.index) * 100 - 100) * self.get_storing_term() / 365
+
+        if bonuce > 0:
+            return bonuce
+        else:
+            return 0
 
     def prolongation_to_string(self):
         if self.is_prolongation:
