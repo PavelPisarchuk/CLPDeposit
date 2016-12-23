@@ -9,7 +9,8 @@
     <br> {{ deposit.depositType.title }} "{{ deposit.title }}"
     <br>
     <br>Описание: {{ deposit.depositType.description }}
-
+    <br>
+    <br>Минимальная сумма: {{ deposit.format_min_amount }}
     <br>
     <br>
     {% for error in errors %}
