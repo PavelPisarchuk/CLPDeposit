@@ -92,7 +92,7 @@ class IndexDepositForm(forms.ModelForm):
 
 
 class ContractFormWithProlongation(forms.ModelForm):
-    start_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Начальная сумма')
+    start_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Cумма')
 
     class Meta:
         model = Contract
@@ -100,7 +100,7 @@ class ContractFormWithProlongation(forms.ModelForm):
 
 
 class ContractForm(forms.ModelForm):
-    start_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Начальная сумма')
+    start_amount = forms.IntegerField(min_value=1, max_value=1000000, label='Cумма')
 
     class Meta:
         model = Contract
